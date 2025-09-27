@@ -189,8 +189,8 @@ uint8_t rtc_init(void)
 
     if ((bkpflag != 0x5050) && (bkpflag != 0x5051))     /* 之前未初始化过, 重新配置 */
     {
-        rtc_set_time(6, 59, 56, RTC_HOURFORMAT12_AM);   /* 设置时间, 根据实际时间修改 */
-        rtc_set_date(20, 4, 22, 3);                     /* 设置日期 */
+        rtc_set_time(8, 01, 30, RTC_HOURFORMAT12_AM);   /* 设置时间, 根据实际时间修改 */
+        rtc_set_date(25, 9, 11, 4);                     /* 设置日期 */
     }
     return 0;
 }
