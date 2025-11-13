@@ -1,0 +1,23 @@
+[project_search_path]: ./
+[map_search_path]: ./
+[project_file_path]: .//LED.uvprojx
+[ map_file_path]: .//Output/atk_f407.map
+[parse_keil_map start]: 
+[Found keyword]: ----------Execution Region----------
+[name]:  ER_IROM1 
+[Exec base]: 0x8000000
+[Size]: 0x8030
+[Max]: 0x100000
+[Found keyword]: ----------Execution Region----------
+[name]:  RW_IRAM1 
+[Exec base]: 0x20000000
+[Size]: 0xc4f0
+[Max]: 0x20000
+[parse_keil_map over printf bar]: 
+  RW_IRAM1 :0x20000000
+  128.00 KB :|¡ö¡ö¡ö¡ö¡ö¡ö¡ö_____________|   38.46 % (   49.23 KB /   128.00 KB) [80656 B]
+  ER_IROM1 :0x8000000
+    1.00 MB :|____________________|    3.13 % (    0.03 MB /     1.00 MB) [1015760 B]
+[export csv]: ./atk_f407_sort_by_flash.csv
+[export csv]: ./atk_f407_sort_by_ram.csv
+[export xlsx]: atk_f407_analysis.xlsx

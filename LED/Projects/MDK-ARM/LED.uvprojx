@@ -80,9 +80,9 @@
             <nStopB2X>0</nStopB2X>
           </BeforeMake>
           <AfterMake>
-            <RunUserProg1>0</RunUserProg1>
+            <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
-            <UserProg1Name></UserProg1Name>
+            <UserProg1Name>C:\Users\18895\Desktop\STM32F407_Creat\LED\Projects\MDK-ARM\keil5_disp_size_bar.exe</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
@@ -189,7 +189,7 @@
             <hadIRAM2>1</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
-            <useUlib>0</useUlib>
+            <useUlib>1</useUlib>
             <EndSel>0</EndSel>
             <uLtcg>0</uLtcg>
             <nSecure>0</nSecure>
@@ -337,9 +337,9 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>USE_HAL_DRIVER,STM32F407xx</Define>
+              <Define>USE_HAL_DRIVER,STM32F407xx,STM32F407xx,USE_USB_FS</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\User;..\..\Drivers;..\..\Drivers\CMSIS\Device\ST\STM32F4xx\Include;..\..\Drivers\CMSIS\Include;..\..\Drivers\STM32F4xx_HAL_Driver\Inc;..\..\Drivers\SYSTEM\usart;..\..\Drivers\SYSTEM\delay;..\..\Drivers\SYSTEM\sys;..\..\Drivers\BSP\LED;..\..\Middlewares;..\..\Middlewares\DSP\Include;..\..\Middlewares\FreeRTOS;..\..\Middlewares\FreeRTOS\include;..\..\Middlewares\FreeRTOS\portable\RVDS\ARM_CM4_MPU;..\..\Middlewares\FreeRTOS_APP</IncludePath>
+              <IncludePath>..\..\User;..\..\Drivers;..\..\Drivers\CMSIS\Device\ST\STM32F4xx\Include;..\..\Drivers\CMSIS\Include;..\..\Drivers\STM32F4xx_HAL_Driver\Inc;..\..\Drivers\SYSTEM\usart;..\..\Drivers\SYSTEM\delay;..\..\Drivers\SYSTEM\sys;..\..\Drivers\BSP\LED;..\..\Middlewares;..\..\Middlewares\DSP\Include;..\..\Middlewares\FreeRTOS;..\..\Middlewares\FreeRTOS\include;..\..\Middlewares\FreeRTOS\portable\RVDS\ARM_CM4_MPU;..\..\Middlewares\FreeRTOS_APP;..\..\Middlewares\MALLOC;..\..\Middlewares\USB\STM32_USB_Device_Library\Core\Inc;..\..\Middlewares\USB\STM32_USB_Device_Library\Class\CDC\Inc;..\..\Middlewares\USB\USB_APP</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -498,6 +498,21 @@
               <FileType>1</FileType>
               <FilePath>..\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_dma_ex.c</FilePath>
             </File>
+            <File>
+              <FileName>stm32f4xx_hal_pcd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_pcd.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_hal_pcd_ex.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_pcd_ex.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_ll_usb.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_ll_usb.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -561,12 +576,62 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>MiddlewaresDsp</GroupName>
+          <GroupName>Middlewares/Malloc</GroupName>
+          <Files>
+            <File>
+              <FileName>malloc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Middlewares\MALLOC\malloc.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Middlewares/Dsp</GroupName>
           <Files>
             <File>
               <FileName>arm_cortexM4lf_math.lib</FileName>
               <FileType>4</FileType>
               <FilePath>..\..\Middlewares\DSP\Lib\ARM\arm_cortexM4lf_math.lib</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Middlewares/USB</GroupName>
+          <Files>
+            <File>
+              <FileName>usbd_ioreq.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Middlewares\USB\STM32_USB_Device_Library\Core\Src\usbd_ioreq.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbd_ctlreq.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Middlewares\USB\STM32_USB_Device_Library\Core\Src\usbd_ctlreq.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbd_core.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Middlewares\USB\STM32_USB_Device_Library\Core\Src\usbd_core.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbd_cdc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Middlewares\USB\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbd_conf.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Middlewares\USB\USB_APP\usbd_conf.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbd_desc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Middlewares\USB\USB_APP\usbd_desc.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbd_cdc_interface.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Middlewares\USB\USB_APP\usbd_cdc_interface.c</FilePath>
             </File>
           </Files>
         </Group>
