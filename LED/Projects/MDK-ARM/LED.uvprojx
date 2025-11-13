@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F407xx,STM32F407xx,USE_USB_FS</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\User;..\..\Drivers;..\..\Drivers\CMSIS\Device\ST\STM32F4xx\Include;..\..\Drivers\CMSIS\Include;..\..\Drivers\STM32F4xx_HAL_Driver\Inc;..\..\Drivers\SYSTEM\usart;..\..\Drivers\SYSTEM\delay;..\..\Drivers\SYSTEM\sys;..\..\Drivers\BSP\LED;..\..\Middlewares;..\..\Middlewares\DSP\Include;..\..\Middlewares\FreeRTOS;..\..\Middlewares\FreeRTOS\include;..\..\Middlewares\FreeRTOS\portable\RVDS\ARM_CM4_MPU;..\..\Middlewares\FreeRTOS_APP;..\..\Middlewares\MALLOC;..\..\Middlewares\USB\STM32_USB_Device_Library\Core\Inc;..\..\Middlewares\USB\STM32_USB_Device_Library\Class\CDC\Inc;..\..\Middlewares\USB\USB_APP</IncludePath>
+              <IncludePath>..\..\User;..\..\Drivers;..\..\Drivers\CMSIS\Device\ST\STM32F4xx\Include;..\..\Drivers\CMSIS\Include;..\..\Drivers\STM32F4xx_HAL_Driver\Inc;..\..\Drivers\SYSTEM\usart;..\..\Drivers\SYSTEM\delay;..\..\Drivers\SYSTEM\sys;..\..\Drivers\BSP\LED;..\..\Middlewares;..\..\Middlewares\DSP\Include;..\..\Middlewares\FreeRTOS;..\..\Middlewares\FreeRTOS\include;..\..\Middlewares\FreeRTOS\portable\RVDS\ARM_CM4_MPU;..\..\Middlewares\FreeRTOS_APP;..\..\Middlewares\MALLOC;..\..\Middlewares\USB\STM32_USB_Device_Library\Core\Inc;..\..\Middlewares\USB\STM32_USB_Device_Library\Class\CDC\Inc;..\..\Middlewares\USB\USB_APP;..\..\Drivers\BSP\CAN</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -417,6 +417,11 @@
               <FileName>led.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Drivers\BSP\LED\led.c</FilePath>
+            </File>
+            <File>
+              <FileName>can.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Drivers\BSP\CAN\can.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -512,6 +517,11 @@
               <FileName>stm32f4xx_ll_usb.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_ll_usb.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_hal_can.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_can.c</FilePath>
             </File>
           </Files>
         </Group>
