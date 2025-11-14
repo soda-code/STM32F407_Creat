@@ -7,13 +7,13 @@
 /******************************************************************************************/
 /* 引脚 定义 */
 
-#define LED0_GPIO_PORT                  GPIOE
-#define LED0_GPIO_PIN                   GPIO_PIN_0
-#define LED0_GPIO_CLK_ENABLE()          do{ __HAL_RCC_GPIOE_CLK_ENABLE(); }while(0)             /* PF口时钟使能 */
+#define LED0_GPIO_PORT                  GPIOF
+#define LED0_GPIO_PIN                   GPIO_PIN_9
+#define LED0_GPIO_CLK_ENABLE()          do{ __HAL_RCC_GPIOF_CLK_ENABLE(); }while(0)             /* PF口时钟使能 */
 
-#define LED1_GPIO_PORT                  GPIOE
-#define LED1_GPIO_PIN                   GPIO_PIN_1
-#define LED1_GPIO_CLK_ENABLE()          do{ __HAL_RCC_GPIOE_CLK_ENABLE(); }while(0)             /* PF口时钟使能 */
+#define LED1_GPIO_PORT                  GPIOF
+#define LED1_GPIO_PIN                   GPIO_PIN_10
+#define LED1_GPIO_CLK_ENABLE()          do{ __HAL_RCC_GPIOF_CLK_ENABLE(); }while(0)             /* PF口时钟使能 */
 
 /******************************************************************************************/
 

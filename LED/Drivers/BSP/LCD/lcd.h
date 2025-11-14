@@ -1,31 +1,3 @@
-/**
- ****************************************************************************************************
- * @file        lcd.h
- * @author      正点原子团队(ALIENTEK)
- * @version     V1.1
- * @date        2023-05-29
- * @brief       2.8寸/3.5寸/4.3寸/7寸 TFTLCD(MCU屏) 驱动代码
- *              支持驱动IC型号包括:ILI9341/NT35310/NT35510/SSD1963/ST7789/ST7796/ILI9806等
- *
- * @license     Copyright (c) 2020-2032, 广州市星翼电子科技有限公司
- ****************************************************************************************************
- * @attention
- *
- * 实验平台:正点原子 探索者 F407开发板
- * 在线视频:www.yuanzige.com
- * 技术论坛:www.openedv.com
- * 公司网址:www.alientek.com
- * 购买地址:openedv.taobao.com
- *
- * 修改说明
- * V1.0 20211016
- * 第一次发布
- * V1.1 20230529
- * 1，新增对ST7796和ILI9806 IC支持
- * 2，简化部分代码，避免长判定
- ****************************************************************************************************
- */
-
 #ifndef __LCD_H
 #define __LCD_H
 
@@ -181,8 +153,8 @@ typedef struct
 /* SSD1963相关配置参数(一般不用改) */
 
 /* LCD分辨率设置 */ 
-#define SSD_HOR_RESOLUTION      800     /* LCD水平分辨率 */ 
-#define SSD_VER_RESOLUTION      480     /* LCD垂直分辨率 */ 
+#define SSD_HOR_RESOLUTION      240     /* LCD水平分辨率 */ 
+#define SSD_VER_RESOLUTION      320     /* LCD垂直分辨率 */ 
 
 /* LCD驱动参数设置 */ 
 #define SSD_HOR_PULSE_WIDTH     1       /* 水平脉宽 */ 

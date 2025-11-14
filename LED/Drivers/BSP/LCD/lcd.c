@@ -1,42 +1,15 @@
-/**
- ****************************************************************************************************
- * @file        lcd.c
- * @author      正点原子团队(ALIENTEK)
- * @version     V1.1
- * @date        2023-05-29
- * @brief       2.8寸/3.5寸/4.3寸/7寸 TFTLCD(MCU屏) 驱动代码
- *              支持驱动IC型号包括:ILI9341/NT35310/NT35510/SSD1963/ST7789/ST7796/ILI9806等
- *
- * @license     Copyright (c) 2020-2032, 广州市星翼电子科技有限公司
- ****************************************************************************************************
- * @attention
- *
- * 实验平台:正点原子 探索者 F407开发板
- * 在线视频:www.yuanzige.com
- * 技术论坛:www.openedv.com
- * 公司网址:www.alientek.com
- * 购买地址:openedv.taobao.com
- *
- * 修改说明
- * V1.0 20211016
- * 第一次发布
- * V1.1 20230529
- * 1，新增对ST7796和ILI9806 IC支持
- * 2，简化部分代码，避免长判定
- ****************************************************************************************************
- */
 
 #include "stdlib.h"
-#include "./BSP/LCD/lcd.h"
-#include "./BSP/LCD/lcdfont.h"
-#include "./SYSTEM/usart/usart.h"
+#include "lcd.h"
+#include "lcdfont.h"
+#include "usart.h"
 
 
 /* lcd_ex.c存放各个LCD驱动IC的寄存器初始化部分代码,以简化lcd.c,该.c文件
  * 不直接加入到工程里面,只有lcd.c会用到,所以通过include的形式添加.(不要在
  * 其他文件再包含该.c文件!!否则会报错!)
  */
-#include "./BSP/LCD/lcd_ex.c"
+#include "lcd_ex.c"
 
 
 SRAM_HandleTypeDef g_sram_handle;   /* SRAM句柄(用于控制LCD) */
@@ -785,8 +758,6 @@ void lcd_init(void)
      * 里面(卡死在f_putc函数), 所以, 必须初始化串口1, 或者屏蔽掉下面
      * 这行 printf 语句 !!!!!!!
      */
-    printf("LCD ID:%x\r\n", lcddev.id); /* 打印LCD ID */
-
     if (lcddev.id == 0x7789)
     {
         lcd_ex_st7789_reginit();    /* 执行ST7789初始化 */
