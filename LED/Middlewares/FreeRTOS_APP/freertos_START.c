@@ -6,6 +6,7 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "lcd.h"
+#include "can.h"
 /******************************************************************************************************/
 /*FreeRTOS配置*/
 
@@ -104,10 +105,13 @@ void task1(void *pvParameters)
 void task2(void *pvParameters)
 {
     float float_num = 0.0;
-    
+    uint8_t cnt = 0;
+	uint8_t i=0;
+	uint8_t res=0;
+    uint8_t canbuf[8];
     while(1)
     {
-        float_num += 0.01f;                         /* 更新数值 */
+
    
         vTaskDelay(1000);                           /* 延时1000ticks */
     }
