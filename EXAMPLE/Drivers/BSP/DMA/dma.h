@@ -6,7 +6,7 @@
 
 extern DMA_HandleTypeDef g_dma_handle; 
 
-void dma_init(DMA_Stream_TypeDef *dma_stream_handle, uint32_t ch);  /* ≈‰÷√DMAx_CHx */
+void dma_init(DMA_Stream_TypeDef *dma_stream_handle, uint32_t ch);  /* √Ö√§√ñ√ÉDMAx_CHx */
 
 #endif
 

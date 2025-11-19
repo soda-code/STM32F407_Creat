@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F407xx,STM32F407xx,USE_USB_FS</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\User;..\..\Drivers;..\..\Drivers\CMSIS\Device\ST\STM32F4xx\Include;..\..\Drivers\CMSIS\Include;..\..\Drivers\STM32F4xx_HAL_Driver\Inc;..\..\Drivers\SYSTEM\usart;..\..\Drivers\SYSTEM\delay;..\..\Drivers\SYSTEM\sys;..\..\Middlewares;..\..\Middlewares\DSP\Include;..\..\Middlewares\FreeRTOS;..\..\Middlewares\FreeRTOS\include;..\..\Middlewares\FreeRTOS\portable\RVDS\ARM_CM4_MPU;..\..\Middlewares\FreeRTOS_APP;..\..\Middlewares\MALLOC;..\..\Middlewares\USB\STM32_USB_Device_Library\Core\Inc;..\..\Middlewares\USB\STM32_USB_Device_Library\Class\CDC\Inc;..\..\Middlewares\USB\USB_APP;..\..\Drivers\BSP\LED;..\..\Drivers\BSP\CAN;..\..\Drivers\BSP\LCD;..\..\Drivers\BSP\DMA</IncludePath>
+              <IncludePath>..\..\User;..\..\Drivers;..\..\Drivers\CMSIS\Device\ST\STM32F4xx\Include;..\..\Drivers\CMSIS\Include;..\..\Drivers\STM32F4xx_HAL_Driver\Inc;..\..\Drivers\SYSTEM\usart;..\..\Drivers\SYSTEM\delay;..\..\Drivers\SYSTEM\sys;..\..\Middlewares;..\..\Middlewares\DSP\Include;..\..\Middlewares\FreeRTOS;..\..\Middlewares\FreeRTOS\include;..\..\Middlewares\FreeRTOS\portable\RVDS\ARM_CM4_MPU;..\..\Middlewares\FreeRTOS_APP;..\..\Middlewares\MALLOC;..\..\Middlewares\USB\STM32_USB_Device_Library\Core\Inc;..\..\Middlewares\USB\STM32_USB_Device_Library\Class\CDC\Inc;..\..\Middlewares\USB\USB_APP;..\..\Drivers\BSP\LED;..\..\Drivers\BSP\CAN;..\..\Drivers\BSP\LCD;..\..\Drivers\BSP\DMA;..\..\Drivers\BSP\ADC</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -432,6 +432,11 @@
               <FileName>dma.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Drivers\BSP\DMA\dma.c</FilePath>
+            </File>
+            <File>
+              <FileName>adc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Drivers\BSP\ADC\adc.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -548,6 +553,16 @@
               <FileType>1</FileType>
               <FilePath>..\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_ll_fsmc.c</FilePath>
             </File>
+            <File>
+              <FileName>stm32f4xx_hal_adc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_adc.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_hal_adc_ex.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_adc_ex.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -612,6 +627,11 @@
               <FileName>Led_task.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Middlewares\FreeRTOS_APP\Led_task.c</FilePath>
+            </File>
+            <File>
+              <FileName>Key_Task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Middlewares\FreeRTOS_APP\Key_Task.c</FilePath>
             </File>
           </Files>
         </Group>
