@@ -82,7 +82,7 @@
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
-            <UserProg1Name>C:\Users\18895\Desktop\STM32F407_Creat\LED\Projects\MDK-ARM\keil5_disp_size_bar.exe</UserProg1Name>
+            <UserProg1Name>E:\STM32F407_Creat\EXAMPLE\Projects\MDK-ARM\keil5_disp_size_bar.exe</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
@@ -607,6 +607,11 @@
               <FileName>freertos_START.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Middlewares\FreeRTOS_APP\freertos_START.c</FilePath>
+            </File>
+            <File>
+              <FileName>Led_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Middlewares\FreeRTOS_APP\Led_task.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -2,26 +2,26 @@
 
 
 /**
- * @brief       ³õÊ¼»¯LEDÏà¹ØIO¿Ú, ²¢Ê¹ÄÜÊ±ÖÓ
- * @param       ÎÞ
- * @retval      ÎÞ
+ * @brief       ï¿½ï¿½Ê¼ï¿½ï¿½LEDï¿½ï¿½ï¿½IOï¿½ï¿½, ï¿½ï¿½Ê¹ï¿½ï¿½Ê±ï¿½ï¿½
+ * @param       ï¿½ï¿½
+ * @retval      ï¿½ï¿½
  */
 void led_init(void)
 {
     GPIO_InitTypeDef gpio_init_struct;
     
-    LED0_GPIO_CLK_ENABLE();                                 /* LED0Ê±ÖÓÊ¹ÄÜ */
-    LED1_GPIO_CLK_ENABLE();                                 /* LED1Ê±ÖÓÊ¹ÄÜ */
+    LED0_GPIO_CLK_ENABLE();                                 /* LED0Ê±ï¿½ï¿½Ê¹ï¿½ï¿½ */
+    LED1_GPIO_CLK_ENABLE();                                 /* LED1Ê±ï¿½ï¿½Ê¹ï¿½ï¿½ */
 
-    gpio_init_struct.Pin = LED0_GPIO_PIN;                   /* LED0Òý½Å */
-    gpio_init_struct.Mode = GPIO_MODE_OUTPUT_PP;            /* ÍÆÍìÊä³ö */
-    gpio_init_struct.Pull = GPIO_PULLUP;                    /* ÉÏÀ­ */
-    gpio_init_struct.Speed = GPIO_SPEED_FREQ_HIGH;          /* ¸ßËÙ */
-    HAL_GPIO_Init(LED0_GPIO_PORT, &gpio_init_struct);       /* ³õÊ¼»¯LED0Òý½Å */
+    gpio_init_struct.Pin = LED0_GPIO_PIN;                   /* LED0ï¿½ï¿½ï¿½ï¿½ */
+    gpio_init_struct.Mode = GPIO_MODE_OUTPUT_PP;            /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+    gpio_init_struct.Pull = GPIO_PULLUP;                    /* ï¿½ï¿½ï¿½ï¿½ */
+    gpio_init_struct.Speed = GPIO_SPEED_FREQ_HIGH;          /* ï¿½ï¿½ï¿½ï¿½ */
+    HAL_GPIO_Init(LED0_GPIO_PORT, &gpio_init_struct);       /* ï¿½ï¿½Ê¼ï¿½ï¿½LED0ï¿½ï¿½ï¿½ï¿½ */
 
-    gpio_init_struct.Pin = LED1_GPIO_PIN;                   /* LED1Òý½Å */
-    HAL_GPIO_Init(LED1_GPIO_PORT, &gpio_init_struct);       /* ³õÊ¼»¯LED1Òý½Å */
+    gpio_init_struct.Pin = LED1_GPIO_PIN;                   /* LED1ï¿½ï¿½ï¿½ï¿½ */
+    HAL_GPIO_Init(LED1_GPIO_PORT, &gpio_init_struct);       /* ï¿½ï¿½Ê¼ï¿½ï¿½LED1ï¿½ï¿½ï¿½ï¿½ */
     
-    LED0(1);                                                /* ¹Ø±Õ LED0 */
-    LED1(1);                                                /* ¹Ø±Õ LED1 */
+    LED0(1);                                                /* ï¿½Ø±ï¿½ LED0 */
+    LED1(1);                                                /* ï¿½Ø±ï¿½ LED1 */
 }

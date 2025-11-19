@@ -10,11 +10,7 @@
 #include "usbd_cdc.h"
 #include "usbd_cdc_interface.h"
 #include "freertos_START.h"
-  float float_num = 0.0;
-    uint8_t cnt = 0;
-	uint8_t i=0;
-		uint8_t res=0;
-    uint8_t canbuf[8];
+
 int main(void)
 {
     HAL_Init();                         /* ≥ı ºªØHALø‚ */
