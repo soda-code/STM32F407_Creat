@@ -2,27 +2,26 @@
 #include "usart.h"
 #include "delay.h"
 #include "led.h"
+#include "dma.h"
 #include "can.h"
 #include "lcd.h"
 #include "malloc.h"
-#include "usbd_core.h"
-#include "usbd_desc.h"
-#include "usbd_cdc.h"
-#include "usbd_cdc_interface.h"
 #include "freertos_START.h"
 
 int main(void)
 {
-    HAL_Init();                         /* ³õÊ¼»¯HAL¿â */
-    sys_stm32_clock_init(336, 8, 2, 7); /* ÉèÖÃÊ±ÖÓ,168Mhz */
-    delay_init(168);                    /* ÑÓÊ±³õÊ¼»¯ */
-    usart_init(115200);                 /* ´®¿Ú³õÊ¼»¯Îª115200 */
-    led_init();                         /* ³õÊ¼»¯LED */
-	lcd_init();                             /* ³õÊ¼»¯LCD */
-	can_init(CAN_SJW_1TQ, CAN_BS2_6TQ, CAN_BS1_7TQ, 6, CAN_MODE_NORMAL);  /* CAN³õÊ¼»¯, »·»ØÄ£Ê½, ²¨ÌØÂÊ500Kbps */
-	my_mem_init(SRAMIN);                /* ³õÊ¼»¯ÄÚ²¿SRAMÄÚ´æ³Ø */
-    USB_Init();                        /* ³õÊ¼»¯USB */
-	freertos_demo();                    /* ÔËĞĞFreeRTOS */
+    HAL_Init();                         /* åˆå§‹åŒ–HALåº“ */
+    sys_stm32_clock_init(336, 8, 2, 7); /* è®¾ç½®æ—¶é’Ÿ,168Mhz */
+    delay_init(168);                    /* å»¶æ—¶åˆå§‹åŒ– */
+	usart_init(115200);                 /* ä¸²å£åˆå§‹åŒ–ä¸º115200 */
+	dma_init(DMA2_Stream7, DMA_CHANNEL_4);  /* åˆå§‹åŒ–DMA */
+    
+    led_init();                         /* åˆå§‹åŒ–LED */
+	lcd_init();                             /* åˆå§‹åŒ–LCD */
+	//can_init(CAN_SJW_1TQ, CAN_BS2_6TQ, CAN_BS1_7TQ, 6, CAN_MODE_NORMAL);  /* CANåˆå§‹åŒ–, ç¯å›æ¨¡å¼, æ³¢ç‰¹ç‡500Kbps */
+	my_mem_init(SRAMIN);                /* åˆå§‹åŒ–å†…éƒ¨SRAMå†…å­˜æ±  */
+    //USB_Init();                        /* åˆå§‹åŒ–USB */
+	freertos_demo();                    /* è¿è¡ŒFreeRTOS */
 
 
 }

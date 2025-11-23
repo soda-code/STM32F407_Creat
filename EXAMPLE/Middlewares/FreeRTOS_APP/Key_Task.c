@@ -18,8 +18,7 @@ void key_task(void *pvParameters)
 {
     while(1)
     {
-        // Key task implementation goes here
-        vTaskDelay(100); // Example delay
+        vTaskDelay(200); // Example delay
     }
 }
 
