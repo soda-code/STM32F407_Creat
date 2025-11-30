@@ -702,18 +702,6 @@
         </Group>
         <Group>
           <GroupName>Middlewares/AI</GroupName>
-          <Files>
-            <File>
-              <FileName>AI_Lib.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Middlewares\AI\AI_Lib.c</FilePath>
-            </File>
-            <File>
-              <FileName>output_array.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Middlewares\AI\output_array.c</FilePath>
-            </File>
-          </Files>
         </Group>
         <Group>
           <GroupName>Readme</GroupName>
