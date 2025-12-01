@@ -638,6 +638,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\Middlewares\FreeRTOS_APP\AI_Task.c</FilePath>
             </File>
+            <File>
+              <FileName>Can_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Middlewares\FreeRTOS_APP\Can_task.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

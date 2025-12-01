@@ -11,6 +11,8 @@
 /******************************************************************************************************/
 #include "Led_task.h"
 #include "Key_task.h"
+#include "Can_task.h"
+
 
 /*FreeRTOS配置*/
 
@@ -54,6 +56,7 @@ void start_task(void *pvParameters)
     led_task_create();              /* 创建LED任务 */
     key_task_create();              /* 创建按键任务 */
 	AI_task_create();              /* 创建按键任务 */
+	CAN_task_create();              /* 创建按键任务 */
     vTaskDelete(StartTask_Handler); /* 删除开始任务 */
     taskEXIT_CRITICAL();            /* 退出临界区 */
 }

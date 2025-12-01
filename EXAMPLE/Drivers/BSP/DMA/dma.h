@@ -1,7 +1,7 @@
 #ifndef __DMA_H
 #define	__DMA_H
 
-#include "./SYSTEM/sys/sys.h"
+#include "sys.h"
 
 
 extern DMA_HandleTypeDef g_dma_handle; 
