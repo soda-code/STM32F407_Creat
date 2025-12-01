@@ -5,7 +5,7 @@
 #include "usbd_cdc.h"
 
 
-#define USB_USART_REC_LEN       200     /* USB串口接收缓冲区最大字节数 */
+#define USB_USART_REC_LEN       512     /* USB串口接收缓冲区最大字节数 */
 
 /* 轮询周期，最大65ms，最小1ms */
 #define CDC_POLLING_INTERVAL    1       /* 轮询周期，最大65ms，最小1ms */

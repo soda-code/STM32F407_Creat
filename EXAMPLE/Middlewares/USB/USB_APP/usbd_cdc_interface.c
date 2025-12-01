@@ -238,24 +238,23 @@ void cdc_vcp_data_tx(uint8_t *data, uint32_t Len)
  * @param       格式化输出
  * @retval      无
  */
-void usb_printf(char *fmt, ...)
+void usb_printf( char *fmt, ...)
 {
-    uint16_t i;
     va_list ap;
     va_start(ap, fmt);
-    vsprintf((char *)g_usb_usart_printf_buffer, fmt, ap);
+
+    vsnprintf((char *)g_usb_usart_printf_buffer,
+              sizeof(g_usb_usart_printf_buffer),
+              fmt,
+              ap);
+
     va_end(ap);
-    i = strlen((const char *)g_usb_usart_printf_buffer);    /* 此次发送数据的长度 */
-    cdc_vcp_data_tx(g_usb_usart_printf_buffer, i);          /* 发送数据 */
+
+    uint16_t len = strlen((const char *)g_usb_usart_printf_buffer);
+    if(len > 0)
+    {
+        cdc_vcp_data_tx(g_usb_usart_printf_buffer, len);
+    }
 }
-
-
-
-
-
-
-
-
-
 
 

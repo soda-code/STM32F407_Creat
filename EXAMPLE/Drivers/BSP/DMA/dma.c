@@ -2,45 +2,45 @@
 #include "delay.h"
 
 
-DMA_HandleTypeDef  g_dma_handle;                  /* DMA¾ä±ú */
+DMA_HandleTypeDef  g_dma_handle;                  /* DMAå¥æŸ„ */
 
-extern UART_HandleTypeDef g_uart1_handle;         /* UART¾ä±ú */
+extern UART_HandleTypeDef g_uart1_handle;         /* UARTå¥æŸ„ */
 
 /**
- * @brief       ´®¿ÚTX DMA³õÊ¼»¯º¯Êı
- *   @note      ÕâÀïµÄ´«ÊäĞÎÊ½ÊÇ¹Ì¶¨µÄ, ÕâµãÒª¸ù¾İ²»Í¬µÄÇé¿öÀ´ĞŞ¸Ä
- *              ´Ó´æ´¢Æ÷ -> ÍâÉèÄ£Ê½/8Î»Êı¾İ¿í¶È/´æ´¢Æ÷ÔöÁ¿Ä£Ê½
+ * @brief       ä¸²å£TX DMAåˆå§‹åŒ–å‡½æ•°
+ *   @note      è¿™é‡Œçš„ä¼ è¾“å½¢å¼æ˜¯å›ºå®šçš„, è¿™ç‚¹è¦æ ¹æ®ä¸åŒçš„æƒ…å†µæ¥ä¿®æ”¹
+ *              ä»å­˜å‚¨å™¨ -> å¤–è®¾æ¨¡å¼/8ä½æ•°æ®å®½åº¦/å­˜å‚¨å™¨å¢é‡æ¨¡å¼
  *
- * @param       dma_stream_handle : DMAÊı¾İÁ÷,DMA1_Stream0~7/DMA2_Stream0~7
- * @retval      ÎŞ
+ * @param       dma_stream_handle : DMAæ•°æ®æµ,DMA1_Stream0~7/DMA2_Stream0~7
+ * @retval      æ— 
  */
 void dma_init(DMA_Stream_TypeDef *dma_stream_handle, uint32_t ch)
 { 
-    if ((uint32_t)dma_stream_handle > (uint32_t)DMA2)       /* µÃµ½µ±Ç°streamÊÇÊôÓÚDMA2»¹ÊÇDMA1 */
+    if ((uint32_t)dma_stream_handle > (uint32_t)DMA2)       /* å¾—åˆ°å½“å‰streamæ˜¯å±äºDMA2è¿˜æ˜¯DMA1 */
     {
-        __HAL_RCC_DMA2_CLK_ENABLE();                        /* DMA2Ê±ÖÓÊ¹ÄÜ */
+        __HAL_RCC_DMA2_CLK_ENABLE();                        /* DMA2æ—¶é’Ÿä½¿èƒ½ */
     }
     else
     {
-        __HAL_RCC_DMA1_CLK_ENABLE();                        /* DMA1Ê±ÖÓÊ¹ÄÜ */
+        __HAL_RCC_DMA1_CLK_ENABLE();                        /* DMA1æ—¶é’Ÿä½¿èƒ½ */
     }
 
-    __HAL_LINKDMA(&g_uart1_handle, hdmatx, g_dma_handle);   /* ½«DMAÓëUSART1ÁªÏµÆğÀ´(·¢ËÍDMA) */
+    __HAL_LINKDMA(&g_uart1_handle, hdmatx, g_dma_handle);   /* å°†DMAä¸USART1è”ç³»èµ·æ¥(å‘é€DMA) */
 
-    /* Tx DMAÅäÖÃ */
-    g_dma_handle.Instance = dma_stream_handle;                    /* Êı¾İÁ÷Ñ¡Ôñ */
-    g_dma_handle.Init.Channel = ch;                               /* DMAÍ¨µÀÑ¡Ôñ */
-    g_dma_handle.Init.Direction = DMA_MEMORY_TO_PERIPH;           /* ´æ´¢Æ÷µ½ÍâÉè */
-    g_dma_handle.Init.PeriphInc = DMA_PINC_DISABLE;               /* ÍâÉè·ÇÔöÁ¿Ä£Ê½ */
-    g_dma_handle.Init.MemInc = DMA_MINC_ENABLE;                   /* ´æ´¢Æ÷ÔöÁ¿Ä£Ê½ */
-    g_dma_handle.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;  /* ÍâÉèÊı¾İ³¤¶È:8Î» */
-    g_dma_handle.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;     /* ´æ´¢Æ÷Êı¾İ³¤¶È:8Î» */
-    g_dma_handle.Init.Mode = DMA_NORMAL;                          /* ÍâÉèÁ÷¿ØÄ£Ê½ */
-    g_dma_handle.Init.Priority = DMA_PRIORITY_MEDIUM;             /* ÖĞµÈÓÅÏÈ¼¶ */
-    g_dma_handle.Init.FIFOMode = DMA_FIFOMODE_DISABLE;            /* ¹Ø±ÕFIFOÄ£Ê½ */
-    g_dma_handle.Init.FIFOThreshold = DMA_FIFO_THRESHOLD_FULL;    /* FIFOãĞÖµÅäÖÃ */
-    g_dma_handle.Init.MemBurst = DMA_MBURST_SINGLE;               /* ´æ´¢Æ÷Í»·¢µ¥´Î´«Êä */
-    g_dma_handle.Init.PeriphBurst = DMA_PBURST_SINGLE;            /* ÍâÉèÍ»·¢µ¥´Î´«Êä */
+    /* Tx DMAé…ç½® */
+    g_dma_handle.Instance = dma_stream_handle;                    /* æ•°æ®æµé€‰æ‹© */
+    g_dma_handle.Init.Channel = ch;                               /* DMAé€šé“é€‰æ‹© */
+    g_dma_handle.Init.Direction = DMA_MEMORY_TO_PERIPH;           /* å­˜å‚¨å™¨åˆ°å¤–è®¾ */
+    g_dma_handle.Init.PeriphInc = DMA_PINC_DISABLE;               /* å¤–è®¾éå¢é‡æ¨¡å¼ */
+    g_dma_handle.Init.MemInc = DMA_MINC_ENABLE;                   /* å­˜å‚¨å™¨å¢é‡æ¨¡å¼ */
+    g_dma_handle.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;  /* å¤–è®¾æ•°æ®é•¿åº¦:8ä½ */
+    g_dma_handle.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;     /* å­˜å‚¨å™¨æ•°æ®é•¿åº¦:8ä½ */
+    g_dma_handle.Init.Mode = DMA_NORMAL;                          /* å¤–è®¾æµæ§æ¨¡å¼ */
+    g_dma_handle.Init.Priority = DMA_PRIORITY_MEDIUM;             /* ä¸­ç­‰ä¼˜å…ˆçº§ */
+    g_dma_handle.Init.FIFOMode = DMA_FIFOMODE_DISABLE;            /* å…³é—­FIFOæ¨¡å¼ */
+    g_dma_handle.Init.FIFOThreshold = DMA_FIFO_THRESHOLD_FULL;    /* FIFOé˜ˆå€¼é…ç½® */
+    g_dma_handle.Init.MemBurst = DMA_MBURST_SINGLE;               /* å­˜å‚¨å™¨çªå‘å•æ¬¡ä¼ è¾“ */
+    g_dma_handle.Init.PeriphBurst = DMA_PBURST_SINGLE;            /* å¤–è®¾çªå‘å•æ¬¡ä¼ è¾“ */
 
     HAL_DMA_DeInit(&g_dma_handle);
     HAL_DMA_Init(&g_dma_handle);

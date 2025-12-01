@@ -5,25 +5,25 @@
 
 
 /******************************************************************************************/
-/* CAN Òı½Å ¶¨Òå */
+/* CAN å¼•è„š å®šä¹‰ */
 
 #define CAN_RX_GPIO_PORT                GPIOA
 #define CAN_RX_GPIO_PIN                 GPIO_PIN_11
-#define CAN_RX_GPIO_CLK_ENABLE()        do{ __HAL_RCC_GPIOA_CLK_ENABLE(); }while(0)     /* PA¿ÚÊ±ÖÓÊ¹ÄÜ */
+#define CAN_RX_GPIO_CLK_ENABLE()        do{ __HAL_RCC_GPIOA_CLK_ENABLE(); }while(0)     /* PAå£æ—¶é’Ÿä½¿èƒ½ */
 
 #define CAN_TX_GPIO_PORT                GPIOA
 #define CAN_TX_GPIO_PIN                 GPIO_PIN_12
-#define CAN_TX_GPIO_CLK_ENABLE()        do{ __HAL_RCC_GPIOA_CLK_ENABLE(); }while(0)     /* PA¿ÚÊ±ÖÓÊ¹ÄÜ */
+#define CAN_TX_GPIO_CLK_ENABLE()        do{ __HAL_RCC_GPIOA_CLK_ENABLE(); }while(0)     /* PAå£æ—¶é’Ÿä½¿èƒ½ */
 
 /******************************************************************************************/
 
-/* CAN½ÓÊÕRX0ÖĞ¶ÏÊ¹ÄÜ */
-#define CAN_RX0_INT_ENABLE              0                                              /* 0,²»Ê¹ÄÜ; 1,Ê¹ÄÜ; */
+/* CANæ¥æ”¶RX0ä¸­æ–­ä½¿èƒ½ */
+#define CAN_RX0_INT_ENABLE              0                                              /* 0,ä¸ä½¿èƒ½; 1,ä½¿èƒ½; */
 
-/* º¯ÊıÉùÃ÷ */
-uint8_t can_receive_msg(uint32_t id, uint8_t *buf);                                     /* CAN½ÓÊÕÊı¾İ, ²éÑ¯ */
-uint8_t can_send_msg(uint32_t id, uint8_t *msg, uint8_t len);                           /* CAN·¢ËÍÊı¾İ */
-uint8_t can_init(uint32_t tsjw,uint32_t tbs2,uint32_t tbs1,uint16_t brp,uint32_t mode); /* CAN³õÊ¼»¯ */
+/* å‡½æ•°å£°æ˜ */
+uint8_t can_receive_msg(uint32_t id, uint8_t *buf);                                     /* CANæ¥æ”¶æ•°æ®, æŸ¥è¯¢ */
+uint8_t can_send_msg(uint32_t id, uint8_t *msg, uint8_t len);                           /* CANå‘é€æ•°æ® */
+uint8_t can_init(uint32_t tsjw,uint32_t tbs2,uint32_t tbs1,uint16_t brp,uint32_t mode); /* CANåˆå§‹åŒ– */
 
 #endif
 
