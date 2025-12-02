@@ -18,7 +18,20 @@ void key_task(void *pvParameters)
 {
     while(1)
     {
-        vTaskDelay(200); // Example delay
+        uint8_t key = key_scan(0); /* 调用按键扫描函数, 不支持连按 */
+        if (key == KEY0_PRES)
+        {
+            my_printf("KEY0 Pressed!\r\n");
+        }
+        else if (key == KEY1_PRES)
+        {
+            my_printf("KEY1 Pressed!\r\n");
+        }
+        else if (key == WKUP_PRES)
+        {
+            my_printf("WKUP Pressed!\r\n");
+        }
+        vTaskDelay(10); // Example delay
     }
 }
 

@@ -186,7 +186,13 @@ void USART_UX_IRQHandler(void)
 
 #endif
 
-
+//***********************************************************************************************
+//@auto: Li
+//@brief: 重定义printf函数
+//@param: cmd:字符串指针, ...: 可变参数
+//@return: 无
+//@note: 重定义printf函数, 使其调用HAL_UART_Transmit_DMA()函数进行DMA传输, 实现printf函数的异步输出.
+//***********************************************************************************************
  
 
 extern DMA_HandleTypeDef  g_dma_handle;                  /* DMA句柄 */

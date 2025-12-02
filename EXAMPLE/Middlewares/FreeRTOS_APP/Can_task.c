@@ -36,20 +36,23 @@ void CAN_TX_task(void *pvParameters)
 }
 //*********************************************************
 //@auto: Li
-//@brief: CAN task function
+//@brief: CAN task function 
 //@param: none
 //@return: none
 //*********************************************************
 
 void CAN_RX_task(void *pvParameters)
 {
-	uint8_t can_rx_buff[8];
+	uint8_t *can_rx_buff;
     /* CAN初始化, 普通(0)/回环(1)模式, 波特率500Kbps */
 
     while(1)
     {
 		can_receive_msg(0x125,can_rx_buff);
-		canbuf[0]++;
+		if(!can_rx_buff)
+		{
+			
+		}
 		my_printf("\r\n can_rx");
 		for(uint8_t i=0;i<8;i++)
 		{
