@@ -207,3 +207,14 @@ uint8_t can_receive_msg(uint32_t id, uint8_t *buf)
     return g_canx_rxheader.DLC;
 
 }
+
+//*********************************************************
+//@auto: Li
+//@brief: canfifo.c文件，实现CAN的FIFO模式接收数据
+//@param: none
+//@retval: none
+//*********************************************************
+void Can_fifo_init(void)
+{
+
+}
