@@ -10,7 +10,7 @@ TaskHandle_t   	CAN_RX_task_Handler;             /* 任务句柄 */
 void CAN_RX_task(void *pvParameters);             /* 任务函数 */
 
 #define 		CAN_TX_TASK_STACK_SIZE    (1024)
-#define 		CAN_TX_TASK_PRIORITY      4u
+#define 		CAN_TX_TASK_PRIORITY      5u
 TaskHandle_t   	CAN_TX_task_Handler;             /* 任务句柄 */
 void CAN_TX_task(void *pvParameters);                      /* 任务函数 */
 
@@ -44,19 +44,23 @@ void CAN_TX_task(void *pvParameters)
 void CAN_RX_task(void *pvParameters)
 {
 	uint8_t *can_rx_buff;
+	uint8_t res=0;
     /* CAN初始化, 普通(0)/回环(1)模式, 波特率500Kbps */
 
     while(1)
     {
-		can_receive_msg(0x125,can_rx_buff);
-		if(!can_rx_buff)
+		res=can_receive_msg(0x125,can_rx_buff);
+		if(!res)
 		{
-			
+			my_printf("\r\n no can_rx");
 		}
-		my_printf("\r\n can_rx");
-		for(uint8_t i=0;i<8;i++)
+		else
 		{
-			my_printf("%3x",can_rx_buff[i]);
+			my_printf("\r\n can_rx");
+			for(uint8_t i=0;i<8;i++)
+			{
+				my_printf("%3x",can_rx_buff[i]);
+			}
 		}
 		vTaskDelay(1000);
     }
@@ -74,5 +78,5 @@ void CAN_task_create(void)
 	can_init(CAN_SJW_1TQ, CAN_BS2_6TQ, CAN_BS1_7TQ, 6,	CAN_MODE_NORMAL);
 
     xTaskCreate((TaskFunction_t )CAN_TX_task,(const char*)"CAN_TX_task",(uint16_t)CAN_TX_TASK_STACK_SIZE,(void*)NULL,(UBaseType_t)CAN_TX_TASK_PRIORITY,(TaskHandle_t*  )&CAN_TX_task_Handler);
-    xTaskCreate((TaskFunction_t )CAN_RX_task,(const char*)"CAN_RX_task",(uint16_t)CAN_RX_TASK_STACK_SIZE,(void*)NULL,(UBaseType_t)CAN_RX_TASK_PRIORITY,(TaskHandle_t*  )&CAN_RX_task_Handler);
+    //xTaskCreate((TaskFunction_t )CAN_RX_task,(const char*)"CAN_RX_task",(uint16_t)CAN_RX_TASK_STACK_SIZE,(void*)NULL,(UBaseType_t)CAN_RX_TASK_PRIORITY,(TaskHandle_t*  )&CAN_RX_task_Handler);
 }

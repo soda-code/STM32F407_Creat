@@ -165,6 +165,15 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
         HAL_UART_Receive_IT(&g_uart1_handle, (uint8_t *)g_rx_buffer, RXBUFFERSIZE);
     }
 }
+uint16_t sum=0;
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
+{
+    if (huart->Instance == USART1)
+    {
+        // TX done
+	sum++;
+    }
+}
 
 /**
  * @brief       串口1中断服务函数
@@ -207,10 +216,7 @@ void my_printf(const char *cmd, ...)
 	va_end(args);
 	
 	HAL_UART_Transmit_DMA(&g_uart1_handle, _dbg_Buff, length);   /* 开始一次DMA传输！ */
-	while(__HAL_DMA_GET_FLAG(&g_dma_handle, DMA_FLAG_TCIF3_7)==0);
 
-	__HAL_DMA_CLEAR_FLAG(&g_dma_handle, DMA_FLAG_TCIF3_7);	   /* 清除DMA2_Stream7传输完成标志 */
-	HAL_UART_DMAStop(&g_uart1_handle);		/* 传输完成以后关闭串口DMA */
 
 }
 
