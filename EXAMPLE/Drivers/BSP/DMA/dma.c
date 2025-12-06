@@ -44,6 +44,14 @@ void dma_init(DMA_Stream_TypeDef *dma_stream_handle, uint32_t ch)
 
     HAL_DMA_DeInit(&g_dma_handle);
     HAL_DMA_Init(&g_dma_handle);
+	
+	HAL_NVIC_SetPriority(DMA2_Stream7_IRQn, 0, 0); // 假设是 DMA2 Stream 7
+    HAL_NVIC_EnableIRQ(DMA2_Stream7_IRQn);
+}
+void DMA2_Stream7_IRQHandler(void)
+{
+    HAL_DMA_IRQHandler(&g_dma_handle);
 }
 
+ 
 
