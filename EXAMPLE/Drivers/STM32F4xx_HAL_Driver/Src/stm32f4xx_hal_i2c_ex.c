@@ -53,6 +53,7 @@
 
 #ifdef HAL_I2C_MODULE_ENABLED
 
+
 #if  defined(I2C_FLTR_ANOFF)&&defined(I2C_FLTR_DNF)
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
