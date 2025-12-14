@@ -10,8 +10,8 @@
 // 定义接收数据结构体，用于存储解析后的数据
 typedef struct {
     uint8_t status;
-    uint16_t humidity_raw;
-    uint16_t temperature_raw;
+    uint32_t humidity_raw;
+    uint32_t temperature_raw;
     uint8_t crc;
 } SensorData_t;
 

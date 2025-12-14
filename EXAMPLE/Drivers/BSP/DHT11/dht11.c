@@ -126,13 +126,15 @@ HAL_StatusTypeDef IIC_Read_Sensor_Data(SensorData_t *pSensorData)
     // 2. 数据解析 (大端格式，即高字节在前)
     if (pSensorData != NULL)
     {
+    	uint32_t H_raw = (rx_buffer[1] << 12) | (rx_buffer[2] << 4) | (rx_buffer[3] >> 4);
+    	uint32_t T_raw = ((rx_buffer[3] & 0x0F) << 16) | (rx_buffer[4] << 8) | rx_buffer[5];
         pSensorData->status = rx_buffer[0];
         
         // 湿度数据：rx_buffer[1] (高字节) + rx_buffer[2] (低字节)
-        pSensorData->humidity_raw = (uint16_t)(rx_buffer[1] << 8 | rx_buffer[2]);
+        pSensorData->humidity_raw =H_raw;
         
         // 温度数据：rx_buffer[3] (高字节) + rx_buffer[4] (低字节)
-        pSensorData->temperature_raw = (uint16_t)(rx_buffer[3] << 8 | rx_buffer[4]);
+        pSensorData->temperature_raw = T_raw;
         
         // CRC 数据
         pSensorData->crc = rx_buffer[5];

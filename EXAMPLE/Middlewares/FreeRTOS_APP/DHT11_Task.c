@@ -25,7 +25,7 @@ SensorData_t sensor_data;
 //@param:  none
 //@return: none
 //*********************************************************
-
+	float temp=0;
 void DHT11_task(void *pvParameters)
 {
 
@@ -37,8 +37,9 @@ void DHT11_task(void *pvParameters)
 		vTaskDelay(100);
 
 		IIC_Read_Sensor_Data(&sensor_data);
+		temp=(float)sensor_data.temperature_raw/(1024*1024)*200-50;
 
-		vTaskDelay(100);
+		vTaskDelay(1000);
     }
 }
 
