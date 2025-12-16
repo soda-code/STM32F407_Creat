@@ -53,11 +53,19 @@ uint8_t exfuns_init(void)
     
     if (i == FF_VOLUMES && res == 0)
     {
-    	res = f_mount(fs[1], "1:", 1);  /* 挂载FLASH */
-	    if (res == 0X0D)                /* FLASH磁盘,FAT文件系统错误,重新格式化FLASH */
+    	// ************************************ 挂载FLASH 
+    	res = f_mount(fs[1], "1:", 1); 
+	    if (res == 0X0D)   /* FLASH磁盘,FAT文件系统错误,重新格式化FLASH */
     	{
 	        res = f_mkfs("1:", 0, 0, FF_MAX_SS);
 			res = f_mount(fs[1], "1:", 1);  /* 挂载FLASH */			
+	    }
+    	// ************************************ 挂载SD 
+		res = f_mount(fs[0], "0", 1);  /* 挂载SD*/
+	    if (res == 0X0D)               
+    	{
+	        res = f_mkfs("0", 0, 0, FF_MAX_SS);
+			res = f_mount(fs[0], "0", 1); 
 	    }
         return 0;   /* 申请有一个失败,即失败. */
     }

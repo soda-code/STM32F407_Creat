@@ -10,6 +10,12 @@ typedef struct
 	uint32_t Toal_Num;
 }Nor_Flash;
 
+typedef struct
+{
+	uint32_t Free_Num;
+	uint32_t Toal_Num;
+}SD_Struct;
+
 
 // 定义日志条目结构体
 typedef struct
@@ -26,7 +32,7 @@ typedef struct
 
 
 extern Nor_Flash Flash_Fat_fs;
-
+extern SD_Struct SD_Inf;
 void Error_Log_task_create(void);
 
 

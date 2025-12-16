@@ -1,7 +1,7 @@
 #include "malloc.h"
 #include "usart.h"
 #include "diskio.h"
-//#include "sdcard.h"
+#include "sdio_sdcard.h"
 #include "norflash.h"
 
 
@@ -46,7 +46,7 @@ DSTATUS disk_initialize (
     switch (pdrv)
     {
         case SD_CARD:           /* SD卡 */
-            //res = sd_init();    /* SD卡初始化 */
+            res = sd_init();    /* SD卡初始化 */
             break;
 
         case EX_FLASH:          /* 外部flash */
@@ -91,6 +91,14 @@ DRESULT disk_read (
     {
         case SD_CARD:       /* SD卡 */
       
+            res = sd_read_disk(buff, sector, count);
+
+            while (res)     /* 读出错 */
+            {
+                //printf("sd rd error:%d\r\n", res);
+                sd_init();  /* 重新初始化SD卡 */
+                res = sd_read_disk(buff, sector, count);
+            }
 
             break;
 
@@ -142,7 +150,15 @@ DRESULT disk_write (
     switch (pdrv)
     {
         case SD_CARD:       /* SD卡 */
- 
+            res = sd_write_disk((uint8_t *)buff, sector, count);
+
+            while (res)     /* 写出错 */
+            {
+                //printf("sd wr error:%d\r\n", res);
+                sd_init();  /* 重新初始化SD卡 */
+                res = sd_write_disk((uint8_t *)buff, sector, count);
+            }
+
             break;
 
         case EX_FLASH:      /* 外部flash */
@@ -199,13 +215,13 @@ DRESULT disk_ioctl (
                 res = RES_OK;
                 break;
 
-            case GET_BLOCK_SIZE:
-         
+			case GET_BLOCK_SIZE:
+                *(WORD *)buff = g_sd_card_info_handle.LogBlockSize;
                 res = RES_OK;
                 break;
 
             case GET_SECTOR_COUNT:
-            
+                *(DWORD *)buff = g_sd_card_info_handle.LogBlockNbr;
                 res = RES_OK;
                 break;
 

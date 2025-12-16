@@ -10,7 +10,7 @@ TaskHandle_t   Error_Log_task_Handler;             /* 任务句柄 */
 void Error_Log_task(void *pvParameters);                      /* 任务函数 */
 
 FIL file_error={0};
-
+FRESULT Error_Res=FR_OK;
 //*********************************************************
 //@auto: Li
 //@brief: Error_Log task function
@@ -18,21 +18,24 @@ FIL file_error={0};
 //@return: none
 //*********************************************************
 Nor_Flash Flash_Fat_fs;
+SD_Struct SD_Inf;
+
 void Error_Log_task(void *pvParameters)
 {
-	FRESULT res;
+	
 	uint16_t wite_lenth=0;
-	char path[50] = "1:logfile.txt";
-	res=exfuns_get_free("1:", &Flash_Fat_fs.Toal_Num, &Flash_Fat_fs.Free_Num);
+	char path[50] = "0:logfile.txt";
+	Error_Res=exfuns_get_free("1:", &Flash_Fat_fs.Toal_Num, &Flash_Fat_fs.Free_Num);
+	Error_Res=exfuns_get_free("0:", &SD_Inf.Toal_Num, &SD_Inf.Free_Num);
     while(1)
     {
-	    res = f_open(&file_error, path, FA_WRITE | FA_OPEN_ALWAYS);
-	    if (res == FR_OK) 
+	    Error_Res = f_open(&file_error, path, FA_WRITE | FA_OPEN_ALWAYS);
+	    if (Error_Res == FR_OK) 
 		{
 	        /* Seek to end of the file to append data */
-	        res = f_lseek(&file_error, f_size(&file_error));
+	        Error_Res = f_lseek(&file_error, f_size(&file_error));
 			wite_lenth=sizeof(Flash_Fat_fs);
-			res =f_write(&file_error,&Flash_Fat_fs,wite_lenth,&bw);
+			Error_Res =f_write(&file_error,&Flash_Fat_fs,wite_lenth,&bw);
 	        if (bw == wite_lenth)
 	        {
 				my_printf("\n bw:%5d  wite_lenth:%5d  \r\n",bw,wite_lenth);
