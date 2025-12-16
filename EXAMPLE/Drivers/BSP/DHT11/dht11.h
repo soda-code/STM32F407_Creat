@@ -1,68 +1,27 @@
  #ifndef __I2C_HW_H__
 #define __I2C_HW_H__
 
-#include "stm32f4xx_hal.h"  // ¸ù¾İÄãµÄÏµÁĞ¸ÄÎª stm32xxx_hal.h
-#include <stdint.h>
-#include <stddef.h>
+#include "sys.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#define SENSOR_7BIT_ADDR 0x38       // è®¾å¤‡çš„ 7 ä½åœ°å€
+#define SENSOR_8BIT_WRITE_ADDR (SENSOR_7BIT_ADDR << 1) // HAL åº“éœ€è¦çš„ 8 ä½å†™åœ°å€ 0x70
+#define SENSOR_8BIT_READ_ADDR  (SENSOR_7BIT_ADDR << 1 | 0x01) // 8 ä½è¯»å–åœ°å€ (0x71)
 
-/* Íâ²¿ I2C ¾ä±ú£¨ÔÚ CubeMX Éú³ÉµÄ´úÂëÀï¶¨Òå£© */
-extern I2C_HandleTypeDef hi2c1;
+// å®šä¹‰æ¥æ”¶æ•°æ®ç»“æ„ä½“ï¼Œç”¨äºå­˜å‚¨è§£æåçš„æ•°æ®
+typedef struct {
+    uint8_t status;
+    uint32_t humidity_raw;
+    uint32_t temperature_raw;
+    uint8_t crc;
+} SensorData_t;
 
-/* ¿â·µ»ØÖµ */
-typedef enum {
-    I2C_HW_OK = 0,
-    I2C_HW_BUSY,
-    I2C_HW_ERROR,
-    I2C_HW_TIMEOUT,
-    I2C_HW_INVALID_PARAM
-} i2c_hw_status_t;
 
-/* ³õÊ¼»¯£¨Èç¹ûÊ¹ÓÃ CubeMX ¿É²»µ÷ÓÃ´Ëº¯Êı£© */
-i2c_hw_status_t i2c_hw_init(I2C_HandleTypeDef *hi2c);
+void DHT11_II2C_Init(void);
+void HAL_I2C_MspInit(I2C_HandleTypeDef* hi2c);
 
-/* ×èÈû£¨Polling£©Ä£Ê½Ğ´ */
-i2c_hw_status_t i2c_hw_master_write(I2C_HandleTypeDef *hi2c, uint16_t dev_addr,
-                                    uint8_t *pData, uint16_t size, uint32_t timeout);
+HAL_StatusTypeDef IIC_Trigger_Measurement(void);
+HAL_StatusTypeDef IIC_Read_Sensor_Data(SensorData_t *pSensorData);
 
-/* ×èÈû£¨Polling£©Ä£Ê½¶Á */
-i2c_hw_status_t i2c_hw_master_read(I2C_HandleTypeDef *hi2c, uint16_t dev_addr,
-                                   uint8_t *pData, uint16_t size, uint32_t timeout);
 
-/* ÄÚ´æ¼Ä´æÆ÷Ğ´£¨8-bit reg£©×èÈû */
-i2c_hw_status_t i2c_hw_mem_write(I2C_HandleTypeDef *hi2c, uint16_t dev_addr,
-                                 uint16_t mem_addr, uint16_t mem_add_size,
-                                 uint8_t *pData, uint16_t size, uint32_t timeout);
-
-/* ÄÚ´æ¼Ä´æÆ÷¶Á£¨8-bit reg£©×èÈû */
-i2c_hw_status_t i2c_hw_mem_read(I2C_HandleTypeDef *hi2c, uint16_t dev_addr,
-                                uint16_t mem_addr, uint16_t mem_add_size,
-                                uint8_t *pData, uint16_t size, uint32_t timeout);
-
-/* ·Ç×èÈûÖĞ¶Ï·½Ê½Ğ´/¶Á£¨Ê¹ÓÃ HAL IT£© */
-i2c_hw_status_t i2c_hw_master_write_it(I2C_HandleTypeDef *hi2c, uint16_t dev_addr,
-                                       uint8_t *pData, uint16_t size);
-i2c_hw_status_t i2c_hw_master_read_it(I2C_HandleTypeDef *hi2c, uint16_t dev_addr,
-                                      uint8_t *pData, uint16_t size);
-
-/* ·Ç×èÈû DMA ·½Ê½Ğ´/¶Á */
-i2c_hw_status_t i2c_hw_master_write_dma(I2C_HandleTypeDef *hi2c, uint16_t dev_addr,
-                                        uint8_t *pData, uint16_t size);
-i2c_hw_status_t i2c_hw_master_read_dma(I2C_HandleTypeDef *hi2c, uint16_t dev_addr,
-                                       uint8_t *pData, uint16_t size);
-
-/* ÔÚ HAL »Øµ÷ÖĞµ÷ÓÃ£¨¿â°ïÄã´¦Àí×´Ì¬£©*/
-void i2c_hw_evt_callback(I2C_HandleTypeDef *hi2c);
-void i2c_hw_err_callback(I2C_HandleTypeDef *hi2c);
-
-/* ¹¤¾ß£º×ª»» 7bit/8bit µØÖ·£¨HAL Ê¹ÓÃ 7-bit µØÖ·£© */
-static inline uint16_t i2c_addr_7bit(uint16_t addr8bit) { return (addr8bit >> 1); }
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // __I2C_HW_H__

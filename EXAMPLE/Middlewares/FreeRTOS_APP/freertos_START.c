@@ -13,6 +13,9 @@
 #include "Key_task.h"
 #include "Can_task.h"
 #include "AI_task.h"
+#include "DHT11_task.h"
+#include "Error_Log_task.h"
+
 
 /*FreeRTOS配置*/
 
@@ -56,7 +59,9 @@ void start_task(void *pvParameters)
     led_task_create();              /* 创建LED任务 */
     //key_task_create();              /* 创建按键任务 */
 	AI_task_create();              /* 创建按键任务 */
+	DHT1_task_create();
 	CAN_task_create();              /* 创建按键任务 */
+	Error_Log_task_create();        //****系统问题
     vTaskDelete(StartTask_Handler); /* 删除开始任务 */
     taskEXIT_CRITICAL();            /* 退出临界区 */
 }
