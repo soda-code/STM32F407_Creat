@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F407xx,STM32F407xx,USE_USB_FS,ARM_MATH_DSP,ARM_MATH_MATRIX_CHECK,ARM_MATH_ROUNDING</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\User;..\..\Drivers;..\..\Drivers\CMSIS\Device\ST\STM32F4xx\Include;..\..\Drivers\CMSIS\Include;..\..\Drivers\STM32F4xx_HAL_Driver\Inc;..\..\Drivers\SYSTEM\usart;..\..\Drivers\SYSTEM\delay;..\..\Drivers\SYSTEM\sys;..\..\Middlewares;..\..\Middlewares\DSP\Include;..\..\Middlewares\FreeRTOS;..\..\Middlewares\FreeRTOS\include;..\..\Middlewares\FreeRTOS\portable\RVDS\ARM_CM4_MPU;..\..\Middlewares\FreeRTOS_APP;..\..\Middlewares\MALLOC;..\..\Middlewares\USB\STM32_USB_Device_Library\Core\Inc;..\..\Middlewares\USB\STM32_USB_Device_Library\Class\CDC\Inc;..\..\Middlewares\USB\USB_APP;..\..\Middlewares\FATFS\exfuns;..\..\Middlewares\FATFS\source;..\..\Middlewares\AI;..\..\Drivers\BSP\LED;..\..\Drivers\BSP\CAN;..\..\Drivers\BSP\LCD;..\..\Drivers\BSP\DMA;..\..\Drivers\BSP\ADC;..\..\Drivers\BSP\DHT11;..\..\Drivers\BSP\NORFLASH</IncludePath>
+              <IncludePath>..\..\User;..\..\Drivers;..\..\Drivers\CMSIS\Device\ST\STM32F4xx\Include;..\..\Drivers\CMSIS\Include;..\..\Drivers\STM32F4xx_HAL_Driver\Inc;..\..\Drivers\SYSTEM\usart;..\..\Drivers\SYSTEM\delay;..\..\Drivers\SYSTEM\sys;..\..\Middlewares;..\..\Middlewares\DSP\Include;..\..\Middlewares\FreeRTOS;..\..\Middlewares\FreeRTOS\include;..\..\Middlewares\FreeRTOS\portable\RVDS\ARM_CM4_MPU;..\..\Middlewares\FreeRTOS_APP;..\..\Middlewares\MALLOC;..\..\Middlewares\USB\STM32_USB_Device_Library\Core\Inc;..\..\Middlewares\USB\STM32_USB_Device_Library\Class\CDC\Inc;..\..\Middlewares\USB\USB_APP;..\..\Middlewares\FATFS\exfuns;..\..\Middlewares\FATFS\source;..\..\Middlewares\AI;..\..\Drivers\BSP\LED;..\..\Drivers\BSP\CAN;..\..\Drivers\BSP\LCD;..\..\Drivers\BSP\DMA;..\..\Drivers\BSP\ADC;..\..\Drivers\BSP\DHT11;..\..\Drivers\BSP\NORFLASH;..\..\Drivers\BSP\SDIO</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -447,6 +447,11 @@
               <FileName>norflash.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Drivers\BSP\NORFLASH\norflash.c</FilePath>
+            </File>
+            <File>
+              <FileName>sdio_sdcard.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Drivers\BSP\SDIO\sdio_sdcard.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -587,6 +592,21 @@
               <FileName>stm32f4xx_hal_spi.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_spi.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_hal_sd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_sd.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_hal_sdram.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_sdram.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_ll_sdmmc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_ll_sdmmc.c</FilePath>
             </File>
           </Files>
         </Group>
