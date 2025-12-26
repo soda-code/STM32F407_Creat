@@ -25,8 +25,8 @@
 #include "usbd_conf.h"
 #include "usbd_core.h"
 #include "usbd_def.h"
-#include "./SYSTEM/sys/sys.h"
-#include "./SYSTEM/usart/usart.h"
+#include "sys.h"
+#include "usart.h"
 
 
 /* PCD∂®“Â */

@@ -15,7 +15,7 @@
 #include "AI_task.h"
 #include "DHT11_task.h"
 #include "Error_Log_task.h"
-
+#include "Version.h"
 
 /*FreeRTOS配置*/
 
@@ -48,6 +48,12 @@ void freertos_demo(void)
     vTaskStartScheduler();
 }
 
+void Get_Version(void)
+{
+	char str[100]={0};
+	snprintf(str, sizeof(str), "Firmware Version: %s", APP_VERSION);
+
+}
 /**
  * @brief       start_task
  * @param       pvParameters : 传入参数(未用到)
@@ -55,6 +61,8 @@ void freertos_demo(void)
  */
 void start_task(void *pvParameters)
 {
+	Get_Version();
+
     taskENTER_CRITICAL();           /* 进入临界区 */
     led_task_create();              /* 创建LED任务 */
     //key_task_create();              /* 创建按键任务 */

@@ -45,9 +45,11 @@
  * 存储块4(FSMC_NE4)地址范围: 0X6C00 0000 ~ 0X6FFF FFFF
  */
 
+ //** SRAM_BASE_ADDR 定义, 根据 SRAM_FSMC_NEX 的设置来决定基址地址
+
 #define SRAM_BASE_ADDR         (0X60000000 + (0X4000000 * (SRAM_FSMC_NEX - 1)))
-#define AI_DATA_ADRESS_START  SRAM_BASE_ADDR
-#define AI_DATA_ADRESS_END    SRAM_BASE_ADDR+SRAM_SIZE_BYTES*2*10
+#define AI_DATA_ADRESS_START  SRAM_BASE_ADDR                        //** AI数据存储起始地址
+#define AI_DATA_ADRESS_END    SRAM_BASE_ADDR+SRAM_SIZE_BYTES*2*10   //** AI数据存储结束地址
 
 
 extern SRAM_HandleTypeDef g_sram_handler;    /* SRAM句柄 */

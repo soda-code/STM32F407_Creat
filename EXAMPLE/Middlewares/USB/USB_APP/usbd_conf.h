@@ -24,9 +24,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "./MALLOC/malloc.h"
-#include "./SYSTEM/sys/sys.h"
-#include "./SYSTEM/delay/delay.h"
+#include "malloc.h"
+#include "sys.h"
+#include "delay.h"
 
 #include "stm32f4xx_hal_pcd.h"
 
