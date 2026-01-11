@@ -6,12 +6,12 @@
 [Found keyword]: ----------Execution Region----------
 [name]:  ER_IROM1 
 [Exec base]: 0x8000000
-[Size]: 0x14400
+[Size]: 0x142d4
 [Max]: 0x100000
 [Found keyword]: ----------Execution Region----------
 [name]:  RW_IRAM1 
 [Exec base]: 0x20000000
-[Size]: 0x16c88
+[Size]: 0x16ca8
 [Max]: 0x20000
 [Found keyword]: ----------Execution Region----------
 [name]:  ER$$.ARM.__AT_0x68000000 
@@ -25,13 +25,13 @@
 [Max]: 0x1000
 [parse_keil_map over printf bar]: 
   RW_IRAM1 :0x20000000
-  128.00 KB :|¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö______|   71.20 % (   91.13 KB /   128.00 KB) [37752 B]
+  128.00 KB :|¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö______|   71.22 % (   91.16 KB /   128.00 KB) [37720 B]
   ER$$.ARM.__AT_0x68000000 :0x68000000
     4.00 KB :|¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö|  100.00 % (    4.00 KB /     4.00 KB) [0 B]
   ER$$.ARM.__AT_0x68002800 :0x68002800
     4.00 KB :|¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö¡ö|  100.00 % (    4.00 KB /     4.00 KB) [0 B]
   ER_IROM1 :0x8000000
-    1.00 MB :|¡ö___________________|    7.91 % (    0.08 MB /     1.00 MB) [965632 B]
+    1.00 MB :|¡ö___________________|    7.88 % (    0.08 MB /     1.00 MB) [965932 B]
 [export csv]: ./F407_sort_by_flash.csv
 [export csv]: ./F407_sort_by_ram.csv
 [export xlsx]: F407_analysis.xlsx

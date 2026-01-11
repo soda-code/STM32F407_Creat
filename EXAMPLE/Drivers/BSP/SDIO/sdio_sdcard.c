@@ -3,26 +3,30 @@
 #include "sdio_sdcard.h"
 
 
-SD_HandleTypeDef g_sdcard_handler;            /* SD¿¨¾ä±ú */
-HAL_SD_CardInfoTypeDef g_sd_card_info_handle; /* SD¿¨ĞÅÏ¢½á¹¹Ìå */
+SD_HandleTypeDef g_sdcard_handler;            /* SDå¡å¥æŸ„ */
+HAL_SD_CardInfoTypeDef g_sd_card_info_handle; /* SDå¡ä¿¡æ¯ç»“æ„ä½“ */
 
 /**
- * @brief       ³õÊ¼»¯SD¿¨
- * @param       ÎŞ
- * @retval      ·µ»ØÖµ:0 ³õÊ¼»¯ÕıÈ·£»ÆäËûÖµ£¬³õÊ¼»¯´íÎó
+ * @brief       åˆå§‹åŒ–SDå¡
+ * @param       æ— 
+ * @retval      è¿”å›å€¼:0 åˆå§‹åŒ–æ­£ç¡®ï¼›å…¶ä»–å€¼ï¼Œåˆå§‹åŒ–é”™è¯¯
  */
 uint8_t sd_init(void)
 {
     uint8_t SD_Error;
-
-    /* ³õÊ¼»¯Ê±µÄÊ±ÖÓ²»ÄÜ´óÓÚ400KHZ */
+		
+		__HAL_RCC_SDIO_CLK_DISABLE(); // å…³é—­ SDIO æŒ‚è½½åœ¨ AHB/APB ä¸Šçš„æ—¶é’Ÿ
+		SDIO->CLKCR &= ~(SDIO_CLKCR_CLKEN); // åœæ­¢ PC12 æ—¶é’Ÿè¾“å‡º
+		memset(&g_sdcard_handler.Init,0,sizeof(SD_InitTypeDef));
+		HAL_SD_MspInit(&g_sdcard_handler);
+    /* åˆå§‹åŒ–æ—¶çš„æ—¶é’Ÿä¸èƒ½å¤§äº400KHZ */
     g_sdcard_handler.Instance = SDIO;
-    g_sdcard_handler.Init.ClockEdge = SDIO_CLOCK_EDGE_RISING;                       /* ÉÏÉıÑØ */
-    g_sdcard_handler.Init.ClockBypass = SDIO_CLOCK_BYPASS_DISABLE;                  /* ²»Ê¹ÓÃbypassÄ£Ê½£¬Ö±½ÓÓÃHCLK½øĞĞ·ÖÆµµÃµ½SDIO_CK */
-    g_sdcard_handler.Init.ClockPowerSave = SDIO_CLOCK_POWER_SAVE_DISABLE;           /* ¿ÕÏĞÊ±²»¹Ø±ÕÊ±ÖÓµçÔ´ */
-    g_sdcard_handler.Init.BusWide = SDIO_BUS_WIDE_1B;                               /* 1Î»Êı¾İÏß */
-    g_sdcard_handler.Init.HardwareFlowControl = SDIO_HARDWARE_FLOW_CONTROL_DISABLE; /* ¹Ø±ÕÓ²¼şÁ÷¿Ø */
-    g_sdcard_handler.Init.ClockDiv = SDIO_TRANSF_CLK_DIV;                           /* SD´«ÊäÊ±ÖÓÆµÂÊ×î´ó25MHZ */
+    g_sdcard_handler.Init.ClockEdge = SDIO_CLOCK_EDGE_RISING;                       /* ä¸Šå‡æ²¿ */
+    g_sdcard_handler.Init.ClockBypass = SDIO_CLOCK_BYPASS_DISABLE;                  /* ä¸ä½¿ç”¨bypassæ¨¡å¼ï¼Œç›´æ¥ç”¨HCLKè¿›è¡Œåˆ†é¢‘å¾—åˆ°SDIO_CK */
+    g_sdcard_handler.Init.ClockPowerSave = SDIO_CLOCK_POWER_SAVE_DISABLE;           /* ç©ºé—²æ—¶ä¸å…³é—­æ—¶é’Ÿç”µæº */
+    g_sdcard_handler.Init.BusWide = SDIO_BUS_WIDE_1B;                               /* 1ä½æ•°æ®çº¿ */
+    g_sdcard_handler.Init.HardwareFlowControl = SDIO_HARDWARE_FLOW_CONTROL_DISABLE; /* å…³é—­ç¡¬ä»¶æµæ§ */
+    g_sdcard_handler.Init.ClockDiv = SDIO_TRANSF_CLK_DIV;                           /* SDä¼ è¾“æ—¶é’Ÿé¢‘ç‡æœ€å¤§25MHZ */
 
     SD_Error = HAL_SD_Init(&g_sdcard_handler);
     if (SD_Error != HAL_OK)
@@ -30,9 +34,9 @@ uint8_t sd_init(void)
         return 1;
     }
     
-    HAL_SD_GetCardInfo(&g_sdcard_handler, &g_sd_card_info_handle);                  /* »ñÈ¡SD¿¨ĞÅÏ¢ */
+    HAL_SD_GetCardInfo(&g_sdcard_handler, &g_sd_card_info_handle);                  /* è·å–SDå¡ä¿¡æ¯ */
 
-    SD_Error = HAL_SD_ConfigWideBusOperation(&g_sdcard_handler, SDIO_BUS_WIDE_4B);  /* Ê¹ÄÜ4bit¿í×ÜÏßÄ£Ê½ */
+    SD_Error = HAL_SD_ConfigWideBusOperation(&g_sdcard_handler, SDIO_BUS_WIDE_4B);  /* ä½¿èƒ½4bitå®½æ€»çº¿æ¨¡å¼ */
     if (SD_Error != HAL_OK)
     {
         return 2;
@@ -41,51 +45,64 @@ uint8_t sd_init(void)
     return 0;
 }
 
+void GPIO_SD_cd_Reset(void)
+{
+		GPIO_InitTypeDef gpio_init_struct;
+		
+    gpio_init_struct.Pin = SD_D3_GPIO_PIN;              /* SD_D3å¼•è„šæ¨¡å¼è®¾ç½® */
+    gpio_init_struct.Mode = GPIO_MODE_AF_PP;            /* æ¨æŒ½å¤ç”¨ */
+    gpio_init_struct.Pull = GPIO_PULLUP;                /* ä¸Šæ‹‰ */
+    gpio_init_struct.Speed = GPIO_SPEED_FREQ_HIGH;      /* é«˜é€Ÿ */
+    gpio_init_struct.Alternate = GPIO_AF12_SDIO;        /* å¤ç”¨ä¸ºSDIO */
+    HAL_GPIO_Init(SD_D3_GPIO_PORT, &gpio_init_struct);  /* åˆå§‹åŒ– */
+}
 /**
- * @brief       SDIOµ×²ãÇı¶¯£¬Ê±ÖÓÊ¹ÄÜ£¬Òı½ÅÅäÖÃ
-                ´Ëº¯Êı»á±»HAL_SD_Init()µ÷ÓÃ
- * @param       hsd:SD¿¨¾ä±ú
- * @retval      ÎŞ
+ * @brief       SDIOåº•å±‚é©±åŠ¨ï¼Œæ—¶é’Ÿä½¿èƒ½ï¼Œå¼•è„šé…ç½®
+                æ­¤å‡½æ•°ä¼šè¢«HAL_SD_Init()è°ƒç”¨
+ * @param       hsd:SDå¡å¥æŸ„
+ * @retval      æ— 
  */
 void HAL_SD_MspInit(SD_HandleTypeDef *hsd)
 {
     GPIO_InitTypeDef gpio_init_struct;
 
-    __HAL_RCC_SDIO_CLK_ENABLE();    /* Ê¹ÄÜSDIOÊ±ÖÓ */
-    SD_D0_GPIO_CLK_ENABLE();        /* D0Òı½ÅIOÊ±ÖÓÊ¹ÄÜ */
-    SD_D1_GPIO_CLK_ENABLE();        /* D1Òı½ÅIOÊ±ÖÓÊ¹ÄÜ */
-    SD_D2_GPIO_CLK_ENABLE();        /* D2Òı½ÅIOÊ±ÖÓÊ¹ÄÜ */
-    SD_D3_GPIO_CLK_ENABLE();        /* D3Òı½ÅIOÊ±ÖÓÊ¹ÄÜ */
-    SD_CLK_GPIO_CLK_ENABLE();       /* CLKÒı½ÅIOÊ±ÖÓÊ¹ÄÜ */
-    SD_CMD_GPIO_CLK_ENABLE();       /* CMDÒı½ÅIOÊ±ÖÓÊ¹ÄÜ */
+    __HAL_RCC_SDIO_CLK_ENABLE();    /* ä½¿èƒ½SDIOæ—¶é’Ÿ */
+    SD_D0_GPIO_CLK_ENABLE();        /* D0å¼•è„šIOæ—¶é’Ÿä½¿èƒ½ */
+    SD_D1_GPIO_CLK_ENABLE();        /* D1å¼•è„šIOæ—¶é’Ÿä½¿èƒ½ */
+    SD_D2_GPIO_CLK_ENABLE();        /* D2å¼•è„šIOæ—¶é’Ÿä½¿èƒ½ */
+    SD_D3_GPIO_CLK_ENABLE();        /* D3å¼•è„šIOæ—¶é’Ÿä½¿èƒ½ */
+    SD_CLK_GPIO_CLK_ENABLE();       /* CLKå¼•è„šIOæ—¶é’Ÿä½¿èƒ½ */
+    SD_CMD_GPIO_CLK_ENABLE();       /* CMDå¼•è„šIOæ—¶é’Ÿä½¿èƒ½ */
 
-    gpio_init_struct.Pin = SD_D0_GPIO_PIN;              /* SD_D0Òı½ÅÄ£Ê½ÉèÖÃ */
-    gpio_init_struct.Mode = GPIO_MODE_AF_PP;            /* ÍÆÍì¸´ÓÃ */
-    gpio_init_struct.Pull = GPIO_PULLUP;                /* ÉÏÀ­ */
-    gpio_init_struct.Speed = GPIO_SPEED_FREQ_HIGH;      /* ¸ßËÙ */
-    gpio_init_struct.Alternate = GPIO_AF12_SDIO;        /* ¸´ÓÃÎªSDIO */
-    HAL_GPIO_Init(SD_D0_GPIO_PORT, &gpio_init_struct);  /* ³õÊ¼»¯ */
+    gpio_init_struct.Pin = SD_D0_GPIO_PIN;              /* SD_D0å¼•è„šæ¨¡å¼è®¾ç½® */
+    gpio_init_struct.Mode = GPIO_MODE_AF_PP;            /* æ¨æŒ½å¤ç”¨ */
+    gpio_init_struct.Pull = GPIO_PULLUP;                /* ä¸Šæ‹‰ */
+    gpio_init_struct.Speed = GPIO_SPEED_FREQ_HIGH;      /* é«˜é€Ÿ */
+    gpio_init_struct.Alternate = GPIO_AF12_SDIO;        /* å¤ç”¨ä¸ºSDIO */
+    HAL_GPIO_Init(SD_D0_GPIO_PORT, &gpio_init_struct);  /* åˆå§‹åŒ– */
 
-    gpio_init_struct.Pin = SD_D1_GPIO_PIN;              /* SD_D1Òı½ÅÄ£Ê½ÉèÖÃ */
-    HAL_GPIO_Init(SD_D1_GPIO_PORT, &gpio_init_struct);  /* ³õÊ¼»¯ */
+    gpio_init_struct.Pin = SD_D1_GPIO_PIN;              /* SD_D1å¼•è„šæ¨¡å¼è®¾ç½® */
+    HAL_GPIO_Init(SD_D1_GPIO_PORT, &gpio_init_struct);  /* åˆå§‹åŒ– */
 
-    gpio_init_struct.Pin = SD_D2_GPIO_PIN;              /* SD_D2Òı½ÅÄ£Ê½ÉèÖÃ */
-    HAL_GPIO_Init(SD_D2_GPIO_PORT, &gpio_init_struct);  /* ³õÊ¼»¯ */
+    gpio_init_struct.Pin = SD_D2_GPIO_PIN;              /* SD_D2å¼•è„šæ¨¡å¼è®¾ç½® */
+    HAL_GPIO_Init(SD_D2_GPIO_PORT, &gpio_init_struct);  /* åˆå§‹åŒ– */
 
-    gpio_init_struct.Pin = SD_D3_GPIO_PIN;              /* SD_D3Òı½ÅÄ£Ê½ÉèÖÃ */
-    HAL_GPIO_Init(SD_D3_GPIO_PORT, &gpio_init_struct);  /* ³õÊ¼»¯ */
+    gpio_init_struct.Pin = SD_D3_GPIO_PIN;              /* SD_D3å¼•è„šæ¨¡å¼è®¾ç½® */
+    HAL_GPIO_Init(SD_D3_GPIO_PORT, &gpio_init_struct);  /* åˆå§‹åŒ– */
+		
+    gpio_init_struct.Pin = SD_CLK_GPIO_PIN;             /* SD_CLKå¼•è„šæ¨¡å¼è®¾ç½® */
+    HAL_GPIO_Init(SD_CLK_GPIO_PORT, &gpio_init_struct); /* åˆå§‹åŒ– */
 
-    gpio_init_struct.Pin = SD_CLK_GPIO_PIN;             /* SD_CLKÒı½ÅÄ£Ê½ÉèÖÃ */
-    HAL_GPIO_Init(SD_CLK_GPIO_PORT, &gpio_init_struct); /* ³õÊ¼»¯ */
+    gpio_init_struct.Pin = SD_CMD_GPIO_PIN;             /* SD_CMDå¼•è„šæ¨¡å¼è®¾ç½® */
+    HAL_GPIO_Init(SD_CMD_GPIO_PORT, &gpio_init_struct); /* åˆå§‹åŒ– */
 
-    gpio_init_struct.Pin = SD_CMD_GPIO_PIN;             /* SD_CMDÒı½ÅÄ£Ê½ÉèÖÃ */
-    HAL_GPIO_Init(SD_CMD_GPIO_PORT, &gpio_init_struct); /* ³õÊ¼»¯ */
+
 }
 
 /**
- * @brief       »ñÈ¡¿¨ĞÅÏ¢º¯Êı
- * @param       cardinfo:SD¿¨ĞÅÏ¢¾ä±ú
- * @retval      ·µ»ØÖµ:¶ÁÈ¡¿¨ĞÅÏ¢×´Ì¬Öµ
+ * @brief       è·å–å¡ä¿¡æ¯å‡½æ•°
+ * @param       cardinfo:SDå¡ä¿¡æ¯å¥æŸ„
+ * @retval      è¿”å›å€¼:è¯»å–å¡ä¿¡æ¯çŠ¶æ€å€¼
  */
 uint8_t get_sd_card_info(HAL_SD_CardInfoTypeDef *cardinfo)
 {
@@ -97,10 +114,10 @@ uint8_t get_sd_card_info(HAL_SD_CardInfoTypeDef *cardinfo)
 }
 
 /**
- * @brief       ÅĞ¶ÏSD¿¨ÊÇ·ñ¿ÉÒÔ´«Êä(¶ÁĞ´)Êı¾İ
- * @param       ÎŞ
- * @retval      ·µ»ØÖµ:SD_TRANSFER_OK      ´«ÊäÍê³É£¬¿ÉÒÔ¼ÌĞøÏÂÒ»´Î´«Êä
-                       SD_TRANSFER_BUSY SD ¿¨ÕıÃ¦£¬²»¿ÉÒÔ½øĞĞÏÂÒ»´Î´«Êä
+ * @brief       åˆ¤æ–­SDå¡æ˜¯å¦å¯ä»¥ä¼ è¾“(è¯»å†™)æ•°æ®
+ * @param       æ— 
+ * @retval      è¿”å›å€¼:SD_TRANSFER_OK      ä¼ è¾“å®Œæˆï¼Œå¯ä»¥ç»§ç»­ä¸‹ä¸€æ¬¡ä¼ è¾“
+                       SD_TRANSFER_BUSY SD å¡æ­£å¿™ï¼Œä¸å¯ä»¥è¿›è¡Œä¸‹ä¸€æ¬¡ä¼ è¾“
  */
 uint8_t get_sd_card_state(void)
 {
@@ -108,11 +125,11 @@ uint8_t get_sd_card_state(void)
 }
 
 /**
- * @brief       ¶ÁSD¿¨(fatfs/usbµ÷ÓÃ)
- * @param       pbuf  : Êı¾İ»º´æÇø
- * @param       saddr : ÉÈÇøµØÖ·
- * @param       cnt   : ÉÈÇø¸öÊı
- * @retval      0, Õı³£;  ÆäËû, ´íÎó´úÂë(Ïê¼ûSD_Error¶¨Òå);
+ * @brief       è¯»SDå¡(fatfs/usbè°ƒç”¨)
+ * @param       pbuf  : æ•°æ®ç¼“å­˜åŒº
+ * @param       saddr : æ‰‡åŒºåœ°å€
+ * @param       cnt   : æ‰‡åŒºä¸ªæ•°
+ * @retval      0, æ­£å¸¸;  å…¶ä»–, é”™è¯¯ä»£ç (è¯¦è§SD_Errorå®šä¹‰);
  */
 uint8_t sd_read_disk(uint8_t *pbuf, uint32_t saddr, uint32_t cnt)
 {
@@ -120,28 +137,27 @@ uint8_t sd_read_disk(uint8_t *pbuf, uint32_t saddr, uint32_t cnt)
     uint32_t timeout = SD_TIMEOUT;
     long long lsector = saddr;
     
-    __disable_irq();                                                                       /* ¹Ø±Õ×ÜÖĞ¶Ï(POLLINGÄ£Ê½,ÑÏ½ûÖĞ¶Ï´ò¶ÏSDIO¶ÁĞ´²Ù×÷!!!) */
-    sta = HAL_SD_ReadBlocks(&g_sdcard_handler, (uint8_t *)pbuf, lsector, cnt, SD_TIMEOUT); /* ¶à¸ösectorµÄ¶Á²Ù×÷ */
+    sta = HAL_SD_ReadBlocks(&g_sdcard_handler, (uint8_t *)pbuf, lsector, cnt, SD_TIMEOUT); /* å¤šä¸ªsectorçš„è¯»æ“ä½œ */
 
-    /* µÈ´ıSD¿¨¶ÁÍê */
+    /* ç­‰å¾…SDå¡è¯»å®Œ */
     while (get_sd_card_state() != SD_TRANSFER_OK)
     {
         if (timeout-- == 0)
         {
-            sta = SD_TRANSFER_BUSY;
+					sta = SD_TRANSFER_BUSY;
+					return sta;
         }
     }
-    __enable_irq(); /* ¿ªÆô×ÜÖĞ¶Ï */
     
     return sta;
 }
 
 /**
- * @brief       Ğ´SD¿¨(fatfs/usbµ÷ÓÃ)
- * @param       pbuf  : Êı¾İ»º´æÇø
- * @param       saddr : ÉÈÇøµØÖ·
- * @param       cnt   : ÉÈÇø¸öÊı
- * @retval      0, Õı³£;  ÆäËû, ´íÎó´úÂë(Ïê¼ûSD_Error¶¨Òå);
+ * @brief       å†™SDå¡(fatfs/usbè°ƒç”¨)
+ * @param       pbuf  : æ•°æ®ç¼“å­˜åŒº
+ * @param       saddr : æ‰‡åŒºåœ°å€
+ * @param       cnt   : æ‰‡åŒºä¸ªæ•°
+ * @retval      0, æ­£å¸¸;  å…¶ä»–, é”™è¯¯ä»£ç (è¯¦è§SD_Errorå®šä¹‰);
  */
 uint8_t sd_write_disk(uint8_t *pbuf, uint32_t saddr, uint32_t cnt)
 {
@@ -149,18 +165,50 @@ uint8_t sd_write_disk(uint8_t *pbuf, uint32_t saddr, uint32_t cnt)
     uint32_t timeout = SD_TIMEOUT;
     long long lsector = saddr;
     
-    __disable_irq();                                                                        /* ¹Ø±Õ×ÜÖĞ¶Ï(POLLINGÄ£Ê½,ÑÏ½ûÖĞ¶Ï´ò¶ÏSDIO¶ÁĞ´²Ù×÷!!!) */
-    sta = HAL_SD_WriteBlocks(&g_sdcard_handler, (uint8_t *)pbuf, lsector, cnt, SD_TIMEOUT); /* ¶à¸ösectorµÄĞ´²Ù×÷ */
+    sta = HAL_SD_WriteBlocks(&g_sdcard_handler, (uint8_t *)pbuf, lsector, cnt, SD_TIMEOUT); /* å¤šä¸ªsectorçš„å†™æ“ä½œ */
 
-    /* µÈ´ıSD¿¨Ğ´Íê */
+    /* ç­‰å¾…SDå¡å†™å®Œ */
     while (get_sd_card_state() != SD_TRANSFER_OK)
     {
-        if (timeout-- == 0)
+				timeout--;
+				sta = SD_TRANSFER_BUSY;
+        if (timeout == 0)
         {
             sta = SD_TRANSFER_BUSY;
+					  return sta;
         }
     }
-    __enable_irq();     /* ¿ªÆô×ÜÖĞ¶Ï */
     
     return sta;
 }
+
+
+/**
+ * @brief       æ£€æµ‹SDå¡çŠ¶æ€
+ * @param       
+ * @retval      0-> æ²¡æœ‰SDå¡ 
+ * @retval      1-> æœ‰SDå¡  
+ */
+bool sd_check_io(void)
+{
+	GPIO_PinState SD_Check_status;
+	GPIO_InitTypeDef gpio_init_struct;
+
+
+	gpio_init_struct.Mode = GPIO_MODE_INPUT;						/* æ¨æŒ½å¤ç”¨ */
+	gpio_init_struct.Pull = GPIO_PULLDOWN;							/* ä¸Šæ‹‰ */
+	gpio_init_struct.Pin = SD_D3_GPIO_PIN;							/* SD_D3å¼•è„šæ¨¡å¼è®¾ç½® */
+	HAL_GPIO_Init(SD_D3_GPIO_PORT, &gpio_init_struct);	/* åˆå§‹åŒ– */
+
+	delay_ms(1);
+	SD_Check_status=HAL_GPIO_ReadPin(SD_D3_GPIO_PORT, SD_D3_GPIO_PIN);
+	if(SD_Check_status)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+

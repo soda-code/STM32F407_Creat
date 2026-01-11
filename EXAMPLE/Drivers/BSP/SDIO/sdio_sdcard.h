@@ -35,7 +35,7 @@
 
 /******************************************************************************************/
 
-#define SD_TIMEOUT             ((uint32_t)100000000)    /* 超时时间 */
+#define SD_TIMEOUT             ((uint32_t)50)    /* 超时时间 */
 #define SD_TRANSFER_OK         ((uint8_t)0x00)
 #define SD_TRANSFER_BUSY       ((uint8_t)0x01)
 
@@ -58,6 +58,9 @@ extern HAL_SD_CardInfoTypeDef  g_sd_card_info_handle;   /* SD卡信息结构体 
 
 /* 函数声明 */
 uint8_t sd_init(void);                                              /* 初始化SD卡 */
+bool 		sd_check_io(void);			     /* SD卡检测 */			
+void GPIO_SD_cd_Reset(void); //***引脚复位
+
 uint8_t get_sd_card_info(HAL_SD_CardInfoTypeDef *cardinfo);         /* 获取卡信息函数 */
 uint8_t get_sd_card_state(void);                                    /* 获取卡的状态 */
 uint8_t sd_read_disk(uint8_t *pbuf, uint32_t saddr, uint32_t cnt);  /* 读SD卡 */
