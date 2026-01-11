@@ -766,19 +766,6 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Middlewares/AI</GroupName>
-        </Group>
-        <Group>
-          <GroupName>Readme</GroupName>
-          <Files>
-            <File>
-              <FileName>readme.txt</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\readme.txt</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
           <GroupName>Middlewares/FATFs</GroupName>
           <Files>
             <File>
@@ -810,6 +797,31 @@
               <FileName>ffunicode.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Middlewares\FATFS\source\ffunicode.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Middlewares/AI</GroupName>
+          <Files>
+            <File>
+              <FileName>Mode.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Middlewares\MODE\Mode.c</FilePath>
+            </File>
+            <File>
+              <FileName>model_weights.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Middlewares\MODE\model_weights.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Readme</GroupName>
+          <Files>
+            <File>
+              <FileName>readme.txt</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\readme.txt</FilePath>
             </File>
           </Files>
         </Group>

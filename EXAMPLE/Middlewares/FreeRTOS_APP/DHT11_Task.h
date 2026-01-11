@@ -1,7 +1,7 @@
 #ifndef _DHT11_TASK_H
 #define _DHT11_TASK_H
 
-void DHT11_task_create(void);
+void Read_DHT20_task_create(void);
 
 
 #endif

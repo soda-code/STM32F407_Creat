@@ -27,23 +27,23 @@ void Error_Log_task(void *pvParameters)
 	char path[50] = "0:logfile.txt";
 	Error_Res=exfuns_get_free("1:", &Flash_Fat_fs.Toal_Num, &Flash_Fat_fs.Free_Num);
 	Error_Res=exfuns_get_free("0:", &SD_Inf.Toal_Num, &SD_Inf.Free_Num);
-    while(1)
-    {
-	    Error_Res = f_open(&file_error, path, FA_WRITE | FA_OPEN_ALWAYS);
-	    if (Error_Res == FR_OK) 
-		{
-	        /* Seek to end of the file to append data */
-	        Error_Res = f_lseek(&file_error, f_size(&file_error));
-			wite_lenth=sizeof(Flash_Fat_fs);
-			Error_Res =f_write(&file_error,&Flash_Fat_fs,wite_lenth,&bw);
-	        if (bw == wite_lenth)
-	        {
-				my_printf("\n bw:%5d  wite_lenth:%5d  \r\n",bw,wite_lenth);
-			}
-	         f_close(&file_error);
-	    }		
+  while(1)
+  {
+    	Error_Res = f_open(&file_error, path, FA_WRITE | FA_OPEN_ALWAYS);
+			if (Error_Res == FR_OK) 
+			{
+			  /* Seek to end of the file to append data */
+			  Error_Res = f_lseek(&file_error, f_size(&file_error));
+				wite_lenth=sizeof(Flash_Fat_fs);
+				Error_Res =f_write(&file_error,&Flash_Fat_fs,wite_lenth,&bw);
+			  if (bw == wite_lenth)
+			  {
+					//my_printf("\n bw:%5d  wite_lenth:%5d  \r\n",bw,wite_lenth);
+				}
+        f_close(&file_error);
+    }		
 		vTaskDelay(3000);
-    }
+  }
 }
 
 //*********************************************************
