@@ -84,6 +84,7 @@ DRESULT disk_read (
 )
 {
     uint8_t res = 0;
+    uint8_t tim_out = 10;
 
     if (!count) return RES_PARERR;   /* count不能等于0，否则返回参数错误 */
 
@@ -96,8 +97,15 @@ DRESULT disk_read (
             while (res)     /* 读出错 */
             {
                 //printf("sd rd error:%d\r\n", res);
+                
                 sd_init();  /* 重新初始化SD卡 */
                 res = sd_read_disk(buff, sector, count);
+								tim_out--;
+								if(tim_out)
+								{
+									res=RES_ERROR;
+									return res;
+								}
             }
 
             break;
@@ -143,8 +151,9 @@ DRESULT disk_write (
     UINT count          /* Number of sectors to write */
 )
 {
+    uint8_t tim_out = 10;
     uint8_t res = 0;
-
+	
     if (!count) return RES_PARERR;  /* count不能等于0，否则返回参数错误 */
 
     switch (pdrv)
@@ -156,7 +165,13 @@ DRESULT disk_write (
             {
                 //printf("sd wr error:%d\r\n", res);
                 sd_init();  /* 重新初始化SD卡 */
-                res = sd_write_disk((uint8_t *)buff, sector, count);
+								res = sd_write_disk((uint8_t *)buff, sector, count);
+								tim_out--;
+								if(tim_out)
+								{
+									res=RES_ERROR;
+									return res;
+								}
             }
 
             break;

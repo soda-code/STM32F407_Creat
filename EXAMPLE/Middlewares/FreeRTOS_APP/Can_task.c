@@ -49,20 +49,20 @@ void CAN_RX_task(void *pvParameters)
 
     while(1)
     {
-		res=can_receive_msg(0x125,can_rx_buff);
-		if(!res)
-		{
-			my_printf("\r\n no can_rx");
-		}
-		else
-		{
-			my_printf("\r\n can_rx");
-			for(uint8_t i=0;i<8;i++)
+			res=can_receive_msg(0x125,can_rx_buff);
+			if(!res)
 			{
-				my_printf("%3x",can_rx_buff[i]);
+			//	my_printf("\r\n no can_rx");
 			}
-		}
-		vTaskDelay(1000);
+			else
+			{
+				//my_printf("\r\n can_rx");
+				for(uint8_t i=0;i<8;i++)
+				{
+				//	my_printf("%3x",can_rx_buff[i]);
+				}
+			}
+			vTaskDelay(1000);
     }
 }
 
@@ -75,8 +75,8 @@ void CAN_RX_task(void *pvParameters)
 //*********************************************************
 void CAN_task_create(void)
 {
-	can_init(CAN_SJW_1TQ, CAN_BS2_6TQ, CAN_BS1_7TQ, 6,	CAN_MODE_NORMAL);
+		can_init(CAN_SJW_1TQ, CAN_BS2_6TQ, CAN_BS1_7TQ, 6,	CAN_MODE_NORMAL);
 
     xTaskCreate((TaskFunction_t )CAN_TX_task,(const char*)"CAN_TX_task",(uint16_t)CAN_TX_TASK_STACK_SIZE,(void*)NULL,(UBaseType_t)CAN_TX_TASK_PRIORITY,(TaskHandle_t*  )&CAN_TX_task_Handler);
-    //xTaskCreate((TaskFunction_t )CAN_RX_task,(const char*)"CAN_RX_task",(uint16_t)CAN_RX_TASK_STACK_SIZE,(void*)NULL,(UBaseType_t)CAN_RX_TASK_PRIORITY,(TaskHandle_t*  )&CAN_RX_task_Handler);
+    xTaskCreate((TaskFunction_t )CAN_RX_task,(const char*)"CAN_RX_task",(uint16_t)CAN_RX_TASK_STACK_SIZE,(void*)NULL,(UBaseType_t)CAN_RX_TASK_PRIORITY,(TaskHandle_t*  )&CAN_RX_task_Handler);
 }

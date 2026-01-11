@@ -15,7 +15,7 @@
 #include "AI_task.h"
 #include "DHT11_task.h"
 #include "Error_Log_task.h"
-
+#include "Version.h"
 
 /*FreeRTOS配置*/
 
@@ -31,12 +31,12 @@ void start_task(void *pvParameters);        /* 任务函数 */
 /******************************************************************************************************/
 
 
-/**
- * @brief       FreeRTOS例程入口函数
+/*****************************************************************************
+ * @brief       FreeRTOS入口函数
  * @param       无
  * @retval      无
- */
-void freertos_demo(void)
+*****************************************************************************/
+void freertos_start(void)
 {
     
     xTaskCreate((TaskFunction_t )start_task,            /* 任务函数 */
@@ -48,6 +48,12 @@ void freertos_demo(void)
     vTaskStartScheduler();
 }
 
+void Get_Version(void)
+{
+	char str[100]={0};
+	snprintf(str, sizeof(str), "Firmware Version: %s", APP_VERSION);
+
+}
 /**
  * @brief       start_task
  * @param       pvParameters : 传入参数(未用到)
@@ -55,13 +61,15 @@ void freertos_demo(void)
  */
 void start_task(void *pvParameters)
 {
-    taskENTER_CRITICAL();           /* 进入临界区 */
-    led_task_create();              /* 创建LED任务 */
-    //key_task_create();              /* 创建按键任务 */
-	AI_task_create();              /* 创建按键任务 */
-	DHT1_task_create();
+	Get_Version();
+
+	taskENTER_CRITICAL();           /* 进入临界区 */
+	led_task_create();              /* 创建LED任务 */
+	//key_task_create();            /* 创建按键任务 */
+	AI_task_create();               /* 创建按键任务 */
+	Read_DHT20_task_create();
 	CAN_task_create();              /* 创建按键任务 */
 	Error_Log_task_create();        //****系统问题
-    vTaskDelete(StartTask_Handler); /* 删除开始任务 */
-    taskEXIT_CRITICAL();            /* 退出临界区 */
+	vTaskDelete(StartTask_Handler); /* 删除开始任务 */
+	taskEXIT_CRITICAL();            /* 退出临界区 */
 }

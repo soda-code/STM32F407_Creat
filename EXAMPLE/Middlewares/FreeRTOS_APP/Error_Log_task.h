@@ -14,6 +14,7 @@ typedef struct
 {
 	uint32_t Free_Num;
 	uint32_t Toal_Num;
+	uint8_t  SD_insert;
 }SD_Struct;
 
 

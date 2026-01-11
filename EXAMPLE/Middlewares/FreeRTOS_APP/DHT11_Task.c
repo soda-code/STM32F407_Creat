@@ -28,18 +28,14 @@ SensorData_t sensor_data;
 	float temp=0;
 void DHT11_task(void *pvParameters)
 {
-
-
     while(1)
     {
+			IIC_Trigger_Measurement();
+			vTaskDelay(100);
+			IIC_Read_Sensor_Data(&sensor_data);
+			temp=(float)sensor_data.temperature_raw/(1024*1024)*200-50;
 
-		IIC_Trigger_Measurement();
-		vTaskDelay(100);
-
-		IIC_Read_Sensor_Data(&sensor_data);
-		temp=(float)sensor_data.temperature_raw/(1024*1024)*200-50;
-
-		vTaskDelay(1000);
+			vTaskDelay(1000);
     }
 }
 
@@ -49,7 +45,7 @@ void DHT11_task(void *pvParameters)
 //@param:  none
 //@return: none
 //*********************************************************
-void DHT1_task_create(void)
+void Read_DHT20_task_create(void)
 {
     xTaskCreate((TaskFunction_t )DHT11_task,(const char*)"DHT11_task",(uint16_t)DHT11_TASK_STACK_SIZE,(void*)NULL,(UBaseType_t)DHT11_TASK_PRIORITY,(TaskHandle_t*  )&DHT11_task_Handler);
 

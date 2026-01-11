@@ -1,48 +1,24 @@
-/**
- ****************************************************************************************************
- * @file        usbd_conf.c
- * @author      ÕıµãÔ­×ÓÍÅ¶Ó(ALIENTEK)
- * @version     V1.0
- * @date        2022-01-19
- * @brief       usbd_conf Çı¶¯´úÂë
- * @license     Copyright (c) 2020-2032, ¹ãÖİÊĞĞÇÒíµç×Ó¿Æ¼¼ÓĞÏŞ¹«Ë¾
- ****************************************************************************************************
- * @attention
- *
- * ÊµÑéÆ½Ì¨:ÕıµãÔ­×Ó STM32F407¿ª·¢°å
- * ÔÚÏßÊÓÆµ:www.yuanzige.com
- * ¼¼ÊõÂÛÌ³:www.openedv.com
- * ¹«Ë¾ÍøÖ·:www.alientek.com
- * ¹ºÂòµØÖ·:openedv.taobao.com
- *
- * ĞŞ¸ÄËµÃ÷
- * V1.0 20220119
- * µÚÒ»´Î·¢²¼
- *
- ****************************************************************************************************
- */
-
 #include "usbd_conf.h"
 #include "usbd_core.h"
 #include "usbd_def.h"
-#include "./SYSTEM/sys/sys.h"
-#include "./SYSTEM/usart/usart.h"
+#include "sys.h"
+#include "usart.h"
 
 
-/* PCD¶¨Òå */
+/* PCDå®šä¹‰ */
 PCD_HandleTypeDef g_hpcd;
 
-/* USBÁ¬½Ó×´Ì¬
- * 0,Ã»ÓĞÁ¬½Ó;
- * 1,ÒÑ¾­Á¬½Ó;
+/* USBè¿æ¥çŠ¶æ€
+ * 0,æ²¡æœ‰è¿æ¥;
+ * 1,å·²ç»è¿æ¥;
  */
-volatile uint8_t g_device_state = 0;    /* Ä¬ÈÏÃ»ÓĞÁ¬½Ó */
+volatile uint8_t g_device_state = 0;    /* é»˜è®¤æ²¡æœ‰è¿æ¥ */
 
 
 /**
- * @brief       ³õÊ¼»¯PCD MSP
- * @param       hpcd:PCD½á¹¹ÌåÖ¸Õë
- * @retval      ÎŞ
+ * @brief       åˆå§‹åŒ–PCD MSP
+ * @param       hpcd:PCDç»“æ„ä½“æŒ‡é’ˆ
+ * @retval      æ— 
  */
 void HAL_PCD_MspInit(PCD_HandleTypeDef *hpcd)
 {
@@ -50,29 +26,29 @@ void HAL_PCD_MspInit(PCD_HandleTypeDef *hpcd)
 
     if (hpcd->Instance == USB_OTG_FS)
     {
-        __HAL_RCC_USB_OTG_FS_CLK_ENABLE();                   /* Ê¹ÄÜOTG FSÊ±ÖÓ */
-        __HAL_RCC_GPIOA_CLK_ENABLE();                        /* Ê¹ÄÜGPIOAÊ±ÖÓ */
+        __HAL_RCC_USB_OTG_FS_CLK_ENABLE();                   /* ä½¿èƒ½OTG FSæ—¶é’Ÿ */
+        __HAL_RCC_GPIOA_CLK_ENABLE();                        /* ä½¿èƒ½GPIOAæ—¶é’Ÿ */
         gpio_init_struct.Pin = GPIO_PIN_11 | GPIO_PIN_12;
-        gpio_init_struct.Mode = GPIO_MODE_AF_PP;             /* ¸´ÓÃ */
-        gpio_init_struct.Pull = GPIO_NOPULL;                 /* ¸¡¿Õ */
-        gpio_init_struct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;  /* ¸ßËÙ */
-        gpio_init_struct.Alternate = GPIO_AF10_OTG_FS;       /* ¸´ÓÃÎªOTG1_FS */
-        HAL_GPIO_Init(GPIOA, &gpio_init_struct);             /* ³õÊ¼»¯PA11ºÍPA12Òı½Å */
+        gpio_init_struct.Mode = GPIO_MODE_AF_PP;             /* å¤ç”¨ */
+        gpio_init_struct.Pull = GPIO_NOPULL;                 /* æµ®ç©º */
+        gpio_init_struct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;  /* é«˜é€Ÿ */
+        gpio_init_struct.Alternate = GPIO_AF10_OTG_FS;       /* å¤ç”¨ä¸ºOTG1_FS */
+        HAL_GPIO_Init(GPIOA, &gpio_init_struct);             /* åˆå§‹åŒ–PA11å’ŒPA12å¼•è„š */
 
-        HAL_NVIC_SetPriority(OTG_FS_IRQn, 0, 3);             /* ÇÀÕ¼ÓÅÏÈ¼¶ÉèÖÃÎª0,ÏìÓ¦ÓÅÏÈ¼¶Îª3 */
-        HAL_NVIC_EnableIRQ(OTG_FS_IRQn);                     /* Ê¹ÄÜOTG FSÖĞ¶Ï */
+        HAL_NVIC_SetPriority(OTG_FS_IRQn, 0, 3);             /* æŠ¢å ä¼˜å…ˆçº§è®¾ç½®ä¸º0,å“åº”ä¼˜å…ˆçº§ä¸º3 */
+        HAL_NVIC_EnableIRQ(OTG_FS_IRQn);                     /* ä½¿èƒ½OTG FSä¸­æ–­ */
     }
     else if (hpcd->Instance == USB_OTG_HS)
     {
-        /* USB OTG HS±¾Àı³ÌÃ»ÓÃµ½,¹Ê²»×ö´¦Àí */
+        /* USB OTG HSæœ¬ä¾‹ç¨‹æ²¡ç”¨åˆ°,æ•…ä¸åšå¤„ç† */
     }
 }
 
 /**
- * @brief       USB OTG ÖĞ¶Ï·şÎñº¯Êı
- *   @note      ´¦ÀíËùÓĞUSBÖĞ¶Ï
- * @param       ÎŞ
- * @retval      ÎŞ
+ * @brief       USB OTG ä¸­æ–­æœåŠ¡å‡½æ•°
+ *   @note      å¤„ç†æ‰€æœ‰USBä¸­æ–­
+ * @param       æ— 
+ * @retval      æ— 
  */
 void OTG_FS_IRQHandler(void)
 {
@@ -81,13 +57,13 @@ void OTG_FS_IRQHandler(void)
 
 
 /******************************************************************************************/
-/* ÒÔÏÂÊÇ: USBD LL PCD Çı¶¯µÄ»Øµ÷º¯Êı(PCD->USB Device Library) */
+/* ä»¥ä¸‹æ˜¯: USBD LL PCD é©±åŠ¨çš„å›è°ƒå‡½æ•°(PCD->USB Device Library) */
 
 
 /**
- * @brief       USBD ÅäÖÃ½×¶Î»Øµ÷º¯Êı
- * @param       hpcd    : PCD½á¹¹ÌåÖ¸Õë
- * @retval      ÎŞ
+ * @brief       USBD é…ç½®é˜¶æ®µå›è°ƒå‡½æ•°
+ * @param       hpcd    : PCDç»“æ„ä½“æŒ‡é’ˆ
+ * @retval      æ— 
  */
 void HAL_PCD_SetupStageCallback(PCD_HandleTypeDef *hpcd)
 {
@@ -95,10 +71,10 @@ void HAL_PCD_SetupStageCallback(PCD_HandleTypeDef *hpcd)
 }
 
 /**
- * @brief       USBD OUT ½×¶Î»Øµ÷º¯Êı
- * @param       hpcd    : PCD½á¹¹ÌåÖ¸Õë
- * @param       epnum   : ¶ËµãºÅ
- * @retval      ÎŞ
+ * @brief       USBD OUT é˜¶æ®µå›è°ƒå‡½æ•°
+ * @param       hpcd    : PCDç»“æ„ä½“æŒ‡é’ˆ
+ * @param       epnum   : ç«¯ç‚¹å·
+ * @retval      æ— 
  */
 void HAL_PCD_DataOutStageCallback(PCD_HandleTypeDef *hpcd, uint8_t epnum)
 {
@@ -106,10 +82,10 @@ void HAL_PCD_DataOutStageCallback(PCD_HandleTypeDef *hpcd, uint8_t epnum)
 }
 
 /**
- * @brief       USBD IN ½×¶Î»Øµ÷º¯Êı
- * @param       hpcd    : PCD½á¹¹ÌåÖ¸Õë
- * @param       epnum   : ¶ËµãºÅ
- * @retval      ÎŞ
+ * @brief       USBD IN é˜¶æ®µå›è°ƒå‡½æ•°
+ * @param       hpcd    : PCDç»“æ„ä½“æŒ‡é’ˆ
+ * @param       epnum   : ç«¯ç‚¹å·
+ * @retval      æ— 
  */
 void HAL_PCD_DataInStageCallback(PCD_HandleTypeDef *hpcd, uint8_t epnum)
 {
@@ -117,9 +93,9 @@ void HAL_PCD_DataInStageCallback(PCD_HandleTypeDef *hpcd, uint8_t epnum)
 }
 
 /**
- * @brief       USBD SOF »Øµ÷º¯Êı
- * @param       hpcd    : PCD½á¹¹ÌåÖ¸Õë
- * @retval      ÎŞ
+ * @brief       USBD SOF å›è°ƒå‡½æ•°
+ * @param       hpcd    : PCDç»“æ„ä½“æŒ‡é’ˆ
+ * @retval      æ— 
  */
 void HAL_PCD_SOFCallback(PCD_HandleTypeDef *hpcd)
 {
@@ -127,9 +103,9 @@ void HAL_PCD_SOFCallback(PCD_HandleTypeDef *hpcd)
 }
 
 /**
- * @brief       USBD ¸´Î»»Øµ÷º¯Êı
- * @param       hpcd    : PCD½á¹¹ÌåÖ¸Õë
- * @retval      ÎŞ
+ * @brief       USBD å¤ä½å›è°ƒå‡½æ•°
+ * @param       hpcd    : PCDç»“æ„ä½“æŒ‡é’ˆ
+ * @retval      æ— 
  */
 void HAL_PCD_ResetCallback(PCD_HandleTypeDef *hpcd)
 {
@@ -154,14 +130,14 @@ void HAL_PCD_ResetCallback(PCD_HandleTypeDef *hpcd)
             break;
     }
 
-    USBD_LL_Reset(hpcd->pData); /* ¸´Î»Éè±¸ */
+    USBD_LL_Reset(hpcd->pData); /* å¤ä½è®¾å¤‡ */
     USBD_LL_SetSpeed(hpcd->pData, speed);
 }
 
 /**
- * @brief       USBD ¹ÒÆğ»Øµ÷º¯Êı
- * @param       hpcd    : PCD½á¹¹ÌåÖ¸Õë
- * @retval      ÎŞ
+ * @brief       USBD æŒ‚èµ·å›è°ƒå‡½æ•°
+ * @param       hpcd    : PCDç»“æ„ä½“æŒ‡é’ˆ
+ * @retval      æ— 
  */
 void HAL_PCD_SuspendCallback(PCD_HandleTypeDef *hpcd)
 {
@@ -170,9 +146,9 @@ void HAL_PCD_SuspendCallback(PCD_HandleTypeDef *hpcd)
 }
 
 /**
- * @brief       USBD »Ö¸´»Øµ÷º¯Êı
- * @param       hpcd    : PCD½á¹¹ÌåÖ¸Õë
- * @retval      ÎŞ
+ * @brief       USBD æ¢å¤å›è°ƒå‡½æ•°
+ * @param       hpcd    : PCDç»“æ„ä½“æŒ‡é’ˆ
+ * @retval      æ— 
  */
 void HAL_PCD_ResumeCallback(PCD_HandleTypeDef *hpcd)
 {
@@ -180,10 +156,10 @@ void HAL_PCD_ResumeCallback(PCD_HandleTypeDef *hpcd)
 }
 
 /**
- * @brief       USBD ISO OUT ÊÂÎñÍê³É»Øµ÷º¯Êı
- * @param       hpcd    : PCD½á¹¹ÌåÖ¸Õë
- * @param       epnum   : ¶ËµãºÅ
- * @retval      ÎŞ
+ * @brief       USBD ISO OUT äº‹åŠ¡å®Œæˆå›è°ƒå‡½æ•°
+ * @param       hpcd    : PCDç»“æ„ä½“æŒ‡é’ˆ
+ * @param       epnum   : ç«¯ç‚¹å·
+ * @retval      æ— 
  */
 void HAL_PCD_ISOOUTIncompleteCallback(PCD_HandleTypeDef *hpcd, uint8_t epnum)
 {
@@ -191,10 +167,10 @@ void HAL_PCD_ISOOUTIncompleteCallback(PCD_HandleTypeDef *hpcd, uint8_t epnum)
 }
 
 /**
- * @brief       USBD ISO IN ÊÂÎñÍê³É»Øµ÷º¯Êı
- * @param       hpcd    : PCD½á¹¹ÌåÖ¸Õë
- * @param       epnum   : ¶ËµãºÅ
- * @retval      ÎŞ
+ * @brief       USBD ISO IN äº‹åŠ¡å®Œæˆå›è°ƒå‡½æ•°
+ * @param       hpcd    : PCDç»“æ„ä½“æŒ‡é’ˆ
+ * @param       epnum   : ç«¯ç‚¹å·
+ * @retval      æ— 
  */
 void HAL_PCD_ISOINIncompleteCallback(PCD_HandleTypeDef *hpcd, uint8_t epnum)
 {
@@ -202,9 +178,9 @@ void HAL_PCD_ISOINIncompleteCallback(PCD_HandleTypeDef *hpcd, uint8_t epnum)
 }
 
 /**
- * @brief       USBD Á¬½Ó³É¹¦»Øµ÷º¯Êı
- * @param       hpcd    : PCD½á¹¹ÌåÖ¸Õë
- * @retval      ÎŞ
+ * @brief       USBD è¿æ¥æˆåŠŸå›è°ƒå‡½æ•°
+ * @param       hpcd    : PCDç»“æ„ä½“æŒ‡é’ˆ
+ * @retval      æ— 
  */
 void HAL_PCD_ConnectCallback(PCD_HandleTypeDef *hpcd)
 {
@@ -213,9 +189,9 @@ void HAL_PCD_ConnectCallback(PCD_HandleTypeDef *hpcd)
 }
 
 /**
- * @brief       USBD ¶Ï¿ªÁ¬½Ó»Øµ÷º¯Êı
- * @param       hpcd    : PCD½á¹¹ÌåÖ¸Õë
- * @retval      ÎŞ
+ * @brief       USBD æ–­å¼€è¿æ¥å›è°ƒå‡½æ•°
+ * @param       hpcd    : PCDç»“æ„ä½“æŒ‡é’ˆ
+ * @retval      æ— 
  */
 void HAL_PCD_DisconnectCallback(PCD_HandleTypeDef *hpcd)
 {
@@ -225,56 +201,56 @@ void HAL_PCD_DisconnectCallback(PCD_HandleTypeDef *hpcd)
 }
 
 /******************************************************************************************/
-/* ÒÔÏÂÊÇ: USBD LL Çı¶¯½Ó¿Úº¯Êı(PCD->USB Device Library) */
+/* ä»¥ä¸‹æ˜¯: USBD LL é©±åŠ¨æ¥å£å‡½æ•°(PCD->USB Device Library) */
 
 
 /**
- * @brief       USBD µ×²ã³õÊ¼»¯º¯Êı
- * @param       pdev    : USBD¾ä±úÖ¸Õë
- * @retval      USB×´Ì¬
- *   @arg       USBD_OK(0)   , Õı³£;
- *   @arg       USBD_BUSY(1) , Ã¦;
- *   @arg       USBD_FAIL(2) , Ê§°Ü;
+ * @brief       USBD åº•å±‚åˆå§‹åŒ–å‡½æ•°
+ * @param       pdev    : USBDå¥æŸ„æŒ‡é’ˆ
+ * @retval      USBçŠ¶æ€
+ *   @arg       USBD_OK(0)   , æ­£å¸¸;
+ *   @arg       USBD_BUSY(1) , å¿™;
+ *   @arg       USBD_FAIL(2) , å¤±è´¥;
  */
 USBD_StatusTypeDef USBD_LL_Init(USBD_HandleTypeDef *pdev)
 {
-#ifdef USE_USB_FS   /* Õë¶ÔUSB FS,Ö´ĞĞFSµÄ³õÊ¼»¯ */
+#ifdef USE_USB_FS   /* é’ˆå¯¹USB FS,æ‰§è¡ŒFSçš„åˆå§‹åŒ– */
     
-    /* ÉèÖÃLLÇı¶¯Ïà¹Ø²ÎÊı */
-    g_hpcd.Instance = USB_OTG_FS;             /* Ê¹ÓÃUSB OTG */
-    g_hpcd.Init.dev_endpoints = 4;            /* ¶ËµãÊıÎª4 */
-    g_hpcd.Init.use_dedicated_ep1 = 0;        /* ½ûÖ¹EP1 dedicatedÖĞ¶Ï */
-    g_hpcd.Init.dma_enable = 0;               /* ²»Ê¹ÄÜDMA */
-    g_hpcd.Init.low_power_enable = 0;         /* ²»Ê¹ÄÜµÍ¹¦ºÄÄ£Ê½ */
-    g_hpcd.Init.phy_itface = PCD_PHY_EMBEDDED;/* Ê¹ÓÃÄÚ²¿PHY */
-    g_hpcd.Init.Sof_enable = 0;               /* Ê¹ÄÜSOFÖĞ¶Ï */
-    g_hpcd.Init.speed = PCD_SPEED_FULL;       /* USBÈ«ËÙ(12Mbps) */
-    g_hpcd.Init.vbus_sensing_enable = 0;      /* ²»Ê¹ÄÜVBUS¼ì²â */
+    /* è®¾ç½®LLé©±åŠ¨ç›¸å…³å‚æ•° */
+    g_hpcd.Instance = USB_OTG_FS;             /* ä½¿ç”¨USB OTG */
+    g_hpcd.Init.dev_endpoints = 4;            /* ç«¯ç‚¹æ•°ä¸º4 */
+    g_hpcd.Init.use_dedicated_ep1 = 0;        /* ç¦æ­¢EP1 dedicatedä¸­æ–­ */
+    g_hpcd.Init.dma_enable = 0;               /* ä¸ä½¿èƒ½DMA */
+    g_hpcd.Init.low_power_enable = 0;         /* ä¸ä½¿èƒ½ä½åŠŸè€—æ¨¡å¼ */
+    g_hpcd.Init.phy_itface = PCD_PHY_EMBEDDED;/* ä½¿ç”¨å†…éƒ¨PHY */
+    g_hpcd.Init.Sof_enable = 0;               /* ä½¿èƒ½SOFä¸­æ–­ */
+    g_hpcd.Init.speed = PCD_SPEED_FULL;       /* USBå…¨é€Ÿ(12Mbps) */
+    g_hpcd.Init.vbus_sensing_enable = 0;      /* ä¸ä½¿èƒ½VBUSæ£€æµ‹ */
 
-    g_hpcd.pData = pdev;                      /* g_hpcdµÄpDataÖ¸Ïòpdev */
-    pdev->pData = &g_hpcd;                    /* pdevµÄpDataÖ¸Ïòg_hpcd */
+    g_hpcd.pData = pdev;                      /* g_hpcdçš„pDataæŒ‡å‘pdev */
+    pdev->pData = &g_hpcd;                    /* pdevçš„pDataæŒ‡å‘g_hpcd */
 
-    HAL_PCD_Init(&g_hpcd);                    /* ³õÊ¼»¯LLÇı¶¯ */
+    HAL_PCD_Init(&g_hpcd);                    /* åˆå§‹åŒ–LLé©±åŠ¨ */
 
-    HAL_PCDEx_SetRxFiFo(&g_hpcd, 0x80);       /* ÉèÖÃ½ÓÊÕFIFO´óĞ¡Îª0X80(128×Ö½Ú) */
-    HAL_PCDEx_SetTxFiFo(&g_hpcd, 0, 0x40);    /* ÉèÖÃ·¢ËÍFIFO 0µÄ´óĞ¡Îª0X40(64×Ö½Ú) */
-    HAL_PCDEx_SetTxFiFo(&g_hpcd, 1, 0x80);    /* ÉèÖÃ·¢ËÍFIFO 1µÄ´óĞ¡Îª0X80(128×Ö½Ú) */
+    HAL_PCDEx_SetRxFiFo(&g_hpcd, 0x80);       /* è®¾ç½®æ¥æ”¶FIFOå¤§å°ä¸º0X80(128å­—èŠ‚) */
+    HAL_PCDEx_SetTxFiFo(&g_hpcd, 0, 0x40);    /* è®¾ç½®å‘é€FIFO 0çš„å¤§å°ä¸º0X40(64å­—èŠ‚) */
+    HAL_PCDEx_SetTxFiFo(&g_hpcd, 1, 0x80);    /* è®¾ç½®å‘é€FIFO 1çš„å¤§å°ä¸º0X80(128å­—èŠ‚) */
 
 #endif
 
-#ifdef USE_USB_HS   /* Õë¶ÔUSB HS,Ö´ĞĞHSµÄ³õÊ¼»¯ */
-    /* Î´ÊµÏÖ */
+#ifdef USE_USB_HS   /* é’ˆå¯¹USB HS,æ‰§è¡ŒHSçš„åˆå§‹åŒ– */
+    /* æœªå®ç° */
 #endif
     return USBD_OK;
 }
 
 /**
- * @brief       USBD µ×²ãÈ¡Ïû³õÊ¼»¯(»Ø¸´Ä¬ÈÏ¸´Î»×´Ì¬)º¯Êı
- * @param       pdev    : USBD¾ä±úÖ¸Õë
- * @retval      USB×´Ì¬
- *   @arg       USBD_OK(0)   , Õı³£;
- *   @arg       USBD_BUSY(1) , Ã¦;
- *   @arg       USBD_FAIL(2) , Ê§°Ü;
+ * @brief       USBD åº•å±‚å–æ¶ˆåˆå§‹åŒ–(å›å¤é»˜è®¤å¤ä½çŠ¶æ€)å‡½æ•°
+ * @param       pdev    : USBDå¥æŸ„æŒ‡é’ˆ
+ * @retval      USBçŠ¶æ€
+ *   @arg       USBD_OK(0)   , æ­£å¸¸;
+ *   @arg       USBD_BUSY(1) , å¿™;
+ *   @arg       USBD_FAIL(2) , å¤±è´¥;
  */
 USBD_StatusTypeDef USBD_LL_DeInit(USBD_HandleTypeDef *pdev)
 {
@@ -283,12 +259,12 @@ USBD_StatusTypeDef USBD_LL_DeInit(USBD_HandleTypeDef *pdev)
 }
 
 /**
- * @brief       USBD µ×²ãÇı¶¯¿ªÊ¼¹¤×÷
- * @param       pdev    : USBD¾ä±úÖ¸Õë
- * @retval      USB×´Ì¬
- *   @arg       USBD_OK(0)   , Õı³£;
- *   @arg       USBD_BUSY(1) , Ã¦;
- *   @arg       USBD_FAIL(2) , Ê§°Ü;
+ * @brief       USBD åº•å±‚é©±åŠ¨å¼€å§‹å·¥ä½œ
+ * @param       pdev    : USBDå¥æŸ„æŒ‡é’ˆ
+ * @retval      USBçŠ¶æ€
+ *   @arg       USBD_OK(0)   , æ­£å¸¸;
+ *   @arg       USBD_BUSY(1) , å¿™;
+ *   @arg       USBD_FAIL(2) , å¤±è´¥;
  */
 USBD_StatusTypeDef USBD_LL_Start(USBD_HandleTypeDef *pdev)
 {
@@ -297,12 +273,12 @@ USBD_StatusTypeDef USBD_LL_Start(USBD_HandleTypeDef *pdev)
 }
 
 /**
- * @brief       USBD µ×²ãÇı¶¯Í£Ö¹¹¤×÷
- * @param       pdev    : USBD¾ä±úÖ¸Õë
- * @retval      USB×´Ì¬
- *   @arg       USBD_OK(0)   , Õı³£;
- *   @arg       USBD_BUSY(1) , Ã¦;
- *   @arg       USBD_FAIL(2) , Ê§°Ü;
+ * @brief       USBD åº•å±‚é©±åŠ¨åœæ­¢å·¥ä½œ
+ * @param       pdev    : USBDå¥æŸ„æŒ‡é’ˆ
+ * @retval      USBçŠ¶æ€
+ *   @arg       USBD_OK(0)   , æ­£å¸¸;
+ *   @arg       USBD_BUSY(1) , å¿™;
+ *   @arg       USBD_FAIL(2) , å¤±è´¥;
  */
 USBD_StatusTypeDef USBD_LL_Stop(USBD_HandleTypeDef *pdev)
 {
@@ -311,15 +287,15 @@ USBD_StatusTypeDef USBD_LL_Stop(USBD_HandleTypeDef *pdev)
 }
 
 /**
- * @brief       USBD ³õÊ¼»¯(´ò¿ª)Ä³¸ö¶Ëµã
- * @param       pdev    : USBD¾ä±úÖ¸Õë
- * @param       ep_addr : ¶ËµãºÅ
- * @param       ep_type : ¶ËµãÀàĞÍ
- * @param       ep_mps  : ¶Ëµã×î´ó°üÈİÁ¿(×Ö½Ú)
- * @retval      USB×´Ì¬
- *   @arg       USBD_OK(0)   , Õı³£;
- *   @arg       USBD_BUSY(1) , Ã¦;
- *   @arg       USBD_FAIL(2) , Ê§°Ü;
+ * @brief       USBD åˆå§‹åŒ–(æ‰“å¼€)æŸä¸ªç«¯ç‚¹
+ * @param       pdev    : USBDå¥æŸ„æŒ‡é’ˆ
+ * @param       ep_addr : ç«¯ç‚¹å·
+ * @param       ep_type : ç«¯ç‚¹ç±»å‹
+ * @param       ep_mps  : ç«¯ç‚¹æœ€å¤§åŒ…å®¹é‡(å­—èŠ‚)
+ * @retval      USBçŠ¶æ€
+ *   @arg       USBD_OK(0)   , æ­£å¸¸;
+ *   @arg       USBD_BUSY(1) , å¿™;
+ *   @arg       USBD_FAIL(2) , å¤±è´¥;
  */
 USBD_StatusTypeDef USBD_LL_OpenEP(USBD_HandleTypeDef *pdev, uint8_t ep_addr, uint8_t ep_type, uint16_t ep_mps)
 {
@@ -328,13 +304,13 @@ USBD_StatusTypeDef USBD_LL_OpenEP(USBD_HandleTypeDef *pdev, uint8_t ep_addr, uin
 }
 
 /**
- * @brief       USBD È¡Ïû³õÊ¼»¯(¹Ø±Õ)Ä³¸ö¶Ëµã
- * @param       pdev    : USBD¾ä±úÖ¸Õë
- * @param       ep_addr : ¶ËµãºÅ
- * @retval      USB×´Ì¬
- *   @arg       USBD_OK(0)   , Õı³£;
- *   @arg       USBD_BUSY(1) , Ã¦;
- *   @arg       USBD_FAIL(2) , Ê§°Ü;
+ * @brief       USBD å–æ¶ˆåˆå§‹åŒ–(å…³é—­)æŸä¸ªç«¯ç‚¹
+ * @param       pdev    : USBDå¥æŸ„æŒ‡é’ˆ
+ * @param       ep_addr : ç«¯ç‚¹å·
+ * @retval      USBçŠ¶æ€
+ *   @arg       USBD_OK(0)   , æ­£å¸¸;
+ *   @arg       USBD_BUSY(1) , å¿™;
+ *   @arg       USBD_FAIL(2) , å¤±è´¥;
  */
 USBD_StatusTypeDef USBD_LL_CloseEP(USBD_HandleTypeDef *pdev, uint8_t ep_addr)
 {
@@ -343,13 +319,13 @@ USBD_StatusTypeDef USBD_LL_CloseEP(USBD_HandleTypeDef *pdev, uint8_t ep_addr)
 }
 
 /**
- * @brief       USBD Çå¿ÕÄ³¸ö¶ËµãµÄÊı¾İ
- * @param       pdev    : USBD¾ä±úÖ¸Õë
- * @param       ep_addr : ¶ËµãºÅ
- * @retval      USB×´Ì¬
- *   @arg       USBD_OK(0)   , Õı³£;
- *   @arg       USBD_BUSY(1) , Ã¦;
- *   @arg       USBD_FAIL(2) , Ê§°Ü;
+ * @brief       USBD æ¸…ç©ºæŸä¸ªç«¯ç‚¹çš„æ•°æ®
+ * @param       pdev    : USBDå¥æŸ„æŒ‡é’ˆ
+ * @param       ep_addr : ç«¯ç‚¹å·
+ * @retval      USBçŠ¶æ€
+ *   @arg       USBD_OK(0)   , æ­£å¸¸;
+ *   @arg       USBD_BUSY(1) , å¿™;
+ *   @arg       USBD_FAIL(2) , å¤±è´¥;
  */
 USBD_StatusTypeDef USBD_LL_FlushEP(USBD_HandleTypeDef *pdev, uint8_t ep_addr)
 {
@@ -358,13 +334,13 @@ USBD_StatusTypeDef USBD_LL_FlushEP(USBD_HandleTypeDef *pdev, uint8_t ep_addr)
 }
 
 /**
- * @brief       USBD ¸øÄ³¸ö¶ËµãÉèÖÃÒ»¸öÔİÍ£×´Ì¬
- * @param       pdev    : USBD¾ä±úÖ¸Õë
- * @param       ep_addr : ¶ËµãºÅ
- * @retval      USB×´Ì¬
- *   @arg       USBD_OK(0)   , Õı³£;
- *   @arg       USBD_BUSY(1) , Ã¦;
- *   @arg       USBD_FAIL(2) , Ê§°Ü;
+ * @brief       USBD ç»™æŸä¸ªç«¯ç‚¹è®¾ç½®ä¸€ä¸ªæš‚åœçŠ¶æ€
+ * @param       pdev    : USBDå¥æŸ„æŒ‡é’ˆ
+ * @param       ep_addr : ç«¯ç‚¹å·
+ * @retval      USBçŠ¶æ€
+ *   @arg       USBD_OK(0)   , æ­£å¸¸;
+ *   @arg       USBD_BUSY(1) , å¿™;
+ *   @arg       USBD_FAIL(2) , å¤±è´¥;
  */
 USBD_StatusTypeDef USBD_LL_StallEP(USBD_HandleTypeDef *pdev, uint8_t ep_addr)
 {
@@ -373,13 +349,13 @@ USBD_StatusTypeDef USBD_LL_StallEP(USBD_HandleTypeDef *pdev, uint8_t ep_addr)
 }
 
 /**
- * @brief       USBD È¡ÏûÄ³¸ö¶ËµãµÄÔİÍ£×´Ì¬
- * @param       pdev    : USBD¾ä±úÖ¸Õë
- * @param       ep_addr : ¶ËµãºÅ
- * @retval      USB×´Ì¬
- *   @arg       USBD_OK(0)   , Õı³£;
- *   @arg       USBD_BUSY(1) , Ã¦;
- *   @arg       USBD_FAIL(2) , Ê§°Ü;
+ * @brief       USBD å–æ¶ˆæŸä¸ªç«¯ç‚¹çš„æš‚åœçŠ¶æ€
+ * @param       pdev    : USBDå¥æŸ„æŒ‡é’ˆ
+ * @param       ep_addr : ç«¯ç‚¹å·
+ * @retval      USBçŠ¶æ€
+ *   @arg       USBD_OK(0)   , æ­£å¸¸;
+ *   @arg       USBD_BUSY(1) , å¿™;
+ *   @arg       USBD_FAIL(2) , å¤±è´¥;
  */
 USBD_StatusTypeDef USBD_LL_ClearStallEP(USBD_HandleTypeDef *pdev,
                                         uint8_t ep_addr)
@@ -389,10 +365,10 @@ USBD_StatusTypeDef USBD_LL_ClearStallEP(USBD_HandleTypeDef *pdev,
 }
 
 /**
- * @brief       USBD ·µ»ØÊÇ·ñ´¦ÓÚÔİÍ£×´Ì¬
- * @param       pdev    : USBD¾ä±úÖ¸Õë
- * @param       ep_addr : ¶ËµãºÅ
- * @retval      0, ·ÇÔİÍ£; 1, ÔİÍ£;
+ * @brief       USBD è¿”å›æ˜¯å¦å¤„äºæš‚åœçŠ¶æ€
+ * @param       pdev    : USBDå¥æŸ„æŒ‡é’ˆ
+ * @param       ep_addr : ç«¯ç‚¹å·
+ * @retval      0, éæš‚åœ; 1, æš‚åœ;
  */
 uint8_t USBD_LL_IsStallEP(USBD_HandleTypeDef *pdev, uint8_t ep_addr)
 {
@@ -409,31 +385,31 @@ uint8_t USBD_LL_IsStallEP(USBD_HandleTypeDef *pdev, uint8_t ep_addr)
 }
 
 /**
- * @brief       USBD ÎªÉè±¸Ö¸¶¨ĞÂµÄUSBµØÖ·
- * @param       pdev    : USBD¾ä±úÖ¸Õë
- * @param       dev_addr: ĞÂµÄÉè±¸µØÖ·,USB1_OTG_HS/USB2_OTG_HS
- * @retval      USB×´Ì¬
- *   @arg       USBD_OK(0)   , Õı³£;
- *   @arg       USBD_BUSY(1) , Ã¦;
- *   @arg       USBD_FAIL(2) , Ê§°Ü;
+ * @brief       USBD ä¸ºè®¾å¤‡æŒ‡å®šæ–°çš„USBåœ°å€
+ * @param       pdev    : USBDå¥æŸ„æŒ‡é’ˆ
+ * @param       dev_addr: æ–°çš„è®¾å¤‡åœ°å€,USB1_OTG_HS/USB2_OTG_HS
+ * @retval      USBçŠ¶æ€
+ *   @arg       USBD_OK(0)   , æ­£å¸¸;
+ *   @arg       USBD_BUSY(1) , å¿™;
+ *   @arg       USBD_FAIL(2) , å¤±è´¥;
  */
 USBD_StatusTypeDef USBD_LL_SetUSBAddress(USBD_HandleTypeDef *pdev, uint8_t dev_addr)
 {
-    g_device_state = 1; /* ÄÜÖ´ĞĞµ½¸Ãº¯Êı,ËµÃ÷USBÁ¬½Ó³É¹¦ÁË */
+    g_device_state = 1; /* èƒ½æ‰§è¡Œåˆ°è¯¥å‡½æ•°,è¯´æ˜USBè¿æ¥æˆåŠŸäº† */
     HAL_PCD_SetAddress(pdev->pData, dev_addr);
     return USBD_OK;
 }
 
 /**
- * @brief       USBD Í¨¹ı¶Ëµã·¢ËÍÊı¾İ
- * @param       pdev    : USBD¾ä±úÖ¸Õë
- * @param       ep_addr : ¶ËµãºÅ
- * @param       pbuf    : Êı¾İ»º³åÇøÊ×µØÖ·
- * @param       size    : Òª·¢ËÍµÄÊı¾İ´óĞ¡
- * @retval      USB×´Ì¬
- *   @arg       USBD_OK(0)   , Õı³£;
- *   @arg       USBD_BUSY(1) , Ã¦;
- *   @arg       USBD_FAIL(2) , Ê§°Ü;
+ * @brief       USBD é€šè¿‡ç«¯ç‚¹å‘é€æ•°æ®
+ * @param       pdev    : USBDå¥æŸ„æŒ‡é’ˆ
+ * @param       ep_addr : ç«¯ç‚¹å·
+ * @param       pbuf    : æ•°æ®ç¼“å†²åŒºé¦–åœ°å€
+ * @param       size    : è¦å‘é€çš„æ•°æ®å¤§å°
+ * @retval      USBçŠ¶æ€
+ *   @arg       USBD_OK(0)   , æ­£å¸¸;
+ *   @arg       USBD_BUSY(1) , å¿™;
+ *   @arg       USBD_FAIL(2) , å¤±è´¥;
  */
 USBD_StatusTypeDef USBD_LL_Transmit(USBD_HandleTypeDef *pdev, uint8_t ep_addr, uint8_t *pbuf, uint32_t size)
 {
@@ -442,15 +418,15 @@ USBD_StatusTypeDef USBD_LL_Transmit(USBD_HandleTypeDef *pdev, uint8_t ep_addr, u
 }
 
 /**
- * @brief       USBD ×¼±¸Ò»¸ö¶Ëµã½ÓÊÕÊı¾İ
- * @param       pdev    : USBD¾ä±úÖ¸Õë
- * @param       ep_addr : ¶ËµãºÅ
- * @param       pbuf    : Êı¾İ»º³åÇøÊ×µØÖ·
- * @param       size    : Òª½ÓÊÕµÄÊı¾İ´óĞ¡
- * @retval      USB×´Ì¬
- *   @arg       USBD_OK(0)   , Õı³£;
- *   @arg       USBD_BUSY(1) , Ã¦;
- *   @arg       USBD_FAIL(2) , Ê§°Ü;
+ * @brief       USBD å‡†å¤‡ä¸€ä¸ªç«¯ç‚¹æ¥æ”¶æ•°æ®
+ * @param       pdev    : USBDå¥æŸ„æŒ‡é’ˆ
+ * @param       ep_addr : ç«¯ç‚¹å·
+ * @param       pbuf    : æ•°æ®ç¼“å†²åŒºé¦–åœ°å€
+ * @param       size    : è¦æ¥æ”¶çš„æ•°æ®å¤§å°
+ * @retval      USBçŠ¶æ€
+ *   @arg       USBD_OK(0)   , æ­£å¸¸;
+ *   @arg       USBD_BUSY(1) , å¿™;
+ *   @arg       USBD_FAIL(2) , å¤±è´¥;
  */
 USBD_StatusTypeDef USBD_LL_PrepareReceive(USBD_HandleTypeDef *pdev, uint8_t ep_addr, uint8_t *pbuf, uint32_t size)
 {
@@ -459,10 +435,10 @@ USBD_StatusTypeDef USBD_LL_PrepareReceive(USBD_HandleTypeDef *pdev, uint8_t ep_a
 }
 
 /**
- * @brief       USBD »ñÈ¡×îºóÒ»¸ö´«Êä°üµÄ´óĞ¡
- * @param       pdev    : USBD¾ä±úÖ¸Õë
- * @param       ep_addr : ¶ËµãºÅ
- * @retval      °ü´óĞ¡
+ * @brief       USBD è·å–æœ€åä¸€ä¸ªä¼ è¾“åŒ…çš„å¤§å°
+ * @param       pdev    : USBDå¥æŸ„æŒ‡é’ˆ
+ * @param       ep_addr : ç«¯ç‚¹å·
+ * @retval      åŒ…å¤§å°
  */
 uint32_t USBD_LL_GetRxDataSize(USBD_HandleTypeDef *pdev, uint8_t ep_addr)
 {
@@ -470,9 +446,9 @@ uint32_t USBD_LL_GetRxDataSize(USBD_HandleTypeDef *pdev, uint8_t ep_addr)
 }
 
 /**
- * @brief       USBD ÑÓÊ±º¯Êı(ÒÔmsÎªµ¥Î»)
- * @param       Delay   : ÑÓÊ±µÄmsÊı
- * @retval      ÎŞ
+ * @brief       USBD å»¶æ—¶å‡½æ•°(ä»¥msä¸ºå•ä½)
+ * @param       Delay   : å»¶æ—¶çš„msæ•°
+ * @retval      æ— 
  */
 void USBD_LL_Delay(uint32_t Delay)
 {

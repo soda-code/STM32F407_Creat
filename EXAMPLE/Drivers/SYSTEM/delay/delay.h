@@ -1,7 +1,7 @@
 #ifndef __DELAY_H
 #define __DELAY_H
 
-#include "./SYSTEM/sys/sys.h"
+#include "sys.h"
 
 
 void delay_init(uint16_t sysclk);           /* ³õÊ¼»¯ÑÓ³Ùº¯Êý */
