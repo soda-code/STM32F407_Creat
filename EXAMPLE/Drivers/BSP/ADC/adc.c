@@ -84,7 +84,7 @@ void adc_channel_set(ADC_HandleTypeDef *adc_handle, uint32_t ch, uint32_t rank, 
  */
 uint32_t adc_get_result(uint32_t ch)
 {
-    adc_channel_set(&g_adc_handle, ch, 1, ADC_SAMPLETIME_480CYCLES);   /* 设置通道，序列和采样时间 */
+    adc_channel_set(&g_adc_handle, ch, 1, ADC_SAMPLETIME_15CYCLES);   /* 设置通道，序列和采样时间 */
     HAL_ADC_Start(&g_adc_handle);                                       /* 开启ADC */
     HAL_ADC_PollForConversion(&g_adc_handle, 10);                       /* 轮询转换 */
 

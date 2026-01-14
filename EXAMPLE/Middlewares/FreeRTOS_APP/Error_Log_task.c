@@ -27,29 +27,22 @@ void Error_Log_task(void *pvParameters)
 	uint16_t wite_lenth=0;
 	FRESULT res = FR_OK;
 	char path[50] = "0:logfile.txt";
-//	Error_Res=exfuns_get_free("1:", &Flash_Fat_fs.Toal_Num, &Flash_Fat_fs.Free_Num);
-//	Error_Res=exfuns_get_free("0:", &SD_Inf.Toal_Num, &SD_Inf.Free_Num);
+	res = f_mount(fs[0], "0", 1);  /* 挂载SD*/
+	if(res != FR_OK)
+	{
+		SD_Inf.SD_insert = 0;
+		Error_Res=exfuns_get_free("1:", &Flash_Fat_fs.Toal_Num, &Flash_Fat_fs.Free_Num);
+		Error_Res=exfuns_get_free("0:", &SD_Inf.Toal_Num, &SD_Inf.Free_Num);
+	}
+	else
+	{
+		SD_Inf.SD_insert = 1;
+	}
+
   while(1)
   {
-		//************ 记录Flash文件系统信息 ************/	
-		if(!SD_Inf.SD_insert)
-		{
-			vTaskDelay(1000);
-			res = f_mount(fs[0], "0", 1);  /* 挂载SD*/
-			if(res != FR_OK)
-			{
-				SD_Inf.SD_insert = 0;
-			}
-			else
-			{
-				SD_Inf.SD_insert = 1;
-			}
-		}
-		else
-		{
-			SD_Inf.SD_insert = 0;
-		}
-		//************ 记录Flash文件系统信息 ************/
+
+		//************ 记录SD文件系统信息 ************/
 		if(SD_Inf.SD_insert)
 		{
 			Error_Res = f_open(&file_error, path, FA_WRITE | FA_OPEN_ALWAYS);
@@ -61,7 +54,7 @@ void Error_Log_task(void *pvParameters)
 				Error_Res =f_write(&file_error,&Flash_Fat_fs,wite_lenth,&bw);
 				if (bw == wite_lenth)
 				{
-					my_printf("\n bw:%5d  wite_lenth:%5d  \r\n",bw,wite_lenth);
+				//	my_printf("\n bw:%5d  wite_lenth:%5d  \r\n",bw,wite_lenth);
 				}
 				f_close(&file_error);
 	
