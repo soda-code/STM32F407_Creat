@@ -123,19 +123,7 @@ void USB_LP_CAN1_RX0_IRQHandler(void)
     uint8_t rxbuf[8];
     uint32_t id;
     can_receive_msg(id, rxbuf);
-    printf("id:%d\r\n", g_canx_rxheader.StdId);
-    printf("ide:%d\r\n", g_canx_rxheader.IDE);
-    printf("rtr:%d\r\n", g_canx_rxheader.RTR);
-    printf("len:%d\r\n", g_canx_rxheader.DLC);
 
-    printf("rxbuf[0]:%d\r\n", rxbuf[0]);
-    printf("rxbuf[1]:%d\r\n", rxbuf[1]);
-    printf("rxbuf[2]:%d\r\n", rxbuf[2]);
-    printf("rxbuf[3]:%d\r\n", rxbuf[3]);
-    printf("rxbuf[4]:%d\r\n", rxbuf[4]);
-    printf("rxbuf[5]:%d\r\n", rxbuf[5]);
-    printf("rxbuf[6]:%d\r\n", rxbuf[6]);
-    printf("rxbuf[7]:%d\r\n", rxbuf[7]);
 }
 
 #endif

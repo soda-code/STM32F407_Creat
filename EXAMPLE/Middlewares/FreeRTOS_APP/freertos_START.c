@@ -12,9 +12,10 @@
 #include "Led_task.h"
 #include "Key_task.h"
 #include "Can_task.h"
+#include "Light_Task.h"
 #include "AI_task.h"
-#include "DHT11_task.h"
-#include "Error_Log_task.h"
+#include "Ex_Temp_Humit_Task.h"
+#include "Data_Save_task.h"
 #include "Version.h"
 
 /*FreeRTOS配置*/
@@ -65,11 +66,12 @@ void start_task(void *pvParameters)
 
 	taskENTER_CRITICAL();           /* 进入临界区 */
 	led_task_create();              /* 创建LED任务 */
+	Light_task_create();
 	//key_task_create();            /* 创建按键任务 */
 	AI_task_create();               /* 创建按键任务 */
-	Read_DHT20_task_create();
+	EX_Temp_Humit_task_create();
 	CAN_task_create();              /* 创建按键任务 */
-	Error_Log_task_create();        //****系统问题
+	Data_Save_task_create();        //****系统问题
 	vTaskDelete(StartTask_Handler); /* 删除开始任务 */
 	taskEXIT_CRITICAL();            /* 退出临界区 */
 }

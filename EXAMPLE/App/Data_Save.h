@@ -1,20 +1,23 @@
-#ifndef __ERROR_LOG_TASK_H
-#define __ERROR_LOG_TASK_H
+#ifndef __DATA_SAVE_H
+#define __DATA_SAVE_H
 
 #include "sys.h"
+
+//*************************************************************************************
 #define MAX_LOG_PAYLOAD_SIZE 100
 
+//*************************************************************************************
 typedef struct
 {
-	uint32_t Free_Num;
-	uint32_t Toal_Num;
+	uint32_t Free_Num; // 外部闪存剩余空间 单位:簇
+	uint32_t Toal_Num; // 外部闪存总空间 单位:簇
 }Nor_Flash;
 
 typedef struct
 {
-	uint32_t Free_Num;
-	uint32_t Toal_Num;
-	uint8_t  SD_insert;
+	uint32_t Free_Num;  // SD卡剩余空间 单位:簇
+	uint32_t Toal_Num;  // SD卡总空间 单位:簇
+	uint8_t  SD_insert; // SD卡插入标志
 }SD_Struct;
 
 
@@ -34,7 +37,14 @@ typedef struct
 
 extern Nor_Flash Flash_Fat_fs;
 extern SD_Struct SD_Inf;
-void Error_Log_task_create(void);
+
+
+
+void Data_Save_Init(void);
+
+void Data_save(void);
+void Temp_Humit_Data_save(void);
+void Can_Data_Save(void);
 
 
 #endif

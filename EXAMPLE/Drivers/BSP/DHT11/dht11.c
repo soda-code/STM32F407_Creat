@@ -84,17 +84,19 @@ uint16_t tx_size = sizeof(tx_buffer);
   * @brief IIC 触发测量及数据写入操作 (对应图示)
   * @retval HAL_StatusTypeDef 状态
   */
-HAL_StatusTypeDef IIC_Trigger_Measurement(void)
+bool Measurement_Start(void)
 {
     HAL_StatusTypeDef status;
-    
-    // 缓冲区已在上面定义
-
     // 执行 IIC 写入操作
     // 参数: 句柄, 设备地址, 缓冲区, 长度, 超时时间
     status = HAL_I2C_Master_Transmit( &hi2c1,SENSOR_8BIT_WRITE_ADDR,  tx_buffer,tx_size, 1000 );
 
-    return status;
+    if (status != HAL_OK)
+    {
+        // I2C 通信失败，返回错误状态
+        return false;
+    }
+    return true;
 }
 
 
@@ -105,7 +107,7 @@ HAL_StatusTypeDef IIC_Trigger_Measurement(void)
   * @param pSensorData: 存储解析后数据的结构体指针
   * @retval HAL_StatusTypeDef 状态
   */
-HAL_StatusTypeDef IIC_Read_Sensor_Data(SensorData_t *pSensorData)
+bool Read_Sensor_Data(SensorData_t *pSensorData)
 {
     HAL_StatusTypeDef status;
     // 接收缓冲区总长：1(状态) + 2(湿度) + 2(温度) + 1(CRC) = 6 字节
@@ -120,7 +122,7 @@ HAL_StatusTypeDef IIC_Read_Sensor_Data(SensorData_t *pSensorData)
     if (status != HAL_OK)
     {
         // I2C 通信失败，返回错误状态
-        return status;
+        return false;
     }
 
     // 2. 数据解析 (大端格式，即高字节在前)
@@ -131,7 +133,7 @@ HAL_StatusTypeDef IIC_Read_Sensor_Data(SensorData_t *pSensorData)
         pSensorData->status = rx_buffer[0];
         
         // 湿度数据：rx_buffer[1] (高字节) + rx_buffer[2] (低字节)
-        pSensorData->humidity_raw =H_raw;
+        pSensorData->humidity_raw = H_raw;
         
         // 温度数据：rx_buffer[3] (高字节) + rx_buffer[4] (低字节)
         pSensorData->temperature_raw = T_raw;
@@ -139,7 +141,7 @@ HAL_StatusTypeDef IIC_Read_Sensor_Data(SensorData_t *pSensorData)
         // CRC 数据
         pSensorData->crc = rx_buffer[5];
     }
-    
-    return HAL_OK;
+
+    return true;
 }
 

@@ -6,6 +6,7 @@
 #include "core_cm4.h"
 #include "stm32f4xx_hal.h"
 #include <stdbool.h>
+#include <stdio.h>
 
 /**
  * SYS_SUPPORT_OS用于定义系统文件夹是否支持OS
