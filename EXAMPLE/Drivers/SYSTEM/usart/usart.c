@@ -234,20 +234,23 @@ extern DMA_HandleTypeDef  g_dma_handle;                  /* DMA句柄 */
 
 void my_printf(const char *cmd, ...)
 {
-	uint8_t _dbg_Buff[1024];
+	uint8_t _dbg_Buff[512]={0};
 	uint16_t length;
 	va_list args;
 	va_start(args, cmd);
 	length = vsnprintf((char*)_dbg_Buff, sizeof(_dbg_Buff)+1, (char*)cmd, args);
 	va_end(args);
 	
-	    /* DMA 正在发送，直接返回（或排队） */
-    if (uart1_tx_busy)
-        return;
-
-    uart1_tx_busy = 1;
-	HAL_UART_Transmit_DMA(&g_uart1_handle, _dbg_Buff, length);   /* 开始一次DMA传输！ */
-
+	/* DMA 正在发送，直接返回（或排队） */
+  if(uart1_tx_busy)
+  {
+		return;
+	}
+	else
+	{
+    	uart1_tx_busy = 1;
+		HAL_UART_Transmit_DMA(&g_uart1_handle, _dbg_Buff, length);   /* 开始一次DMA传输！ */
+	}
 
 }
 

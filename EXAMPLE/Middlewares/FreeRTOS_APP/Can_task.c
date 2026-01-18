@@ -4,12 +4,12 @@
 #include "Can_App.h"
 
 
-#define 		CAN_RX_TASK_STACK_SIZE    (2048)
+#define 		CAN_RX_TASK_STACK_SIZE    (1024)
 #define 		CAN_RX_TASK_PRIORITY      4u
 TaskHandle_t   	CAN_RX_task_Handler;             /* 任务句柄 */
 void CAN_RX_task(void *pvParameters);             /* 任务函数 */
 
-#define 		CAN_TX_TASK_STACK_SIZE    (1024)
+#define 		CAN_TX_TASK_STACK_SIZE    (512)
 #define 		CAN_TX_TASK_PRIORITY      5u
 TaskHandle_t   	CAN_TX_task_Handler;             /* 任务句柄 */
 void CAN_TX_task(void *pvParameters);                      /* 任务函数 */
@@ -27,8 +27,8 @@ void CAN_TX_task(void *pvParameters)
     /* CAN初始化, 普通(0)/回环(1)模式, 波特率500Kbps */
     while(1)
     {
-		CAN_TX_App();
-		vTaskDelay(20);
+			CAN_TX_App();
+			vTaskDelay(100);
     }
 }
 //*********************************************************
@@ -43,7 +43,7 @@ void CAN_RX_task(void *pvParameters)
 	while(1)
 	{
 		CAN_RX_App();
-		vTaskDelay(1000);
+		vTaskDelay(100);
 	}
 }
 

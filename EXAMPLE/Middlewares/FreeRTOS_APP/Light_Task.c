@@ -2,8 +2,8 @@
 #include "task.h"
 #include "Light_Task.h"
 
-#define Light_TASK_STACK_SIZE    (2048)
-#define Light_TASK_PRIORITY      2u
+#define Light_TASK_STACK_SIZE    (512)
+#define Light_TASK_PRIORITY      4u
 TaskHandle_t   Light_task_Handler;             /* 任务句柄 */
 void Light_task(void *pvParameters);                      /* 任务函数 */
 
@@ -19,7 +19,7 @@ void Light_task(void *pvParameters)
 	while(1)
 	{
 		Light_Read();
-		vTaskDelay(100);
+		vTaskDelay(1);
 	}
 }
 

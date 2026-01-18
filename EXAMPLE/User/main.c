@@ -25,7 +25,6 @@ int main(void)
 	adc_init();
 	sd_init();
 	DHT11_II2C_Init();
-	can_init(CAN_SJW_1TQ, CAN_BS2_6TQ, CAN_BS1_7TQ, 6, CAN_MODE_NORMAL);  /* CAN初始化, 环回模式, 波特率500Kbps */
 	my_mem_init(SRAMIN);                /* 初始化内部SRAM内存池 */
 	//USB_Init();                        /* 初始化USB */
 	exfuns_init();                  	/* 为fatfs相关变量申请内存 */

@@ -18,4 +18,5 @@ void Read_Temp_Humit(void)
 	vTaskDelay(100);
 	Read_Sensor_Data(&sensor_data);
 	temp=(float)sensor_data.temperature_raw/(1024*1024)*200-50;
+	vTaskDelay(1000);
 }

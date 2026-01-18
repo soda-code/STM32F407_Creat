@@ -134,21 +134,19 @@ uint8_t get_sd_card_state(void)
 uint8_t sd_read_disk(uint8_t *pbuf, uint32_t saddr, uint32_t cnt)
 {
     uint8_t sta = HAL_OK;
-    uint32_t timeout = SD_TIMEOUT;
     long long lsector = saddr;
-    
+    uint32_t sd_tiick_wait =HAL_GetTick();
     sta = HAL_SD_ReadBlocks(&g_sdcard_handler, (uint8_t *)pbuf, lsector, cnt, SD_TIMEOUT); /* 多个sector的读操作 */
 
     /* 等待SD卡读完 */
     while (get_sd_card_state() != SD_TRANSFER_OK)
-    {
-        if (timeout-- == 0)
-        {
-					sta = SD_TRANSFER_BUSY;
-					return sta;
-        }
+    {	
+    	if((HAL_GetTick()-sd_tiick_wait)>SD_TIMEOUT)
+    	{
+			sta = SD_TRANSFER_BUSY;
+			return sta;
+		}
     }
-    
     return sta;
 }
 
@@ -162,23 +160,19 @@ uint8_t sd_read_disk(uint8_t *pbuf, uint32_t saddr, uint32_t cnt)
 uint8_t sd_write_disk(uint8_t *pbuf, uint32_t saddr, uint32_t cnt)
 {
     uint8_t sta = HAL_OK;
-    uint32_t timeout = SD_TIMEOUT;
     long long lsector = saddr;
-    
+    uint32_t sd_tiick_wait =HAL_GetTick();
     sta = HAL_SD_WriteBlocks(&g_sdcard_handler, (uint8_t *)pbuf, lsector, cnt, SD_TIMEOUT); /* 多个sector的写操作 */
-
-    /* 等待SD卡写完 */
+        /* 等待SD卡读完 */
     while (get_sd_card_state() != SD_TRANSFER_OK)
-    {
-				timeout--;
-				sta = SD_TRANSFER_BUSY;
-        if (timeout == 0)
-        {
-            sta = SD_TRANSFER_BUSY;
-					  return sta;
-        }
-    }
-    
+    {	
+    	if((HAL_GetTick()-sd_tiick_wait)>SD_TIMEOUT)
+    	{
+			sta = SD_TRANSFER_BUSY;
+			return sta;
+		}
+	}
+   
     return sta;
 }
 

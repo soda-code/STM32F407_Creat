@@ -12,3 +12,4 @@
 void Read_Temp_Humit(void);
 
 #endif // __I2C_HW_H__
+//

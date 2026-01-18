@@ -5,7 +5,7 @@
 #include "sram.h"
 #include "adc.h"
 
-#define AI_TASK_STACK_SIZE    (2048)
+#define AI_TASK_STACK_SIZE    (1024)
 #define AI_TASK_PRIORITY      3u
 TaskHandle_t   AI_task_Handler;             /* 任务句柄 */
 void AI_task(void *pvParameters);                      /* 任务函数 */
@@ -28,7 +28,7 @@ void AI_task(void *pvParameters)
 	while(1)
 	{
 
-		vTaskDelay(1);
+		vTaskDelay(100);
 	}
 }
 

@@ -3,7 +3,7 @@
 #include "task.h"
 #include "Data_Save.h"
 
-#define DATA_TASK_STACK_SIZE    (2048)
+#define DATA_TASK_STACK_SIZE    (512)
 #define DATA_TASK_PRIORITY      2u
 TaskHandle_t   Data_task_Handler;             /* 任务句柄 */
 void Data_task(void *pvParameters);                      /* 任务函数 */
@@ -20,8 +20,8 @@ void Data_task(void *pvParameters)
   Data_Save_Init();
   while(1)
   {
-		Data_save();
-		vTaskDelay(1000);
+	Data_save();
+	vTaskDelay(1000);
   }
 }
 

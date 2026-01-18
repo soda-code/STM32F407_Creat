@@ -4,8 +4,8 @@
 #include "usart.h"
 #include "Ex_Temp_Humit.h"
 
-#define 		EX_TEMP_HUMIT_TASK_STACK_SIZE    (2048)
-#define 		EX_TEMP_HUMIT_TASK_PRIORITY       4u
+#define 		EX_TEMP_HUMIT_TASK_STACK_SIZE    (512)
+#define 		EX_TEMP_HUMIT_TASK_PRIORITY       3u
 TaskHandle_t   	EX_TEMP_HUMIT_task_Handler;      /* 任务句柄 */
 void EX_TEMP_HUMIT(void *pvParameters);     /* 任务函数 */
 
