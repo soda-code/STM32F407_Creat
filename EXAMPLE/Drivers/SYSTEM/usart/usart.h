@@ -42,6 +42,8 @@ extern uint8_t g_rx_buffer[RXBUFFERSIZE];       /* HAL库USART接收Buffer */
 
 
 void usart_init(uint32_t baudrate);             /* 串口初始化函数 */
+void Usart_Send(uint8_t *buf, uint16_t len);
+
 void my_printf(const char *cmd, ...);
 
 #endif

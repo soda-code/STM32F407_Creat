@@ -165,13 +165,16 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
         HAL_UART_Receive_IT(&g_uart1_handle, (uint8_t *)g_rx_buffer, RXBUFFERSIZE);
     }
 }
-uint16_t sum=0;
+
+
+volatile uint8_t uart1_tx_busy = 0;
+
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 {
     if (huart->Instance == USART1)
     {
         // TX done
-	sum++;
+			uart1_tx_busy=0;
     }
 }
 
@@ -197,6 +200,29 @@ void USART_UX_IRQHandler(void)
 
 //***********************************************************************************************
 //@auto: Li
+//@brief: 串口发送函数
+//@param: 
+//@return: 无
+//@note:
+//***********************************************************************************************
+
+void Usart_Send(uint8_t *buf, uint16_t len)
+{
+    if (buf == NULL || len == 0)
+        return;
+
+    /* DMA 正在发送，直接返回（或排队） */
+    if (uart1_tx_busy)
+        return;
+
+    uart1_tx_busy = 1;
+
+    /* 启动 DMA 发送 */
+    HAL_UART_Transmit_DMA(&g_uart1_handle, buf, len);
+}
+
+//***********************************************************************************************
+//@auto: Li
 //@brief: 重定义printf函数
 //@param: cmd:字符串指针, ...: 可变参数
 //@return: 无
@@ -215,10 +241,16 @@ void my_printf(const char *cmd, ...)
 	length = vsnprintf((char*)_dbg_Buff, sizeof(_dbg_Buff)+1, (char*)cmd, args);
 	va_end(args);
 	
+	    /* DMA 正在发送，直接返回（或排队） */
+    if (uart1_tx_busy)
+        return;
+
+    uart1_tx_busy = 1;
 	HAL_UART_Transmit_DMA(&g_uart1_handle, _dbg_Buff, length);   /* 开始一次DMA传输！ */
 
 
 }
+
 
 
 

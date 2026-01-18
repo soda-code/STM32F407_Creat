@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F407xx,STM32F407xx,USE_USB_FS,ARM_MATH_DSP,ARM_MATH_MATRIX_CHECK,ARM_MATH_ROUNDING</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\User;..\..\Drivers;..\..\Drivers\CMSIS\Device\ST\STM32F4xx\Include;..\..\Drivers\CMSIS\Include;..\..\Drivers\STM32F4xx_HAL_Driver\Inc;..\..\Drivers\SYSTEM\usart;..\..\Drivers\SYSTEM\delay;..\..\Drivers\SYSTEM\sys;..\..\Middlewares;..\..\Middlewares\DSP\Include;..\..\Middlewares\FreeRTOS;..\..\Middlewares\FreeRTOS\include;..\..\Middlewares\FreeRTOS\portable\RVDS\ARM_CM4_MPU;..\..\Middlewares\FreeRTOS_APP;..\..\Middlewares\MALLOC;..\..\Middlewares\USB\STM32_USB_Device_Library\Core\Inc;..\..\Middlewares\USB\STM32_USB_Device_Library\Class\CDC\Inc;..\..\Middlewares\USB\USB_APP;..\..\Middlewares\FATFS\exfuns;..\..\Middlewares\FATFS\source;..\..\Middlewares\AI;..\..\Drivers\BSP\LED;..\..\Drivers\BSP\CAN;..\..\Drivers\BSP\LCD;..\..\Drivers\BSP\DMA;..\..\Drivers\BSP\ADC;..\..\Drivers\BSP\DHT11;..\..\Drivers\BSP\NORFLASH;..\..\Drivers\BSP\SDIO;..\..\Drivers\BSP\SRAM</IncludePath>
+              <IncludePath>..\..\User;..\..\Drivers;..\..\Drivers\CMSIS\Device\ST\STM32F4xx\Include;..\..\Drivers\CMSIS\Include;..\..\Drivers\STM32F4xx_HAL_Driver\Inc;..\..\Drivers\SYSTEM\usart;..\..\Drivers\SYSTEM\delay;..\..\Drivers\SYSTEM\sys;..\..\Middlewares;..\..\Middlewares\DSP\Include;..\..\Middlewares\FreeRTOS;..\..\Middlewares\FreeRTOS\include;..\..\Middlewares\FreeRTOS\portable\RVDS\ARM_CM4_MPU;..\..\Middlewares\FreeRTOS_APP;..\..\Middlewares\MALLOC;..\..\Middlewares\USB\STM32_USB_Device_Library\Core\Inc;..\..\Middlewares\USB\STM32_USB_Device_Library\Class\CDC\Inc;..\..\Middlewares\USB\USB_APP;..\..\Middlewares\FATFS\exfuns;..\..\Middlewares\FATFS\source;..\..\Middlewares\AI;..\..\Drivers\BSP\LED;..\..\Drivers\BSP\CAN;..\..\Drivers\BSP\LCD;..\..\Drivers\BSP\DMA;..\..\Drivers\BSP\ADC;..\..\Drivers\BSP\DHT11;..\..\Drivers\BSP\NORFLASH;..\..\Drivers\BSP\SDIO;..\..\Drivers\BSP\SRAM;..\..\App</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -694,14 +694,19 @@
               <FilePath>..\..\Middlewares\FreeRTOS_APP\Can_task.c</FilePath>
             </File>
             <File>
-              <FileName>DHT11_Task.c</FileName>
+              <FileName>Data_Save_task.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Middlewares\FreeRTOS_APP\DHT11_Task.c</FilePath>
+              <FilePath>..\..\Middlewares\FreeRTOS_APP\Data_Save_task.c</FilePath>
             </File>
             <File>
-              <FileName>Error_Log_task.c</FileName>
+              <FileName>Ex_Temp_Humit_Task.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\Middlewares\FreeRTOS_APP\Error_Log_task.c</FilePath>
+              <FilePath>..\..\Middlewares\FreeRTOS_APP\Ex_Temp_Humit_Task.c</FilePath>
+            </File>
+            <File>
+              <FileName>Light_Task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Middlewares\FreeRTOS_APP\Light_Task.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -812,6 +817,41 @@
               <FileName>model_weights.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Middlewares\MODE\model_weights.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>App</GroupName>
+          <Files>
+            <File>
+              <FileName>Can_App.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\App\Can_App.c</FilePath>
+            </File>
+            <File>
+              <FileName>Data_Save.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\App\Data_Save.c</FilePath>
+            </File>
+            <File>
+              <FileName>Key_App.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\App\Key_App.c</FilePath>
+            </File>
+            <File>
+              <FileName>Led_App.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\App\Led_App.c</FilePath>
+            </File>
+            <File>
+              <FileName>Ex_Temp_Humit.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\App\Ex_Temp_Humit.c</FilePath>
+            </File>
+            <File>
+              <FileName>Light_App.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\App\Light_App.c</FilePath>
             </File>
           </Files>
         </Group>

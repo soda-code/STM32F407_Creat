@@ -8,7 +8,8 @@
 #define SENSOR_8BIT_READ_ADDR  (SENSOR_7BIT_ADDR << 1 | 0x01) // 8 位读取地址 (0x71)
 
 // 定义接收数据结构体，用于存储解析后的数据
-typedef struct {
+typedef struct 
+{
     uint8_t status;
     uint32_t humidity_raw;
     uint32_t temperature_raw;
@@ -19,9 +20,11 @@ typedef struct {
 void DHT11_II2C_Init(void);
 void HAL_I2C_MspInit(I2C_HandleTypeDef* hi2c);
 
-HAL_StatusTypeDef IIC_Trigger_Measurement(void);
-HAL_StatusTypeDef IIC_Read_Sensor_Data(SensorData_t *pSensorData);
+bool Measurement_Start(void);
+bool Read_Sensor_Data(SensorData_t *pSensorData);
 
 
 
 #endif // __I2C_HW_H__
+
+

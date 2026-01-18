@@ -84,33 +84,12 @@ void adc_channel_set(ADC_HandleTypeDef *adc_handle, uint32_t ch, uint32_t rank, 
  */
 uint32_t adc_get_result(uint32_t ch)
 {
-    adc_channel_set(&g_adc_handle, ch, 1, ADC_SAMPLETIME_480CYCLES);   /* 设置通道，序列和采样时间 */
+    adc_channel_set(&g_adc_handle, ch, 1, ADC_SAMPLETIME_15CYCLES);   /* 设置通道，序列和采样时间 */
     HAL_ADC_Start(&g_adc_handle);                                       /* 开启ADC */
     HAL_ADC_PollForConversion(&g_adc_handle, 10);                       /* 轮询转换 */
 
     return (uint16_t)HAL_ADC_GetValue(&g_adc_handle);                   /* 返回最近一次ADC1规则组的转换结果 */
 }
-
-/**
- * @brief       获取通道ch的转换值，取times次, 然后平均
- * @param       ch      : 通道号, 0~17
- * @param       times   : 获取次数
- * @retval      通道ch的times次转换结果平均值
- */
-uint32_t adc_get_result_average(uint32_t ch, uint8_t times)
-{
-    uint32_t temp_val = 0;
-    uint8_t t;
-
-    for (t = 0; t < times; t++)     /* 获取times次数据 */
-    {
-        temp_val += adc_get_result(ch);
-        delay_ms(5);
-    }
-
-    return temp_val / times;        /* 返回平均值 */
-}
-
 
 
 

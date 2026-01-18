@@ -1,7 +1,7 @@
 #include "Led_task.h"
-#include "led.h"
 #include "FreeRTOS.h"
 #include "task.h"
+#include "Led_App.h"
 
 #define LED_TASK_STACK_SIZE    (512)
 #define LED_TASK_PRIORITY      1u
@@ -19,9 +19,9 @@ void led_task(void *pvParameters)
 {
     while(1)
     {
-        LED1(0);
+        Led_On();
         vTaskDelay(500);
-        LED1(1);
+		Led_Off();
         vTaskDelay(500);
     }
 }
