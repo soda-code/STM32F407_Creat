@@ -1,10 +1,7 @@
 # STM32F407 综合例程 (HAL库 + FreeRTOS + FATFS)
 
-这是一个基于STM32 HAL库开发的STM32F407全功能综合例程，完整整合FreeRTOS实时操作系统与FATFS文件系统，实现LED、KEY、SD卡、NORFLASH、外部SRAM、ADC（DMA采集）、DMA、串口等核心外设的HAL库驱动适配与应用演示，是F407 HAL库开发入门、项目移植的一站式参考案例。
-
 ## 📋 核心功能
 ### 1. 基础框架
-- 基于STM32Cube HAL库搭建底层驱动，兼容STM32CubeMX配置生成
 - FreeRTOS 基于HAL库移植（任务管理、消息队列、信号量、延时等基础功能）
 - FATFS 文件系统适配HAL库（支持SD卡/NORFLASH多介质挂载、文件读写）
 
@@ -24,12 +21,10 @@
 ## 🎯 适用场景
 - STM32F407 HAL库入门，掌握HAL库+RTOS+文件系统+DMA/ADC/串口全流程开发
 - 工业控制、数据采集、嵌入式存储类项目的底层驱动参考
-- STM32CubeMX配置工程的实战移植（如ADC DMA、串口DMA配置）
 
 ## 🛠️ 开发环境
 - 编译器：Keil MDK-ARM
 - 固件库：STM32CubeF4 HAL库（V1.27.0+，可根据实际版本调整）
-- 工具：STM32CubeMX（用于外设引脚/DMA/ADC参数配置）
 - 硬件：STM32F407开发板（需带对应外设：SD卡、NORFLASH、外部SRAM、ADC采集通道）
 
 ## 🚀 快速使用
