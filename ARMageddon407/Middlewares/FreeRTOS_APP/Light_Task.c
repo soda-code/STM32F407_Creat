@@ -18,7 +18,7 @@ void Light_task(void *pvParameters)
 {
 	while(1)
 	{
-		Light_Read();
+		//Light_Read();
 		vTaskDelay(1);
 	}
 }
