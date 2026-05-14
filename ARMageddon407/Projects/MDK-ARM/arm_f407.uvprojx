@@ -212,7 +212,7 @@
             <Ra2Chk>0</Ra2Chk>
             <Ra3Chk>0</Ra3Chk>
             <Im1Chk>1</Im1Chk>
-            <Im2Chk>0</Im2Chk>
+            <Im2Chk>1</Im2Chk>
             <OnChipMemories>
               <Ocm1>
                 <Type>0</Type>
@@ -340,7 +340,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F4xx,USE_HAL_DRIVER,ARM_MATH_DSP,ARM_MATH_MATRIX_CHECK,ARM_MATH_ROUNDING</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\User;..\..\Drivers;..\..\Drivers\CMSIS\Device\ST\STM32F4xx\Include;..\..\Drivers\CMSIS\Include;..\..\Drivers\CMSIS\DSP\Include;..\..\Drivers\STM32F4xx_HAL_Driver\Inc;..\..\Middlewares;..\..\Middlewares\FreeRTOS\include;..\..\Middlewares\FreeRTOS\portable\GCC\ARM_CM4F;..\..\Middlewares\emWin\Config;..\..\Middlewares\emWin\emWin_Demo;..\..\Middlewares\emWin\inc;..\..\Middlewares\CMSIS_NN\Include\Internal;..\..\Middlewares\CMSIS_NN\Include</IncludePath>
+              <IncludePath>..\..\User;..\..\Drivers;..\..\Drivers\CMSIS\Device\ST\STM32F4xx\Include;..\..\Drivers\CMSIS\Include;..\..\Drivers\CMSIS\DSP\Include;..\..\Drivers\STM32F4xx_HAL_Driver\Inc;..\..\Middlewares;..\..\Middlewares\FreeRTOS\include;..\..\Middlewares\FreeRTOS\portable\GCC\ARM_CM4F;..\..\Middlewares\FreeRtos_APP;..\..\Middlewares\emWin\Config;..\..\Middlewares\emWin\emWin_Demo;..\..\Middlewares\emWin\inc;..\..\Middlewares\CMSIS_NN\Include\Internal;..\..\Middlewares\CMSIS_NN\Include</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -633,6 +633,16 @@
               <FileName>port.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Middlewares\FreeRTOS\portable\GCC\ARM_CM4F\port.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Middlewares/FreeRTOS_APP</GroupName>
+          <Files>
+            <File>
+              <FileName>led_app.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Middlewares\FreeRtos_APP\led_app.c</FilePath>
             </File>
           </Files>
         </Group>

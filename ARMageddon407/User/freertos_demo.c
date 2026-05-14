@@ -18,13 +18,13 @@
 TaskHandle_t            StartTask_Handler;  /* 任务句柄 */
 void start_task(void *pvParameters);        /* 任务函数 */
 
-/* TASK1 任务 配置
+/* LED 任务 配置
  * 包括: 任务句柄 任务优先级 堆栈大小 创建任务
  */
-#define TASK1_PRIO      2                   /* 任务优先级 */
-#define TASK1_STK_SIZE  128                 /* 任务堆栈大小 */
-TaskHandle_t            Task1Task_Handler;  /* 任务句柄 */
-void task1(void *pvParameters);             /* 任务函数 */
+#define LED_PRIO      5                   /* 任务优先级 */
+#define LED_STK_SIZE  2*1024                 /* 任务堆栈大小 */
+TaskHandle_t          LedTask_Handler;  /* 任务句柄 */
+void led_task(void *pvParameters);             /* 任务函数 */
 
 /* TASK2 任务 配置
  * 包括: 任务句柄 任务优先级 堆栈大小 创建任务
@@ -73,12 +73,12 @@ void start_task(void *pvParameters)
     WM_MULTIBUF_Enable(1);      //开启STemWin多缓冲,RGB屏可能会用到
     taskENTER_CRITICAL();           /* 进入临界区 */
     /* 创建任务1 */
-    xTaskCreate((TaskFunction_t )task1,
-                (const char*    )"task1",
-                (uint16_t       )TASK1_STK_SIZE,
+    xTaskCreate((TaskFunction_t )led_task,
+                (const char*    )"led_task",
+                (uint16_t       )LED_STK_SIZE,
                 (void*          )NULL,
-                (UBaseType_t    )TASK1_PRIO,
-                (TaskHandle_t*  )&Task1Task_Handler);
+                (UBaseType_t    )LED_PRIO,
+                (TaskHandle_t*  )&LedTask_Handler);
     /* 创建任务2 */
     xTaskCreate((TaskFunction_t )task2,
                 (const char*    )"task2",
@@ -101,17 +101,13 @@ void start_task(void *pvParameters)
 }
 
 /**
- * @brief       task1
+ * @brief       led_task
  * @param       pvParameters : 传入参数(未用到)
  * @retval      无
  */
-void task1(void *pvParameters)
+void led_task(void *pvParameters)
 {
-    while (1)
-    {
-        GUI_TOUCH_Exec();
-        vTaskDelay(5);
-    }
+ led_run();
 }
 
 /**
