@@ -1,48 +1,75 @@
-#include "sram.h"
-#include "usart.h"
+/**
+ ****************************************************************************************************
+ * @file        sram.c
+ * @author      ÕıµãÔ­×ÓÍÅ¶Ó(ALIENTEK)
+ * @version     V1.0
+ * @date        2021-11-04
+ * @brief       Íâ²¿SRAM Çı¶¯´úÂë
+ * @license     Copyright (c) 2020-2032, ¹ãÖİÊĞĞÇÒíµç×Ó¿Æ¼¼ÓĞÏŞ¹«Ë¾
+ ****************************************************************************************************
+ * @attention
+ *
+ * ÊµÑéÆ½Ì¨:ÕıµãÔ­×Ó STM32F407¿ª·¢°å
+ * ÔÚÏßÊÓÆµ:www.yuanzige.com
+ * ¼¼ÊõÂÛÌ³:www.openedv.com
+ * ¹«Ë¾ÍøÖ·:www.alientek.com
+ * ¹ºÂòµØÖ·:openedv.taobao.com
+ *
+ * ĞŞ¸ÄËµÃ÷
+ * V1.0 20211103
+ * µÚÒ»´Î·¢²¼
+ *
+ ****************************************************************************************************
+ */
+
+#include "./BSP/SRAM/sram.h"
+#include "./SYSTEM/usart/usart.h"
+#include "./XMRAM/XMRAM.h"
 
 
-SRAM_HandleTypeDef g_sram_handler; /* SRAMå¥æŸ„ */
+SRAM_HandleTypeDef g_sram_handler; /* SRAM¾ä±ú */
 
 /**
- * @brief       åˆå§‹åŒ– å¤–éƒ¨SRAM
- * @param       æ— 
- * @retval      æ— 
+ * @brief       ³õÊ¼»¯ Íâ²¿SRAM
+ * @param       ÎŞ
+ * @retval      ÎŞ
  */
 void sram_init(void)
 {
     GPIO_InitTypeDef gpio_init_struct;
     FSMC_NORSRAM_TimingTypeDef fsmc_readwritetim;
 
-    SRAM_CS_GPIO_CLK_ENABLE();    /* SRAM_CSè„šæ—¶é’Ÿä½¿èƒ½ */
-    SRAM_WR_GPIO_CLK_ENABLE();    /* SRAM_WRè„šæ—¶é’Ÿä½¿èƒ½ */
-    SRAM_RD_GPIO_CLK_ENABLE();    /* SRAM_RDè„šæ—¶é’Ÿä½¿èƒ½ */
-    __HAL_RCC_FSMC_CLK_ENABLE();  /* ä½¿èƒ½FSMCæ—¶é’Ÿ */
-    __HAL_RCC_GPIOD_CLK_ENABLE(); /* ä½¿èƒ½GPIODæ—¶é’Ÿ */
-    __HAL_RCC_GPIOE_CLK_ENABLE(); /* ä½¿èƒ½GPIOEæ—¶é’Ÿ */
-    __HAL_RCC_GPIOF_CLK_ENABLE(); /* ä½¿èƒ½GPIOFæ—¶é’Ÿ */
-    __HAL_RCC_GPIOG_CLK_ENABLE(); /* ä½¿èƒ½GPIOGæ—¶é’Ÿ */
+    XmRamInit();
+    SRAM_CS_GPIO_CLK_ENABLE();    /* SRAM_CS½ÅÊ±ÖÓÊ¹ÄÜ */
+    SRAM_WR_GPIO_CLK_ENABLE();    /* SRAM_WR½ÅÊ±ÖÓÊ¹ÄÜ */
+    SRAM_RD_GPIO_CLK_ENABLE();    /* SRAM_RD½ÅÊ±ÖÓÊ¹ÄÜ */
+    __HAL_RCC_FSMC_CLK_ENABLE();  /* Ê¹ÄÜFSMCÊ±ÖÓ */
+    __HAL_RCC_GPIOD_CLK_ENABLE(); /* Ê¹ÄÜGPIODÊ±ÖÓ */
+    __HAL_RCC_GPIOE_CLK_ENABLE(); /* Ê¹ÄÜGPIOEÊ±ÖÓ */
+    __HAL_RCC_GPIOF_CLK_ENABLE(); /* Ê¹ÄÜGPIOFÊ±ÖÓ */
+    __HAL_RCC_GPIOG_CLK_ENABLE(); /* Ê¹ÄÜGPIOGÊ±ÖÓ */
 
     gpio_init_struct.Pin = SRAM_CS_GPIO_PIN;
     gpio_init_struct.Mode = GPIO_MODE_AF_PP;
     gpio_init_struct.Pull = GPIO_PULLUP;
     gpio_init_struct.Speed = GPIO_SPEED_FREQ_HIGH;
     gpio_init_struct.Alternate = GPIO_AF12_FSMC;
-    HAL_GPIO_Init(SRAM_CS_GPIO_PORT, &gpio_init_struct); /* SRAM_CSå¼•è„šæ¨¡å¼è®¾ç½® */
+    HAL_GPIO_Init(SRAM_CS_GPIO_PORT, &gpio_init_struct); /* SRAM_CSÒı½ÅÄ£Ê½ÉèÖÃ */
 
     gpio_init_struct.Pin = SRAM_WR_GPIO_PIN;
-    HAL_GPIO_Init(SRAM_WR_GPIO_PORT, &gpio_init_struct); /* SRAM_WRå¼•è„šæ¨¡å¼è®¾ç½® */
+    HAL_GPIO_Init(SRAM_WR_GPIO_PORT, &gpio_init_struct); /* SRAM_WRÒı½ÅÄ£Ê½ÉèÖÃ */
 
     gpio_init_struct.Pin = SRAM_RD_GPIO_PIN;
-    HAL_GPIO_Init(SRAM_RD_GPIO_PORT, &gpio_init_struct); /* SRAM_CSå¼•è„šæ¨¡å¼è®¾ç½® */
+    HAL_GPIO_Init(SRAM_RD_GPIO_PORT, &gpio_init_struct); /* SRAM_CSÒı½ÅÄ£Ê½ÉèÖÃ */
 
+    
     /* PD0,1,4,5,8~15 */
     gpio_init_struct.Pin = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_8 | GPIO_PIN_9 | 
                        GPIO_PIN_10 | GPIO_PIN_11 | GPIO_PIN_12 | GPIO_PIN_13 |
                        GPIO_PIN_14 | GPIO_PIN_15;
-    gpio_init_struct.Mode = GPIO_MODE_AF_PP;       /* æ¨æŒ½å¤ç”¨ */
-    gpio_init_struct.Pull = GPIO_PULLUP;           /* ä¸Šæ‹‰ */
-    gpio_init_struct.Speed = GPIO_SPEED_FREQ_HIGH; /* é«˜é€Ÿ */
+    gpio_init_struct.Mode = GPIO_MODE_AF_PP;       /* ÍÆÍì¸´ÓÃ */
+    gpio_init_struct.Pull = GPIO_PULLUP;           /* ÉÏÀ­ */
+    gpio_init_struct.Speed = GPIO_SPEED_FREQ_HIGH; /* ¸ßËÙ */
     HAL_GPIO_Init(GPIOD, &gpio_init_struct);
 
     /* PE0,1,7~15 */
@@ -66,34 +93,33 @@ void sram_init(void)
     g_sram_handler.Init.NSBank = (SRAM_FSMC_NEX == 1) ? FSMC_NORSRAM_BANK1 : \
                                  (SRAM_FSMC_NEX == 2) ? FSMC_NORSRAM_BANK2 : \
                                  (SRAM_FSMC_NEX == 3) ? FSMC_NORSRAM_BANK3 : 
-                                                        FSMC_NORSRAM_BANK4; /* æ ¹æ®é…ç½®é€‰æ‹©FSMC_NE1~4 */
-    g_sram_handler.Init.DataAddressMux = FSMC_DATA_ADDRESS_MUX_DISABLE;     /* åœ°å€/æ•°æ®çº¿ä¸å¤ç”¨ */
+                                                        FSMC_NORSRAM_BANK4; /* ¸ù¾İÅäÖÃÑ¡ÔñFSMC_NE1~4 */
+    g_sram_handler.Init.DataAddressMux = FSMC_DATA_ADDRESS_MUX_DISABLE;     /* µØÖ·/Êı¾İÏß²»¸´ÓÃ */
     g_sram_handler.Init.MemoryType = FSMC_MEMORY_TYPE_SRAM;                 /* SRAM */
-    g_sram_handler.Init.MemoryDataWidth = FSMC_NORSRAM_MEM_BUS_WIDTH_16;    /* 16ä½æ•°æ®å®½åº¦ */
-    g_sram_handler.Init.BurstAccessMode = FSMC_BURST_ACCESS_MODE_DISABLE;   /* æ˜¯å¦ä½¿èƒ½çªå‘è®¿é—®,ä»…å¯¹åŒæ­¥çªå‘å­˜å‚¨å™¨æœ‰æ•ˆ,æ­¤å¤„æœªç”¨åˆ° */
-    g_sram_handler.Init.WaitSignalPolarity = FSMC_WAIT_SIGNAL_POLARITY_LOW; /* ç­‰å¾…ä¿¡å·çš„ææ€§,ä»…åœ¨çªå‘æ¨¡å¼è®¿é—®ä¸‹æœ‰ç”¨ */
-    g_sram_handler.Init.WaitSignalActive = FSMC_WAIT_TIMING_BEFORE_WS;      /* å­˜å‚¨å™¨æ˜¯åœ¨ç­‰å¾…å‘¨æœŸä¹‹å‰çš„ä¸€ä¸ªæ—¶é’Ÿå‘¨æœŸè¿˜æ˜¯ç­‰å¾…å‘¨æœŸæœŸé—´ä½¿èƒ½NWAIT */
-    g_sram_handler.Init.WriteOperation = FSMC_WRITE_OPERATION_ENABLE;       /* å­˜å‚¨å™¨å†™ä½¿èƒ½ */
-    g_sram_handler.Init.WaitSignal = FSMC_WAIT_SIGNAL_DISABLE;              /* ç­‰å¾…ä½¿èƒ½ä½,æ­¤å¤„æœªç”¨åˆ° */
-    g_sram_handler.Init.ExtendedMode = FSMC_EXTENDED_MODE_DISABLE;          /* è¯»å†™ä½¿ç”¨ç›¸åŒçš„æ—¶åº */
-    g_sram_handler.Init.AsynchronousWait = FSMC_ASYNCHRONOUS_WAIT_DISABLE;  /* æ˜¯å¦ä½¿èƒ½åŒæ­¥ä¼ è¾“æ¨¡å¼ä¸‹çš„ç­‰å¾…ä¿¡å·,æ­¤å¤„æœªç”¨åˆ° */
-    g_sram_handler.Init.WriteBurst = FSMC_WRITE_BURST_DISABLE;              /* ç¦æ­¢çªå‘å†™ */
-    /* FSMCè¯»æ—¶åºæ§åˆ¶å¯„å­˜å™¨ */
-    fsmc_readwritetim.AddressSetupTime = 0x02;                              /* åœ°å€å»ºç«‹æ—¶é—´ï¼ˆADDSETï¼‰ä¸º2ä¸ªHCLK 1/168M=6ns*2=12ns */
-    fsmc_readwritetim.AddressHoldTime = 0x00;                               /* åœ°å€ä¿æŒæ—¶é—´ï¼ˆADDHLDï¼‰æ¨¡å¼Aæœªç”¨åˆ° */
-    fsmc_readwritetim.DataSetupTime = 0x08;                                 /* æ•°æ®ä¿å­˜æ—¶é—´ä¸º8ä¸ªHCLK =6*8= 48ns */
-    fsmc_readwritetim.BusTurnAroundDuration = 0x00;
-    fsmc_readwritetim.AccessMode = FSMC_ACCESS_MODE_A;                      /* æ¨¡å¼A */
+    g_sram_handler.Init.MemoryDataWidth = FSMC_NORSRAM_MEM_BUS_WIDTH_16;    /* 16Î»Êı¾İ¿í¶È */
+    g_sram_handler.Init.BurstAccessMode = FSMC_BURST_ACCESS_MODE_DISABLE;   /* ÊÇ·ñÊ¹ÄÜÍ»·¢·ÃÎÊ,½ö¶ÔÍ¬²½Í»·¢´æ´¢Æ÷ÓĞĞ§,´Ë´¦Î´ÓÃµ½ */
+    g_sram_handler.Init.WaitSignalPolarity = FSMC_WAIT_SIGNAL_POLARITY_LOW; /* µÈ´ıĞÅºÅµÄ¼«ĞÔ,½öÔÚÍ»·¢Ä£Ê½·ÃÎÊÏÂÓĞÓÃ */
+    g_sram_handler.Init.WaitSignalActive = FSMC_WAIT_TIMING_BEFORE_WS;      /* ´æ´¢Æ÷ÊÇÔÚµÈ´ıÖÜÆÚÖ®Ç°µÄÒ»¸öÊ±ÖÓÖÜÆÚ»¹ÊÇµÈ´ıÖÜÆÚÆÚ¼äÊ¹ÄÜNWAIT */
+    g_sram_handler.Init.WriteOperation = FSMC_WRITE_OPERATION_ENABLE;       /* ´æ´¢Æ÷Ğ´Ê¹ÄÜ */
+    g_sram_handler.Init.WaitSignal = FSMC_WAIT_SIGNAL_DISABLE;              /* µÈ´ıÊ¹ÄÜÎ»,´Ë´¦Î´ÓÃµ½ */
+    g_sram_handler.Init.ExtendedMode = FSMC_EXTENDED_MODE_DISABLE;          /* ¶ÁĞ´Ê¹ÓÃÏàÍ¬µÄÊ±Ğò */
+    g_sram_handler.Init.AsynchronousWait = FSMC_ASYNCHRONOUS_WAIT_DISABLE;  /* ÊÇ·ñÊ¹ÄÜÍ¬²½´«ÊäÄ£Ê½ÏÂµÄµÈ´ıĞÅºÅ,´Ë´¦Î´ÓÃµ½ */
+    g_sram_handler.Init.WriteBurst = FSMC_WRITE_BURST_DISABLE;              /* ½ûÖ¹Í»·¢Ğ´ */
+    /* FMC¶ÁÊ±Ğò¿ØÖÆ¼Ä´æÆ÷ */
+    fsmc_readwritetim.AddressSetupTime = 0x00;                              /* µØÖ·½¨Á¢Ê±¼ä£¨ADDSET£©Îª1¸öHCLK 1/72M=13.8ns */
+    fsmc_readwritetim.AddressHoldTime = 0x00;                               /* µØÖ·±£³ÖÊ±¼ä£¨ADDHLD£©Ä£Ê½AÎ´ÓÃµ½ */
+    fsmc_readwritetim.DataSetupTime = 0x06;                                 /* Êı¾İ±£´æÊ±¼äÎª6¸öHCLK = 6*1 = 6ns */
+    fsmc_readwritetim.BusTurnAroundDuration = 0X00;
+    fsmc_readwritetim.AccessMode = FSMC_ACCESS_MODE_A;                      /* Ä£Ê½A */
     HAL_SRAM_Init(&g_sram_handler, &fsmc_readwritetim, &fsmc_readwritetim);
 }
 
-
 /**
- * @brief       å¾€SRAMæŒ‡å®šåœ°å€å†™å…¥æŒ‡å®šé•¿åº¦æ•°æ®
- * @param       pbuf    : æ•°æ®å­˜å‚¨åŒº
- * @param       addr    : å¼€å§‹å†™å…¥çš„åœ°å€(æœ€å¤§32bit)
- * @param       datalen : è¦å†™å…¥çš„å­—èŠ‚æ•°(æœ€å¤§32bit)
- * @retval      æ— 
+ * @brief       ÍùSRAMÖ¸¶¨µØÖ·Ğ´ÈëÖ¸¶¨³¤¶ÈÊı¾İ
+ * @param       pbuf    : Êı¾İ´æ´¢Çø
+ * @param       addr    : ¿ªÊ¼Ğ´ÈëµÄµØÖ·(×î´ó32bit)
+ * @param       datalen : ÒªĞ´ÈëµÄ×Ö½ÚÊı(×î´ó32bit)
+ * @retval      ÎŞ
  */
 void sram_write(uint8_t *pbuf, uint32_t addr, uint32_t datalen)
 {
@@ -106,11 +132,11 @@ void sram_write(uint8_t *pbuf, uint32_t addr, uint32_t datalen)
 }
 
 /**
- * @brief       ä»SRAMæŒ‡å®šåœ°å€è¯»å–æŒ‡å®šé•¿åº¦æ•°æ®
- * @param       pbuf    : æ•°æ®å­˜å‚¨åŒº
- * @param       addr    : å¼€å§‹è¯»å–çš„åœ°å€(æœ€å¤§32bit)
- * @param       datalen : è¦è¯»å–çš„å­—èŠ‚æ•°(æœ€å¤§32bit)
- * @retval      æ— 
+ * @brief       ´ÓSRAMÖ¸¶¨µØÖ·¶ÁÈ¡Ö¸¶¨³¤¶ÈÊı¾İ
+ * @param       pbuf    : Êı¾İ´æ´¢Çø
+ * @param       addr    : ¿ªÊ¼¶ÁÈ¡µÄµØÖ·(×î´ó32bit)
+ * @param       datalen : Òª¶ÁÈ¡µÄ×Ö½ÚÊı(×î´ó32bit)
+ * @retval      ÎŞ
  */
 void sram_read(uint8_t *pbuf, uint32_t addr, uint32_t datalen)
 {
@@ -121,39 +147,27 @@ void sram_read(uint8_t *pbuf, uint32_t addr, uint32_t datalen)
     }
 }
 
-/*******************æµ‹è¯•å‡½æ•°**********************************/
+/*******************²âÊÔº¯Êı**********************************/
 
-/*************************************************************************************************
- * @brief       æµ‹è¯•å‡½æ•° åœ¨SRAMæŒ‡å®šåœ°å€å†™å…¥1ä¸ªå­—èŠ‚
- * @param       addr    : å¼€å§‹å†™å…¥çš„åœ°å€(æœ€å¤§32bit)
- * @param       data    : è¦å†™å…¥çš„å­—èŠ‚
- * @retval      æ— 
+/**
+ * @brief       ²âÊÔº¯Êı ÔÚSRAMÖ¸¶¨µØÖ·Ğ´Èë1¸ö×Ö½Ú
+ * @param       addr    : ¿ªÊ¼Ğ´ÈëµÄµØÖ·(×î´ó32bit)
+ * @param       data    : ÒªĞ´ÈëµÄ×Ö½Ú
+ * @retval      ÎŞ
  */
 void sram_test_write(uint32_t addr, uint8_t data)
 {
-    sram_write(&data, addr, 1); /* å†™å…¥1ä¸ªå­—èŠ‚ */
+    sram_write(&data, addr, 1); /* Ğ´Èë1¸ö×Ö½Ú */
 }
 
-/******************************************************************************
- * @brief       æµ‹è¯•å‡½æ•° ä»SRAMæŒ‡å®šåœ°å€è¯»å–1ä¸ªå­—èŠ‚
- * @param       addr    : å¼€å§‹è¯»å–çš„åœ°å€(æœ€å¤§32bit)
- * @retval      è¯»å–åˆ°çš„æ•°æ®(1ä¸ªå­—èŠ‚)
-******************************************************************************/
+/**
+ * @brief       ²âÊÔº¯Êı ÔÚSRAMÖ¸¶¨µØÖ·¶ÁÈ¡1¸ö×Ö½Ú
+ * @param       addr    : ¿ªÊ¼¶ÁÈ¡µÄµØÖ·(×î´ó32bit)
+ * @retval      ¶ÁÈ¡µ½µÄÊı¾İ(1¸ö×Ö½Ú)
+ */
 uint8_t sram_test_read(uint32_t addr)
 {
     uint8_t data;
-    sram_read(&data, addr, 1); /* è¯»å–1ä¸ªå­—èŠ‚ */
+    sram_read(&data, addr, 1); /* ¶ÁÈ¡1¸ö×Ö½Ú */
     return data;
 }
-
-/******************************************************************************
- * @brief       æ¸…é™¤SRAMæŒ‡å®šåœ°å€çš„æ•°æ®
- * @param       data    : è¦æ¸…é™¤çš„æ•°ç»„
- * @param       len     : è¦æ¸…é™¤çš„æ•°ç»„é•¿åº¦
- * @retval      è¯»å–åˆ°çš„æ•°æ®(1ä¸ªå­—èŠ‚)
- *******************************************************************************/
-void sram_clear(uint32_t *data, size_t len)
-{
-    memset(data, 0, len * sizeof(uint32_t));
-}
-
