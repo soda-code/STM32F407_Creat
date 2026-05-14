@@ -1,0 +1,25 @@
+TD710 000:005.762   SEGGER J-Link V9.30a Log File
+TD710 000:005.869   DLL Compiled: Mar 30 2026 10:51:58
+TD710 000:005.873   Logging started @ 2026-05-14 11:14
+TD710 000:005.877   Process: D:\KEIL5\UV4\UV4.exe
+TD710 000:005.884 - 5.881ms 
+TD710 000:005.891 JLINK_SetWarnOutHandler(...)
+TD710 000:005.896 - 0.006ms 
+TD710 000:005.902 JLINK_OpenEx(...)
+TD710 000:011.359   
+  ***** Warning: 
+TD710 000:011.380   Out of sync , resynchronizing...
+TD710 011:418.102   
+  ***** Warning: 
+TD710 011:418.130   Out of sync , resynchronizing...
+TD710 011:426.343   
+  ***** Warning: 
+TD710 011:426.366   Out of sync , resynchronizing...
+TD710 011:426.383   
+  ***** Error: 
+TD710 011:426.389   Cannot connect to the probe/programmer.
+TD710 011:426.543 - 11420.639ms returns "Cannot connect to the probe/programmer."
+TD710 015:594.053 JLINK_Close()
+TD710 015:597.566 - 3.514ms
+TD710 015:597.586   
+TD710 015:597.590   Closed
