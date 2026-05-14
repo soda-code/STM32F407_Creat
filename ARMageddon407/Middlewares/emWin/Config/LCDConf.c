@@ -57,8 +57,8 @@ Purpose     : Display controller configuration (single layer)
 //   The display size should be adapted in order to match the size of
 //   the target display.
 //
-#define XSIZE_PHYS 480
-#define YSIZE_PHYS 272
+#define XSIZE_PHYS 320
+#define YSIZE_PHYS 240
 
 //
 // Color conversion
@@ -114,44 +114,44 @@ Purpose     : Display controller configuration (single layer)
 */
 void LCD_X_Config(void)
 {
-    GUI_DEVICE_CreateAndLink(&GUIDRV_Template_API, GUICC_M565, 0, 0); /* ´´½¨ÏÔÊ¾Çý¶¯Æ÷¼þ */
+    GUI_DEVICE_CreateAndLink(&GUIDRV_Template_API, GUICC_M565, 0, 0); /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
     LCD_SetSizeEx(0, lcddev.width, lcddev.height);
     LCD_SetVSizeEx(0, lcddev.width, lcddev.height);
 
     
-    /* ÅÐ¶Ïµç×èÆÁ»¹ÊÇµçÈÝÆÁ */
+    /* ï¿½Ð¶Ïµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Çµï¿½ï¿½ï¿½ï¿½ï¿½ */
     if ((tp_dev.touchtype & 0x80) == 0)
     {
-        /* ÆäËûÆÁÄ»È«²¿Ä¬ÈÏÎª2.8´ç 320X240 */
-        if (lcddev.dir == 0)        /* ÊúÆÁ */
+        /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä»È«ï¿½ï¿½Ä¬ï¿½ï¿½Îª2.8ï¿½ï¿½ 320X240 */
+        if (lcddev.dir == 0)        /* ï¿½ï¿½ï¿½ï¿½ */
         {
             GUI_TOUCH_SetOrientation(GUI_MIRROR_X);
             GUI_TOUCH_Calibrate(GUI_COORD_X, 0, lcddev.width, 155, 3903);
             GUI_TOUCH_Calibrate(GUI_COORD_Y, 0, lcddev.height, 188, 3935);
         }
-        else                        /* ºáÆÁ */
+        else                        /* ï¿½ï¿½ï¿½ï¿½ */
         {
             GUI_TOUCH_SetOrientation(GUI_SWAP_XY);
             GUI_TOUCH_Calibrate(GUI_COORD_X, 0, lcddev.width, 188, 3903);
             GUI_TOUCH_Calibrate(GUI_COORD_Y, 0, lcddev.height, 155, 3935);
         }
     }
-    else                            /* µçÈÝÆÁ */
+    else                            /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
     {
-        if (lcddev.id == 0X1963)    /* 1963Îª7´çÆÁ 800*480 */
+        if (lcddev.id == 0X1963)    /* 1963Îª7ï¿½ï¿½ï¿½ï¿½ 800*480 */
         {
             /* 6368 3816 */
             /* GUI_TOUCH_SetOrientation(GUI_SWAP_XY|GUI_MIRROR_Y); */
             GUI_TOUCH_Calibrate(GUI_COORD_X, 0, 800, 0, 799);
             GUI_TOUCH_Calibrate(GUI_COORD_Y, 0, 480, 0, 479);
         }
-        else if (lcddev.id == 0X5310 || lcddev.id == 0X6804) /* 0X5510 0X6804Îª3.5´ç 320x480 */
+        else if (lcddev.id == 0X5310 || lcddev.id == 0X6804) /* 0X5510 0X6804Îª3.5ï¿½ï¿½ 320x480 */
         {
-            if (lcddev.dir == 0)    /* ÊúÆÁ */
+            if (lcddev.dir == 0)    /* ï¿½ï¿½ï¿½ï¿½ */
             {
                 GUI_TOUCH_SetOrientation(GUI_MIRROR_X);
             }
-            else                    /* ºáÆÁ*/
+            else                    /* ï¿½ï¿½ï¿½ï¿½*/
             {
                 GUI_TOUCH_SetOrientation(GUI_SWAP_XY);
             }

@@ -42,6 +42,7 @@ Purpose     : Display controller initialization
 */
 
 #include "GUI.h"
+#include "./MALLOC/malloc.h"
 
 /*********************************************************************
 *
@@ -52,9 +53,9 @@ Purpose     : Display controller initialization
 //
 // Define the available number of bytes available for the GUI
 //
-#define USE_EXRAM      0             /* ¸ù¾İ¿ª·¢°åÑ¡Ôñ£¬0Îª²»Ê¹ÓÃÍâ²¿ SRAM  */
-#define GUI_NUMBYTES (30*1024)       /* ¸ù¾İ¿ª·¢°åÑ¡Ôñ£¬ÉèÖÃ EMWIN ÄÚ´æ´óĞ¡ */
-#define GUI_BLOCKSIZE 0X80           /* ¿é´óĞ¡ */
+#define USE_EXRAM    1               /* æ ¹æ®å¼€å‘æ¿é€‰æ‹©ï¼Œ0ä¸ºä¸ä½¿ç”¨å¤–éƒ¨ SRAM  */
+#define GUI_NUMBYTES (100*1024)       /* æ ¹æ®å¼€å‘æ¿é€‰æ‹©ï¼Œè®¾ç½® EMWIN å†…å­˜å¤§å° */
+#define GUI_BLOCKSIZE 0X80           /* å—å¤§å° */
 
 
 /*********************************************************************
@@ -71,25 +72,20 @@ Purpose     : Display controller initialization
 *   Called during the initialization process in order to set up the
 *   available memory for the GUI.
 */
-void GUI_X_Config(void) {
+uint8_t *aMemory = (uint8_t *)0x68000000;     // â† è¿™é‡Œæ”¹æˆä½ çš„å®é™…åœ°å€
+void GUI_X_Config(void) 
+{
+	#if (USE_EXRAM)
+        GUI_ALLOC_AssignMemory(aMemory, GUI_NUMBYTES);
+	#else
+        //
+        // 32 bit aligned memory area
+        //
+        static U32 aMemory[GUI_NUMBYTES / 4];
+	#endif
 
-#if (USE_EXRAM)
-    /* ´ÓÍâ²¿ SRAM ÖĞ·ÖÅä GUI_NUMBYTES ×Ö½ÚµÄÄÚ´æ */
-    static U32 *aMemory = mymalloc(SRAMEX, GUI_NUMBYTES);
-#else
-    //
-    // 32 bit aligned memory area
-    //
-    static U32 aMemory[GUI_NUMBYTES / 4];
-#endif
-
-    //
-    // Assign memory to emWin
-    //
     GUI_ALLOC_AssignMemory(aMemory, GUI_NUMBYTES);
-    //
-    // Set default font
-    //
+ 
     GUI_SetDefaultFont(GUI_FONT_6X8);
 }
 
