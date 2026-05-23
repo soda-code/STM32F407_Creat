@@ -54,7 +54,7 @@ Purpose     : Configures emWins abilities, fonts etc.
 *
 *       Multi tasking support
 */
-#define GUI_OS                    (0)  /* 0:不使用操作系统 */
+#define GUI_OS                    (1)  /* 0:不使用操作系统 */
 
 /*********************************************************************
 *

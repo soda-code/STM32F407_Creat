@@ -9,6 +9,7 @@
 #include "./MALLOC/malloc.h"
 #include "freertos_demo.h"
 
+
 int main(void)
 {
     HAL_Init();                         /* 初始化HAL库 */
@@ -22,6 +23,5 @@ int main(void)
     sram_init();                        /* SRAM初始化 */
     my_mem_init(SRAMIN);                /* 初始化内部SRAM内存池 */
     my_mem_init(SRAMCCM);               /* 初始化内部CCM内存池 */
-
     freertos_demo();                    /* 运行FreeRTOS例程 */
 }

@@ -42,8 +42,7 @@ Purpose     : Display controller initialization
 */
 
 #include "GUI.h"
-#include "./MALLOC/malloc.h"
-
+#include "mem_pool.h"
 /*********************************************************************
 *
 *       Defines
@@ -53,8 +52,8 @@ Purpose     : Display controller initialization
 //
 // Define the available number of bytes available for the GUI
 //
-#define USE_EXRAM    1               /* 根据开发板选择，0为不使用外部 SRAM  */
-#define GUI_NUMBYTES (100*1024)       /* 根据开发板选择，设置 EMWIN 内存大小 */
+#define USE_EXRAM    0              /* 根据开发板选择，0为不使用外部 SRAM  */
+#define GUI_NUMBYTES (50*1024)       /* 根据开发板选择，设置 EMWIN 内存大小 */
 #define GUI_BLOCKSIZE 0X80           /* 块大小 */
 
 
@@ -72,21 +71,17 @@ Purpose     : Display controller initialization
 *   Called during the initialization process in order to set up the
 *   available memory for the GUI.
 */
-uint8_t *aMemory = (uint8_t *)0x68000000;     // ← 这里改成你的实际地址
 void GUI_X_Config(void) 
 {
-	#if (USE_EXRAM)
-        GUI_ALLOC_AssignMemory(aMemory, GUI_NUMBYTES);
-	#else
-        //
-        // 32 bit aligned memory area
-        //
-        static U32 aMemory[GUI_NUMBYTES / 4];
-	#endif
+        #if (USE_EXRAM)
 
-    GUI_ALLOC_AssignMemory(aMemory, GUI_NUMBYTES);
- 
-    GUI_SetDefaultFont(GUI_FONT_6X8);
+        #else
+        static U32 aMemory[GUI_NUMBYTES / 4];
+
+        #endif
+                GUI_ALLOC_AssignMemory(aMemory, GUI_NUMBYTES);
+
+        GUI_SetDefaultFont(GUI_FONT_6X8);
 }
 
 /*************************** End of file ****************************/

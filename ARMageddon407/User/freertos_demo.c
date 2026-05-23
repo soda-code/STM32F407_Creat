@@ -6,6 +6,11 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
+#include "mem_pool.h"
+
+// 嵌入式中常用静态大数组作为内存池
+#define EXTERNAL_SRAM_ADDR   ((void*)0x68000000)   // 示例：STM32 FSMC/FMC 映射地址
+#define EXTERNAL_SRAM_SIZE   (1024 * 1024 * 1)     // 示例：1MB
 
 /******************************************************************************************************/
 /*FreeRTOS配置*/
@@ -68,9 +73,12 @@ void freertos_demo(void)
 void start_task(void *pvParameters)
 {
     __HAL_RCC_CRC_CLK_ENABLE();
-    WM_SetCreateFlags(WM_CF_MEMDEV);
-    GUI_Init();                 //STemWin初始化
-    WM_MULTIBUF_Enable(1);      //开启STemWin多缓冲,RGB屏可能会用到
+		mem_pool_init(EXTERNAL_SRAM_ADDR, EXTERNAL_SRAM_SIZE, true);
+		void* p1 = mem_pool_alloc(10*1024);
+		void* p2 = mem_pool_alloc(300*1024);
+		void* p3 = mem_pool_alloc(200*1024);
+	    uint8_t *reg = (uint8_t*)mem_pool_alloc(512);
+	    uint32_t *reg1 = (uint32_t*)mem_pool_alloc(512);
     taskENTER_CRITICAL();           /* 进入临界区 */
     /* 创建任务1 */
     xTaskCreate((TaskFunction_t )led_task,
@@ -80,7 +88,7 @@ void start_task(void *pvParameters)
                 (UBaseType_t    )LED_PRIO,
                 (TaskHandle_t*  )&LedTask_Handler);
     /* 创建任务2 */
-    xTaskCreate((TaskFunction_t )task2,
+    xTaskCreate((TaskFunction_t )task2,	
                 (const char*    )"task2",
                 (uint16_t       )TASK2_STK_SIZE,
                 (void*          )NULL,
@@ -107,7 +115,11 @@ void start_task(void *pvParameters)
  */
 void led_task(void *pvParameters)
 {
- led_run();
+  while(1)
+  {
+    led_run();
+    GUI_Delay(1);
+  }
 }
 
 /**
@@ -121,7 +133,7 @@ void task2(void *pvParameters)
     
     while (1)
     {
-        GUI_Delay(100);
+        vTaskDelay(1);
     }
 }
 
@@ -135,7 +147,6 @@ void led0_task(void *pvParameters)
 {
     while (1)
     {
-        LED0_TOGGLE();
-        vTaskDelay(1000);
+        vTaskDelay(1);
     }
 }
