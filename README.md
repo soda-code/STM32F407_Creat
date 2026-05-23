@@ -22,10 +22,10 @@
 ---
 
 ## 📁 项目结构
-STM32F407_Creat/
-├── ARMageddon407/          # Keil 工程主目录
-├── DOC/                    # 文档资料（启动流程、版本记录等）
-├── README.md
+STM32F407_Creat/   
+├── ARMageddon407/          # Keil 工程主目录   
+├── DOC/                    # 文档资料（启动流程、版本记录等）  
+├── README.md  
 └── ...（其他配置文件）
 
 ---
