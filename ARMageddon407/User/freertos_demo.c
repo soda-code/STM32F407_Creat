@@ -1,152 +1,111 @@
 #include "freertos_demo.h"
 #include "./BSP/LED/led.h"
-#include "GUI.h"
-#include "GUIDEMO.h"
+#include "max30102_app.h"
+
 /*FreeRTOS*********************************************************************************************/
 #include "FreeRTOS.h"
 #include "task.h"
-
-#include "mem_pool.h"
-
-// åµŒå…¥å¼ä¸­å¸¸ç”¨é™æ€å¤§æ•°ç»„ä½œä¸ºå†…å­˜æ± 
-#define EXTERNAL_SRAM_ADDR   ((void*)0x68000000)   // ç¤ºä¾‹ï¼šSTM32 FSMC/FMC æ˜ å°„åœ°å€
-#define EXTERNAL_SRAM_SIZE   (1024 * 1024 * 1)     // ç¤ºä¾‹ï¼š1MB
+#include "led_app.h"
 
 /******************************************************************************************************/
-/*FreeRTOSé…ç½®*/
+/*FreeRTOSÅäÖÃ*/
 
-/* START_TASK ä»»åŠ¡ é…ç½®
- * åŒ…æ‹¬: ä»»åŠ¡å¥æŸ„ ä»»åŠ¡ä¼˜å…ˆçº§ å †æ ˆå¤§å° åˆ›å»ºä»»åŠ¡
+/* START_TASK ÈÎÎñ ÅäÖÃ
+ * °üÀ¨: ÈÎÎñ¾ä±ú ÈÎÎñÓÅÏÈ¼¶ ¶ÑÕ»´óĞ¡ ´´½¨ÈÎÎñ
  */
-#define START_TASK_PRIO 1                   /* ä»»åŠ¡ä¼˜å…ˆçº§ */
-#define START_STK_SIZE  128                 /* ä»»åŠ¡å †æ ˆå¤§å° */
-TaskHandle_t            StartTask_Handler;  /* ä»»åŠ¡å¥æŸ„ */
-void start_task(void *pvParameters);        /* ä»»åŠ¡å‡½æ•° */
+#define START_TASK_PRIO 1                   /* ÈÎÎñÓÅÏÈ¼¶ */
+#define START_STK_SIZE  128                 /* ÈÎÎñ¶ÑÕ»´óĞ¡ */
+TaskHandle_t            StartTask_Handler;  /* ÈÎÎñ¾ä±ú */
+void start_task(void *pvParameters);        /* ÈÎÎñº¯Êı */
 
-/* LED ä»»åŠ¡ é…ç½®
- * åŒ…æ‹¬: ä»»åŠ¡å¥æŸ„ ä»»åŠ¡ä¼˜å…ˆçº§ å †æ ˆå¤§å° åˆ›å»ºä»»åŠ¡
+/* TASK1 ÈÎÎñ ÅäÖÃ
+ * °üÀ¨: ÈÎÎñ¾ä±ú ÈÎÎñÓÅÏÈ¼¶ ¶ÑÕ»´óĞ¡ ´´½¨ÈÎÎñ
  */
-#define LED_PRIO      5                   /* ä»»åŠ¡ä¼˜å…ˆçº§ */
-#define LED_STK_SIZE  2*1024                 /* ä»»åŠ¡å †æ ˆå¤§å° */
-TaskHandle_t          LedTask_Handler;  /* ä»»åŠ¡å¥æŸ„ */
-void led_task(void *pvParameters);             /* ä»»åŠ¡å‡½æ•° */
+#define LED_PRIO      5                   /* ÈÎÎñÓÅÏÈ¼¶ */
+#define LED_STK_SIZE  4*1024                 /* ÈÎÎñ¶ÑÕ»´óĞ¡ */
+TaskHandle_t          LedTask_Handler;  /* ÈÎÎñ¾ä±ú */
+void led_task(void *pvParameters);             /* ÈÎÎñº¯Êı */
 
-/* TASK2 ä»»åŠ¡ é…ç½®
- * åŒ…æ‹¬: ä»»åŠ¡å¥æŸ„ ä»»åŠ¡ä¼˜å…ˆçº§ å †æ ˆå¤§å° åˆ›å»ºä»»åŠ¡
+/* TASK2 ÈÎÎñ ÅäÖÃ
+ * °üÀ¨: ÈÎÎñ¾ä±ú ÈÎÎñÓÅÏÈ¼¶ ¶ÑÕ»´óĞ¡ ´´½¨ÈÎÎñ
  */
-#define TASK2_PRIO      3                   /* ä»»åŠ¡ä¼˜å…ˆçº§ */
-#define TASK2_STK_SIZE  512                 /* ä»»åŠ¡å †æ ˆå¤§å° */
-TaskHandle_t            Task2Task_Handler;  /* ä»»åŠ¡å¥æŸ„ */
-void task2(void *pvParameters);             /* ä»»åŠ¡å‡½æ•° */
-
-/* LED0 ä»»åŠ¡ é…ç½®
- * åŒ…æ‹¬: ä»»åŠ¡å¥æŸ„ ä»»åŠ¡ä¼˜å…ˆçº§ å †æ ˆå¤§å° åˆ›å»ºä»»åŠ¡
- */
-#define LED0_PRIO      4                   /* ä»»åŠ¡ä¼˜å…ˆçº§ */
-#define LED0_STK_SIZE  512                 /* ä»»åŠ¡å †æ ˆå¤§å° */
-TaskHandle_t           Led0Task_Handler;   /* ä»»åŠ¡å¥æŸ„ */
-void led0_task(void *pvParameters);        /* ä»»åŠ¡å‡½æ•° */
+#define DATA_CAP_PRIO      6                   /* ÈÎÎñÓÅÏÈ¼¶ */
+#define DATA_CAP_STK_SIZE  512                 /* ÈÎÎñ¶ÑÕ»´óĞ¡ */
+TaskHandle_t           DataCapTask_Handler;   /* ÈÎÎñ¾ä±ú */
+void DataCap_task(void *pvParameters);        /* ÈÎÎñº¯Êı */
 
 /******************************************************************************************************/
+
+/* LCDË¢ÆÁÊ±Ê¹ÓÃµÄÑÕÉ« */
 
 /**
- * @brief       FreeRTOSä¾‹ç¨‹å…¥å£å‡½æ•°
- * @param       æ— 
- * @retval      æ— 
+ * @brief       FreeRTOSÀı³ÌÈë¿Úº¯Êı
+ * @param       ÎŞ
+ * @retval      ÎŞ
  */
 void freertos_demo(void)
 {
-    xTaskCreate((TaskFunction_t )start_task,            /* ä»»åŠ¡å‡½æ•° */
-                (const char*    )"start_task",          /* ä»»åŠ¡åç§° */
-                (uint16_t       )START_STK_SIZE,        /* ä»»åŠ¡å †æ ˆå¤§å° */
-                (void*          )NULL,                  /* ä¼ å…¥ç»™ä»»åŠ¡å‡½æ•°çš„å‚æ•° */
-                (UBaseType_t    )START_TASK_PRIO,       /* ä»»åŠ¡ä¼˜å…ˆçº§ */
-                (TaskHandle_t*  )&StartTask_Handler);   /* ä»»åŠ¡å¥æŸ„ */
+    
+    xTaskCreate((TaskFunction_t )start_task,            /* ÈÎÎñº¯Êı */
+                (const char*    )"start_task",          /* ÈÎÎñÃû³Æ */
+                (uint16_t       )START_STK_SIZE,        /* ÈÎÎñ¶ÑÕ»´óĞ¡ */
+                (void*          )NULL,                  /* ´«Èë¸øÈÎÎñº¯ÊıµÄ²ÎÊı */
+                (UBaseType_t    )START_TASK_PRIO,       /* ÈÎÎñÓÅÏÈ¼¶ */
+                (TaskHandle_t*  )&StartTask_Handler);   /* ÈÎÎñ¾ä±ú */
     vTaskStartScheduler();
 }
 
 /**
  * @brief       start_task
- * @param       pvParameters : ä¼ å…¥å‚æ•°(æœªç”¨åˆ°)
- * @retval      æ— 
+ * @param       pvParameters : ´«Èë²ÎÊı(Î´ÓÃµ½)
+ * @retval      ÎŞ
  */
 void start_task(void *pvParameters)
 {
     __HAL_RCC_CRC_CLK_ENABLE();
-		mem_pool_init(EXTERNAL_SRAM_ADDR, EXTERNAL_SRAM_SIZE, true);
-		void* p1 = mem_pool_alloc(10*1024);
-		void* p2 = mem_pool_alloc(300*1024);
-		void* p3 = mem_pool_alloc(200*1024);
-	    uint8_t *reg = (uint8_t*)mem_pool_alloc(512);
-	    uint32_t *reg1 = (uint32_t*)mem_pool_alloc(512);
-    taskENTER_CRITICAL();           /* è¿›å…¥ä¸´ç•ŒåŒº */
-    /* åˆ›å»ºä»»åŠ¡1 */
+    taskENTER_CRITICAL();           /* ½øÈëÁÙ½çÇø */
+    /* ´´½¨ÈÎÎñ1 */
     xTaskCreate((TaskFunction_t )led_task,
                 (const char*    )"led_task",
                 (uint16_t       )LED_STK_SIZE,
                 (void*          )NULL,
                 (UBaseType_t    )LED_PRIO,
                 (TaskHandle_t*  )&LedTask_Handler);
-    /* åˆ›å»ºä»»åŠ¡2 */
-    xTaskCreate((TaskFunction_t )task2,	
-                (const char*    )"task2",
-                (uint16_t       )TASK2_STK_SIZE,
+    /* ´´½¨ÈÎÎñ2 */
+    xTaskCreate((TaskFunction_t )DataCap_task,
+                (const char*    )"DataCap_task",
+                (uint16_t       )DATA_CAP_STK_SIZE,
                 (void*          )NULL,
-                (UBaseType_t    )TASK2_PRIO,
-                (TaskHandle_t*  )&Task2Task_Handler);
-                
-                
-    /* åˆ›å»ºLEDä»»åŠ¡ */
-    xTaskCreate((TaskFunction_t )led0_task,
-                (const char*    )"led0_task",
-                (uint16_t       )LED0_STK_SIZE,
-                (void*          )NULL,
-                (UBaseType_t    )LED0_PRIO,
-                (TaskHandle_t*  )&Led0Task_Handler);
-                
-    vTaskDelete(StartTask_Handler); /* åˆ é™¤å¼€å§‹ä»»åŠ¡ */
-    taskEXIT_CRITICAL();            /* é€€å‡ºä¸´ç•ŒåŒº */
+                (UBaseType_t    )DATA_CAP_PRIO,
+                (TaskHandle_t*  )&DataCapTask_Handler);
+    vTaskDelete(StartTask_Handler); /* É¾³ı¿ªÊ¼ÈÎÎñ */
+    taskEXIT_CRITICAL();            /* ÍË³öÁÙ½çÇø */
 }
 
 /**
- * @brief       led_task
- * @param       pvParameters : ä¼ å…¥å‚æ•°(æœªç”¨åˆ°)
- * @retval      æ— 
+ * @brief       task1
+ * @param       pvParameters : ´«Èë²ÎÊı(Î´ÓÃµ½)
+ * @retval      ÎŞ
  */
 void led_task(void *pvParameters)
 {
-  while(1)
-  {
-    led_run();
-    GUI_Delay(1);
-  }
-}
-
-/**
- * @brief       task2
- * @param       pvParameters : ä¼ å…¥å‚æ•°(æœªç”¨åˆ°)
- * @retval      æ— 
- */
-void task2(void *pvParameters)
-{
-    GUIDEMO_Main();
     
-    while (1)
+    while(1)
     {
-        vTaskDelay(1);
+    led_run();
     }
 }
 
 /**
- * @brief       led0_task
- * @param       pvParameters : ä¼ å…¥å‚æ•°(æœªç”¨åˆ°)
- * @retval      æ— 
+ * @brief       task2
+ * @param       pvParameters : ´«Èë²ÎÊı(Î´ÓÃµ½)
+ * @retval      ÎŞ
  */
-
-void led0_task(void *pvParameters)
+void DataCap_task(void *pvParameters)
 {
-    while (1)
+    
+    while(1)
     {
-        vTaskDelay(1);
+    	Max_30102_run();
     }
 }

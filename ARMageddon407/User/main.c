@@ -1,3 +1,23 @@
+/**
+ ****************************************************************************************************
+ * @file        main.c
+ * @author      ÕıµãÔ­×ÓÍÅ¶Ó(ALIENTEK)
+ * @version     V1.4
+ * @date        2022-01-04
+ * @brief       FreeRTOS ÊµÑé
+ * @license     Copyright (c) 2020-2032, ¹ãÖİÊĞĞÇÒíµç×Ó¿Æ¼¼ÓĞÏŞ¹«Ë¾
+ ****************************************************************************************************
+ * @attention
+ *
+ * ÊµÑéÆ½Ì¨:ÕıµãÔ­×Ó Ì½Ë÷Õß F407¿ª·¢°å
+ * ÔÚÏßÊÓÆµ:www.yuanzige.com
+ * ¼¼ÊõÂÛÌ³:www.openedv.com
+ * ¹«Ë¾ÍøÖ·:www.alientek.com
+ * ¹ºÂòµØÖ·:openedv.taobao.com
+ *
+ ****************************************************************************************************
+ */
+
 #include "./SYSTEM/sys/sys.h"
 #include "./SYSTEM/usart/usart.h"
 #include "./SYSTEM/delay/delay.h"
@@ -8,20 +28,24 @@
 #include "./BSP/SRAM/sram.h"
 #include "./MALLOC/malloc.h"
 #include "freertos_demo.h"
-
+#include "./BSP/MAX30102/max30102.h"
+#include "./BSP/NORFLASH/norflash.h"
 
 int main(void)
 {
-    HAL_Init();                         /* åˆå§‹åŒ–HALåº“ */
-    sys_stm32_clock_init(336, 8, 2, 7); /* è®¾ç½®æ—¶é’Ÿ,168Mhz */
-    delay_init(168);                    /* å»¶æ—¶åˆå§‹åŒ– */
-    usart_init(115200);                 /* ä¸²å£åˆå§‹åŒ–ä¸º115200 */
-    led_init();                         /* åˆå§‹åŒ–LED */
-    lcd_init();                         /* åˆå§‹åŒ–LCD */
-    key_init();                         /* åˆå§‹åŒ–æŒ‰é”® */
-    tp_dev.init();                      /* è§¦æ‘¸å±åˆå§‹åŒ– */
-    sram_init();                        /* SRAMåˆå§‹åŒ– */
-    my_mem_init(SRAMIN);                /* åˆå§‹åŒ–å†…éƒ¨SRAMå†…å­˜æ±  */
-    my_mem_init(SRAMCCM);               /* åˆå§‹åŒ–å†…éƒ¨CCMå†…å­˜æ±  */
-    freertos_demo();                    /* è¿è¡ŒFreeRTOSä¾‹ç¨‹ */
+    HAL_Init();                         /* ³õÊ¼»¯HAL¿â */
+    sys_stm32_clock_init(336, 8, 2, 7); /* ÉèÖÃÊ±ÖÓ,168Mhz */
+    delay_init(168);                    /* ÑÓÊ±³õÊ¼»¯ */
+    usart_init(115200);                 /* ´®¿Ú³õÊ¼»¯Îª115200 */
+    led_init();                         /* ³õÊ¼»¯LED */
+    lcd_init();                         /* ³õÊ¼»¯LCD */
+    key_init();                         /* ³õÊ¼»¯°´¼ü */
+		MAX30102_Init();
+    tp_dev.init();                      /* ´¥ÃşÆÁ³õÊ¼»¯ */
+		norflash_init();
+    sram_init();                        /* SRAM³õÊ¼»¯ */
+    my_mem_init(SRAMIN);                /* ³õÊ¼»¯ÄÚ²¿SRAMÄÚ´æ³Ø */
+    my_mem_init(SRAMCCM);               /* ³õÊ¼»¯ÄÚ²¿CCMÄÚ´æ³Ø */
+    
+    freertos_demo();                    /* ÔËĞĞFreeRTOSÀı³Ì */
 }

@@ -1,67 +1,91 @@
+/**
+ ****************************************************************************************************
+ * @file        btim.c
+ * @author      ÕýµãÔ­×ÓÍÅ¶Ó(ALIENTEK)
+ * @version     V1.0
+ * @date        2021-10-15
+ * @brief       »ù±¾¶¨Ê±Æ÷ Çý¶¯´úÂë
+ * @license     Copyright (c) 2020-2032, ¹ãÖÝÊÐÐÇÒíµç×Ó¿Æ¼¼ÓÐÏÞ¹«Ë¾
+ ****************************************************************************************************
+ * @attention
+ *
+ * ÊµÑéÆ½Ì¨:ÕýµãÔ­×Ó STM32F407¿ª·¢°å
+ * ÔÚÏßÊÓÆµ:www.yuanzige.com
+ * ¼¼ÊõÂÛÌ³:www.openedv.com
+ * ¹«Ë¾ÍøÖ·:www.alientek.com
+ * ¹ºÂòµØÖ·:openedv.taobao.com
+ *
+ * ÐÞ¸ÄËµÃ÷
+ * V1.0 20211015
+ * µÚÒ»´Î·¢²¼
+ *
+ ****************************************************************************************************
+ */
+
 #include "./BSP/LED/led.h"
 #include "./BSP/TIMER/btim.h"
 
 
-TIM_HandleTypeDef timx_handler;         /* å®šæ—¶å™¨å‚æ•°å¥æŸ„ */
+TIM_HandleTypeDef timx_handler;         /* ¶¨Ê±Æ÷²ÎÊý¾ä±ú */
 
 /**
- * @brief       åŸºæœ¬å®šæ—¶å™¨TIMXä¸­æ–­æœåŠ¡å‡½æ•°
- * @param       æ— 
- * @retval      æ— 
+ * @brief       »ù±¾¶¨Ê±Æ÷TIMXÖÐ¶Ï·þÎñº¯Êý
+ * @param       ÎÞ
+ * @retval      ÎÞ
  */
 void BTIM_TIMX_INT_IRQHandler(void)
 {
-    HAL_TIM_IRQHandler(&timx_handler);  /*å®šæ—¶å™¨å›žè°ƒå‡½æ•°*/
+    HAL_TIM_IRQHandler(&timx_handler);  /*¶¨Ê±Æ÷»Øµ÷º¯Êý*/
 }
 /**
- * @brief       å›žè°ƒå‡½æ•°ï¼Œå®šæ—¶å™¨ä¸­æ–­æœåŠ¡å‡½æ•°è°ƒç”¨
- * @param       æ— 
- * @retval      æ— 
+ * @brief       »Øµ÷º¯Êý£¬¶¨Ê±Æ÷ÖÐ¶Ï·þÎñº¯Êýµ÷ÓÃ
+ * @param       ÎÞ
+ * @retval      ÎÞ
  */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
     if (htim == (&timx_handler))
     {
-        LED1_TOGGLE(); /*LED1åè½¬*/
+        LED1_TOGGLE(); /*LED1·´×ª*/
     }
 }
 
 /**
- * @brief       åŸºæœ¬å®šæ—¶å™¨TIMXå®šæ—¶ä¸­æ–­åˆå§‹åŒ–å‡½æ•°
+ * @brief       »ù±¾¶¨Ê±Æ÷TIMX¶¨Ê±ÖÐ¶Ï³õÊ¼»¯º¯Êý
  * @note
- *              åŸºæœ¬å®šæ—¶å™¨çš„æ—¶é’Ÿæ¥è‡ªAPB1,å½“PPRE1 â‰¥ 2åˆ†é¢‘çš„æ—¶å€™
- *              åŸºæœ¬å®šæ—¶å™¨çš„æ—¶é’Ÿä¸ºAPB1æ—¶é’Ÿçš„2å€, è€ŒAPB1ä¸º36M, æ‰€ä»¥å®šæ—¶å™¨æ—¶é’Ÿ = 72Mhz
- *              å®šæ—¶å™¨æº¢å‡ºæ—¶é—´è®¡ç®—æ–¹æ³•: Tout = ((arr + 1) * (psc + 1)) / Ft us.
- *              Ft=å®šæ—¶å™¨å·¥ä½œé¢‘çŽ‡,å•ä½:Mhz
+ *              »ù±¾¶¨Ê±Æ÷µÄÊ±ÖÓÀ´×ÔAPB1,µ±PPRE1 ¡Ý 2·ÖÆµµÄÊ±ºò
+ *              »ù±¾¶¨Ê±Æ÷µÄÊ±ÖÓÎªAPB1Ê±ÖÓµÄ2±¶, ¶øAPB1Îª36M, ËùÒÔ¶¨Ê±Æ÷Ê±ÖÓ = 72Mhz
+ *              ¶¨Ê±Æ÷Òç³öÊ±¼ä¼ÆËã·½·¨: Tout = ((arr + 1) * (psc + 1)) / Ft us.
+ *              Ft=¶¨Ê±Æ÷¹¤×÷ÆµÂÊ,µ¥Î»:Mhz
  *
- * @param       arr: è‡ªåŠ¨é‡è£…å€¼ã€‚
- * @param       psc: æ—¶é’Ÿé¢„åˆ†é¢‘æ•°
- * @retval      æ— 
+ * @param       arr: ×Ô¶¯ÖØ×°Öµ¡£
+ * @param       psc: Ê±ÖÓÔ¤·ÖÆµÊý
+ * @retval      ÎÞ
  */
 void btim_timx_int_init(uint16_t arr, uint16_t psc)
 {
-    timx_handler.Instance = BTIM_TIMX_INT;                      /*é€šç”¨å®šæ—¶å™¨X*/
-    timx_handler.Init.Prescaler = psc;                          /* è®¾ç½®é¢„åˆ†é¢‘å™¨  */
-    timx_handler.Init.CounterMode = TIM_COUNTERMODE_UP;         /* å‘ä¸Šè®¡æ•°å™¨ */
-    timx_handler.Init.Period = arr;                             /*è‡ªåŠ¨è£…è½½å€¼*/
-    timx_handler.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;   /*æ—¶é’Ÿåˆ†é¢‘å› å­*/
+    timx_handler.Instance = BTIM_TIMX_INT;                      /*Í¨ÓÃ¶¨Ê±Æ÷X*/
+    timx_handler.Init.Prescaler = psc;                          /* ÉèÖÃÔ¤·ÖÆµÆ÷  */
+    timx_handler.Init.CounterMode = TIM_COUNTERMODE_UP;         /* ÏòÉÏ¼ÆÊýÆ÷ */
+    timx_handler.Init.Period = arr;                             /*×Ô¶¯×°ÔØÖµ*/
+    timx_handler.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;   /*Ê±ÖÓ·ÖÆµÒò×Ó*/
     HAL_TIM_Base_Init(&timx_handler);
 
-    HAL_TIM_Base_Start_IT(&timx_handler);                       /*ä½¿èƒ½é€šç”¨å®šæ—¶å™¨xå’ŒåŠå…¶æ›´æ–°ä¸­æ–­ï¼šTIM_IT_UPDATE*/
+    HAL_TIM_Base_Start_IT(&timx_handler);                       /*Ê¹ÄÜÍ¨ÓÃ¶¨Ê±Æ÷xºÍ¼°Æä¸üÐÂÖÐ¶Ï£ºTIM_IT_UPDATE*/
 }
 
 /**
- * @brief       å®šæ—¶å™¨åº•å†Œé©±åŠ¨ï¼Œå¼€å¯æ—¶é’Ÿï¼Œè®¾ç½®ä¸­æ–­ä¼˜å…ˆçº§
-                æ­¤å‡½æ•°ä¼šè¢«HAL_TIM_Base_Init()å‡½æ•°è°ƒç”¨
- * @param       æ— 
- * @retval      æ— 
+ * @brief       ¶¨Ê±Æ÷µ×²áÇý¶¯£¬¿ªÆôÊ±ÖÓ£¬ÉèÖÃÖÐ¶ÏÓÅÏÈ¼¶
+                ´Ëº¯Êý»á±»HAL_TIM_Base_Init()º¯Êýµ÷ÓÃ
+ * @param       ÎÞ
+ * @retval      ÎÞ
  */
 void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *htim)
 {
     if (htim->Instance == BTIM_TIMX_INT)
     {
-        BTIM_TIMX_INT_CLK_ENABLE();                     /*ä½¿èƒ½TIMæ—¶é’Ÿ*/
-        HAL_NVIC_SetPriority(BTIM_TIMX_INT_IRQn, 1, 3); /* æŠ¢å 1ï¼Œå­ä¼˜å…ˆçº§3ï¼Œç»„2 */
-        HAL_NVIC_EnableIRQ(BTIM_TIMX_INT_IRQn);         /*å¼€å¯ITM3ä¸­æ–­*/
+        BTIM_TIMX_INT_CLK_ENABLE();                     /*Ê¹ÄÜTIMÊ±ÖÓ*/
+        HAL_NVIC_SetPriority(BTIM_TIMX_INT_IRQn, 1, 3); /* ÇÀÕ¼1£¬×ÓÓÅÏÈ¼¶3£¬×é2 */
+        HAL_NVIC_EnableIRQ(BTIM_TIMX_INT_IRQn);         /*¿ªÆôITM3ÖÐ¶Ï*/
     }
 }
