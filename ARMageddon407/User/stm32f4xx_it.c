@@ -154,7 +154,6 @@ void SysTick_Handler(void)
 /*  available peripheral interrupt handler's name please refer to the startup */
 /*  file (startup_stm32f4xx.s).                                               */
 /******************************************************************************/
-
 /**
   * @brief  This function handles PPP interrupt request.
   * @param  None
@@ -164,13 +163,28 @@ void SysTick_Handler(void)
 {
 }*/
 
+extern DMA_HandleTypeDef g_spi1_rx_dma_handler;
+extern DMA_HandleTypeDef g_spi1_tx_dma_handler;
 
 /**
-  * @}
-  */ 
+ * @brief  DMA2_Stream2 中断处理函数 (SPI1 RX DMA)
+ * @param  无
+ * @retval 无
+ */
+void DMA2_Stream2_IRQHandler(void)
+{
+    HAL_DMA_IRQHandler(&g_spi1_rx_dma_handler);
+}
 
 /**
-  * @}
-  */
+ * @brief  DMA2_Stream3 中断处理函数 (SPI1 TX DMA)
+ * @param  无
+ * @retval 无
+ */
+void DMA2_Stream3_IRQHandler(void)
+{
+    HAL_DMA_IRQHandler(&g_spi1_tx_dma_handler);
+}
+
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

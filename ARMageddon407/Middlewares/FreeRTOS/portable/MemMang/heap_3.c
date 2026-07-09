@@ -1,6 +1,6 @@
 /*
- * FreeRTOS Kernel <DEVELOPMENT BRANCH>
- * Copyright (C) 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * FreeRTOS Kernel V10.4.6
+ * Copyright (C) 2021 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * SPDX-License-Identifier: MIT
  *
@@ -68,12 +68,13 @@ void * pvPortMalloc( size_t xWantedSize )
     ( void ) xTaskResumeAll();
 
     #if ( configUSE_MALLOC_FAILED_HOOK == 1 )
-    {
-        if( pvReturn == NULL )
         {
-            vApplicationMallocFailedHook();
+            if( pvReturn == NULL )
+            {
+                extern void vApplicationMallocFailedHook( void );
+                vApplicationMallocFailedHook();
+            }
         }
-    }
     #endif
 
     return pvReturn;
@@ -82,7 +83,7 @@ void * pvPortMalloc( size_t xWantedSize )
 
 void vPortFree( void * pv )
 {
-    if( pv != NULL )
+    if( pv )
     {
         vTaskSuspendAll();
         {
@@ -92,15 +93,3 @@ void vPortFree( void * pv )
         ( void ) xTaskResumeAll();
     }
 }
-/*-----------------------------------------------------------*/
-
-/*
- * Reset the state in this file. This state is normally initialized at start up.
- * This function must be called by the application before restarting the
- * scheduler.
- */
-void vPortHeapResetState( void )
-{
-    /* No state needs to be re-initialised in heap_3. */
-}
-/*-----------------------------------------------------------*/

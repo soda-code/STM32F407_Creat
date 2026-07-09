@@ -1,34 +1,51 @@
-//********************************************************************************
-//  * @file    delay.c
-//  * @author  ARMageddon
-//  * @version V1.0
-//  * @date    2024-06-01
-//  * @brief   å»¶æ—¶å‡½æ•°çš„å®ç°æ–‡ä»¶
-//********************************************************************************
+/**
+ ****************************************************************************************************
+ * @file        delay.c
+ * @author      ÕıµãÔ­×ÓÍÅ¶Ó(ALIENTEK)
+ * @version     V1.0
+ * @date        2021-10-14
+ * @brief       Ê¹ÓÃSysTickµÄÆÕÍ¨¼ÆÊıÄ£Ê½¶ÔÑÓ³Ù½øĞĞ¹ÜÀí(Ö§³Öucosii)
+ *              Ìá¹©delay_init³õÊ¼»¯º¯Êı£¬ delay_usºÍdelay_msµÈÑÓÊ±º¯Êı
+ * @license     Copyright (c) 2020-2032, ¹ãÖİÊĞĞÇÒíµç×Ó¿Æ¼¼ÓĞÏŞ¹«Ë¾
+ ****************************************************************************************************
+ * @attention
+ *
+ * ÊµÑéÆ½Ì¨:ÕıµãÔ­×Ó STM32F407¿ª·¢°å
+ * ÔÚÏßÊÓÆµ:www.yuanzige.com
+ * ¼¼ÊõÂÛÌ³:www.openedv.com
+ * ¹«Ë¾ÍøÖ·:www.alientek.com
+ * ¹ºÂòµØÖ·:openedv.taobao.com
+ *
+ * ĞŞ¸ÄËµÃ÷
+ * V1.0 20211014
+ * µÚÒ»´Î·¢²¼
+ *
+ ****************************************************************************************************
+ */
 
 #include "./SYSTEM/sys/sys.h"
 #include "./SYSTEM/delay/delay.h"
 
-static uint32_t g_fac_us = 0;       /* uså»¶æ—¶å€ä¹˜æ•° */
+static uint32_t g_fac_us = 0;       /* usÑÓÊ±±¶³ËÊı */
 
-/* å¦‚æœSYS_SUPPORT_OSå®šä¹‰äº†,è¯´æ˜è¦æ”¯æŒOSäº†(ä¸é™äºUCOS) */
+/* Èç¹ûSYS_SUPPORT_OS¶¨ÒåÁË,ËµÃ÷ÒªÖ§³ÖOSÁË(²»ÏŞÓÚUCOS) */
 #if SYS_SUPPORT_OS
 
-/* æ·»åŠ å…¬å…±å¤´æ–‡ä»¶ (FreeRTOS éœ€è¦ç”¨åˆ°) */
+/* Ìí¼Ó¹«¹²Í·ÎÄ¼ş (FreeRTOS ĞèÒªÓÃµ½) */
 #include "FreeRTOS.h"
 #include "task.h"
 
 extern void xPortSysTickHandler(void);
 
 /**
- * @brief     systickä¸­æ–­æœåŠ¡å‡½æ•°,ä½¿ç”¨OSæ—¶ç”¨åˆ°
- * @param     ticks: å»¶æ—¶çš„èŠ‚æ‹æ•°
- * @retval    æ— 
+ * @brief     systickÖĞ¶Ï·şÎñº¯Êı,Ê¹ÓÃOSÊ±ÓÃµ½
+ * @param     ticks: ÑÓÊ±µÄ½ÚÅÄÊı
+ * @retval    ÎŞ
  */  
 void SysTick_Handler(void)
 {
     HAL_IncTick();
-    if (xTaskGetSchedulerState() != taskSCHEDULER_NOT_STARTED) /* OSå¼€å§‹è·‘äº†,æ‰æ‰§è¡Œæ­£å¸¸çš„è°ƒåº¦å¤„ç† */
+    if (xTaskGetSchedulerState() != taskSCHEDULER_NOT_STARTED) /* OS¿ªÊ¼ÅÜÁË,²ÅÖ´ĞĞÕı³£µÄµ÷¶È´¦Àí */
     {
         xPortSysTickHandler();
     }
@@ -36,43 +53,43 @@ void SysTick_Handler(void)
 #endif
 
 /**
- * @brief     åˆå§‹åŒ–å»¶è¿Ÿå‡½æ•°
- * @param     sysclk: ç³»ç»Ÿæ—¶é’Ÿé¢‘ç‡, å³CPUé¢‘ç‡(rcc_c_ck), 168Mhz
- * @retval    æ— 
+ * @brief     ³õÊ¼»¯ÑÓ³Ùº¯Êı
+ * @param     sysclk: ÏµÍ³Ê±ÖÓÆµÂÊ, ¼´CPUÆµÂÊ(rcc_c_ck), 168Mhz
+ * @retval    ÎŞ
  */  
 void delay_init(uint16_t sysclk)
 {
-#if SYS_SUPPORT_OS                                      /* å¦‚æœéœ€è¦æ”¯æŒOS */
+#if SYS_SUPPORT_OS                                      /* Èç¹ûĞèÒªÖ§³ÖOS */
     uint32_t reload;
 #endif
-    HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);/* SYSTICKä½¿ç”¨å†…æ ¸æ—¶é’Ÿæº,åŒCPUåŒé¢‘ç‡ */
-    g_fac_us = sysclk;                                  /* ä¸è®ºæ˜¯å¦ä½¿ç”¨OS,g_fac_uséƒ½éœ€è¦ä½¿ç”¨ */
-#if SYS_SUPPORT_OS                                      /* å¦‚æœéœ€è¦æ”¯æŒOS. */
-    reload = sysclk;                                    /* æ¯ç§’é’Ÿçš„è®¡æ•°æ¬¡æ•° å•ä½ä¸ºM */
-    reload *= 1000000 / configTICK_RATE_HZ;             /* æ ¹æ®delay_ostickspersecè®¾å®šæº¢å‡ºæ—¶é—´,reloadä¸º24ä½
-                                                           å¯„å­˜å™¨,æœ€å¤§å€¼:16777216,åœ¨168Mä¸‹,çº¦åˆ0.099så·¦å³ */
-    SysTick->CTRL |= SysTick_CTRL_TICKINT_Msk;          /* å¼€å¯SYSTICKä¸­æ–­ */
-    SysTick->LOAD = reload;                             /* æ¯1/delay_ostickspersecç§’ä¸­æ–­ä¸€æ¬¡ */
-    SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk;           /* å¼€å¯SYSTICK */
+    HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);/* SYSTICKÊ¹ÓÃÄÚºËÊ±ÖÓÔ´,Í¬CPUÍ¬ÆµÂÊ */
+    g_fac_us = sysclk;                                  /* ²»ÂÛÊÇ·ñÊ¹ÓÃOS,g_fac_us¶¼ĞèÒªÊ¹ÓÃ */
+#if SYS_SUPPORT_OS                                      /* Èç¹ûĞèÒªÖ§³ÖOS. */
+    reload = sysclk;                                    /* Ã¿ÃëÖÓµÄ¼ÆÊı´ÎÊı µ¥Î»ÎªM */
+    reload *= 1000000 / configTICK_RATE_HZ;             /* ¸ù¾İdelay_ostickspersecÉè¶¨Òç³öÊ±¼ä,reloadÎª24Î»
+                                                           ¼Ä´æÆ÷,×î´óÖµ:16777216,ÔÚ168MÏÂ,Ô¼ºÏ0.099s×óÓÒ */
+    SysTick->CTRL |= SysTick_CTRL_TICKINT_Msk;          /* ¿ªÆôSYSTICKÖĞ¶Ï */
+    SysTick->LOAD = reload;                             /* Ã¿1/delay_ostickspersecÃëÖĞ¶ÏÒ»´Î */
+    SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk;           /* ¿ªÆôSYSTICK */
 #endif 
 }
  
-#if SYS_SUPPORT_OS                                      /* å¦‚æœéœ€è¦æ”¯æŒOS, ç”¨ä»¥ä¸‹ä»£ç  */
+#if SYS_SUPPORT_OS                                      /* Èç¹ûĞèÒªÖ§³ÖOS, ÓÃÒÔÏÂ´úÂë */
 
 /**
- * @brief     å»¶æ—¶nus
- * @param     nus: è¦å»¶æ—¶çš„usæ•°
- * @note      nuså–å€¼èŒƒå›´: 0~8947848(æœ€å¤§å€¼å³2^32 / g_fac_us @g_fac_us = 168)
- * @retval    æ— 
+ * @brief     ÑÓÊ±nus
+ * @param     nus: ÒªÑÓÊ±µÄusÊı
+ * @note      nusÈ¡Öµ·¶Î§: 0~8947848(×î´óÖµ¼´2^32 / g_fac_us @g_fac_us = 168)
+ * @retval    ÎŞ
  */ 
 void delay_us(uint32_t nus)
 {
     uint32_t ticks;
     uint32_t told, tnow, tcnt = 0;
-    uint32_t reload = SysTick->LOAD;        /* LOADçš„å€¼ */
+    uint32_t reload = SysTick->LOAD;        /* LOADµÄÖµ */
     
-    ticks = nus * g_fac_us;                 /* éœ€è¦çš„èŠ‚æ‹æ•° */
-    told = SysTick->VAL;                    /* åˆšè¿›å…¥æ—¶çš„è®¡æ•°å™¨å€¼ */
+    ticks = nus * g_fac_us;                 /* ĞèÒªµÄ½ÚÅÄÊı */
+    told = SysTick->VAL;                    /* ¸Õ½øÈëÊ±µÄ¼ÆÊıÆ÷Öµ */
     while (1)
     {
         tnow = SysTick->VAL;
@@ -80,7 +97,7 @@ void delay_us(uint32_t nus)
         {
             if (tnow < told)
             {
-                tcnt += told - tnow;        /* è¿™é‡Œæ³¨æ„ä¸€ä¸‹SYSTICKæ˜¯ä¸€ä¸ªé€’å‡çš„è®¡æ•°å™¨å°±å¯ä»¥äº† */
+                tcnt += told - tnow;        /* ÕâÀï×¢ÒâÒ»ÏÂSYSTICKÊÇÒ»¸öµİ¼õµÄ¼ÆÊıÆ÷¾Í¿ÉÒÔÁË */
             }
             else
             {
@@ -89,16 +106,16 @@ void delay_us(uint32_t nus)
             told = tnow;
             if (tcnt >= ticks) 
             {
-                break;                      /* æ—¶é—´è¶…è¿‡/ç­‰äºè¦å»¶è¿Ÿçš„æ—¶é—´,åˆ™é€€å‡º */
+                break;                      /* Ê±¼ä³¬¹ı/µÈÓÚÒªÑÓ³ÙµÄÊ±¼ä,ÔòÍË³ö */
             }
         }
     }
 } 
 
 /**
- * @brief     å»¶æ—¶nms
- * @param     nms: è¦å»¶æ—¶çš„msæ•° (0< nms <= 65535) 
- * @retval    æ— 
+ * @brief     ÑÓÊ±nms
+ * @param     nms: ÒªÑÓÊ±µÄmsÊı (0< nms <= 65535) 
+ * @retval    ÎŞ
  */
 void delay_ms(uint16_t nms)
 {
@@ -110,21 +127,21 @@ void delay_ms(uint16_t nms)
     }
 }
 
-#else  /* ä¸ä½¿ç”¨OSæ—¶, ç”¨ä»¥ä¸‹ä»£ç  */
+#else  /* ²»Ê¹ÓÃOSÊ±, ÓÃÒÔÏÂ´úÂë */
 
 /**
- * @brief       å»¶æ—¶nus
- * @param       nus: è¦å»¶æ—¶çš„usæ•°.
- * @note        æ³¨æ„: nusçš„å€¼,ä¸è¦å¤§äº34952us(æœ€å¤§å€¼å³2^24 / g_fac_us @g_fac_us = 168)
- * @retval      æ— 
+ * @brief       ÑÓÊ±nus
+ * @param       nus: ÒªÑÓÊ±µÄusÊı.
+ * @note        ×¢Òâ: nusµÄÖµ,²»Òª´óÓÚ34952us(×î´óÖµ¼´2^24 / g_fac_us @g_fac_us = 168)
+ * @retval      ÎŞ
  */
 void delay_us(uint32_t nus)
 {
     uint32_t ticks;
     uint32_t told, tnow, tcnt = 0;
-    uint32_t reload = SysTick->LOAD;        /* LOADçš„å€¼ */
-    ticks = nus * g_fac_us;                 /* éœ€è¦çš„èŠ‚æ‹æ•° */
-    told = SysTick->VAL;                    /* åˆšè¿›å…¥æ—¶çš„è®¡æ•°å™¨å€¼ */
+    uint32_t reload = SysTick->LOAD;        /* LOADµÄÖµ */
+    ticks = nus * g_fac_us;                 /* ĞèÒªµÄ½ÚÅÄÊı */
+    told = SysTick->VAL;                    /* ¸Õ½øÈëÊ±µÄ¼ÆÊıÆ÷Öµ */
     while (1)
     {
         tnow = SysTick->VAL;
@@ -132,7 +149,7 @@ void delay_us(uint32_t nus)
         {
             if (tnow < told)
             {
-                tcnt += told - tnow;        /* è¿™é‡Œæ³¨æ„ä¸€ä¸‹SYSTICKæ˜¯ä¸€ä¸ªé€’å‡çš„è®¡æ•°å™¨å°±å¯ä»¥äº† */
+                tcnt += told - tnow;        /* ÕâÀï×¢ÒâÒ»ÏÂSYSTICKÊÇÒ»¸öµİ¼õµÄ¼ÆÊıÆ÷¾Í¿ÉÒÔÁË */
             }
             else 
             {
@@ -141,38 +158,38 @@ void delay_us(uint32_t nus)
             told = tnow;
             if (tcnt >= ticks)
             {
-                break;                      /* æ—¶é—´è¶…è¿‡/ç­‰äºè¦å»¶è¿Ÿçš„æ—¶é—´,åˆ™é€€å‡º */
+                break;                      /* Ê±¼ä³¬¹ı/µÈÓÚÒªÑÓ³ÙµÄÊ±¼ä,ÔòÍË³ö */
             }
         }
     }
 }
 
 /**
- * @brief       å»¶æ—¶nms
- * @param       nms: è¦å»¶æ—¶çš„msæ•° (0< nms <= 65535)
- * @retval      æ— 
+ * @brief       ÑÓÊ±nms
+ * @param       nms: ÒªÑÓÊ±µÄmsÊı (0< nms <= 65535)
+ * @retval      ÎŞ
  */
 void delay_ms(uint16_t nms)
 {
-    uint32_t repeat = nms / 30;     /*  è¿™é‡Œç”¨30,æ˜¯è€ƒè™‘åˆ°å¯èƒ½æœ‰è¶…é¢‘åº”ç”¨ */
+    uint32_t repeat = nms / 30;     /*  ÕâÀïÓÃ30,ÊÇ¿¼ÂÇµ½¿ÉÄÜÓĞ³¬ÆµÓ¦ÓÃ */
     uint32_t remain = nms % 30;
 
     while (repeat)
     {
-        delay_us(30 * 1000);        /* åˆ©ç”¨delay_us å®ç° 1000ms å»¶æ—¶ */
+        delay_us(30 * 1000);        /* ÀûÓÃdelay_us ÊµÏÖ 1000ms ÑÓÊ± */
         repeat--;
     }
 
     if (remain)
     {
-        delay_us(remain * 1000);    /* åˆ©ç”¨delay_us, æŠŠå°¾æ•°å»¶æ—¶(remain ms)ç»™åšäº† */
+        delay_us(remain * 1000);    /* ÀûÓÃdelay_us, °ÑÎ²ÊıÑÓÊ±(remain ms)¸ø×öÁË */
     }
 }
 
 /**
-  * @brief HALåº“å†…éƒ¨å‡½æ•°ç”¨åˆ°çš„å»¶æ—¶
-           HALåº“çš„å»¶æ—¶é»˜è®¤ç”¨Systickï¼Œå¦‚æœæˆ‘ä»¬æ²¡æœ‰å¼€Systickçš„ä¸­æ–­ä¼šå¯¼è‡´è°ƒç”¨è¿™ä¸ªå»¶æ—¶åæ— æ³•é€€å‡º
-  * @param Delay è¦å»¶æ—¶çš„æ¯«ç§’æ•°
+  * @brief HAL¿âÄÚ²¿º¯ÊıÓÃµ½µÄÑÓÊ±
+           HAL¿âµÄÑÓÊ±Ä¬ÈÏÓÃSystick£¬Èç¹ûÎÒÃÇÃ»ÓĞ¿ªSystickµÄÖĞ¶Ï»áµ¼ÖÂµ÷ÓÃÕâ¸öÑÓÊ±ºóÎŞ·¨ÍË³ö
+  * @param Delay ÒªÑÓÊ±µÄºÁÃëÊı
   * @retval None
   */
 void HAL_Delay(uint32_t Delay)
